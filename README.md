@@ -4,15 +4,15 @@ This repository contains tools and utilities to deploy RStudio proffesional prod
 
 ## AWS CloudFormation
 
-Try it out: [![AWS Cloudformation](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)]() (TODO UPDATE URL)
+Deploys a RStudio Team on EC2 instances.
+
+Try it out: [![AWS Cloudformation](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?templateURL=https://rstudio-cloud-tools-temp.s3.amazonaws.com/rstudio-team.yml&stackName=RStudioTeam)
 
 Note: To try on AWS, you should have:
 
 - An AWS key pair created
 - Permission to create EC2 Instances and Security Groups
-- (Optional) A VPC and subnet created if you want to install to a non-default VPC
-
-This deploys a RStudio Team on EC2 instances.
+- A target VPC and subnet created
 
 The inputs required during deployment are:
 
