@@ -6,7 +6,7 @@ This repository contains tools and utilities to deploy RStudio proffesional prod
 
 Deploys a RStudio Team on EC2 instances.
 
-Try it out: [![AWS Cloudformation](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?templateURL=https://rstudio-cloud-tools-temp.s3.amazonaws.com/rstudio-team.yml&stackName=RStudioTeam)
+Try it out: [![AWS Cloudformation](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?templateURL=https://rstudio-cloud-tools-temp.s3.amazonaws.com/rstudio-standalone.yml&stackName=RStudioTeam)
 
 Note: To try on AWS, you should have:
 
