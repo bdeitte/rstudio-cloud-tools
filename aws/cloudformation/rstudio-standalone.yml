@@ -125,7 +125,7 @@ Mappings:
   RSPRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0fa28dfd481b2904b
+      AMI: ami-0513a8d0ca55d8f8c
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -156,7 +156,7 @@ Mappings:
   RSCRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-01cceb79114c558bc
+      AMI: ami-03b5c1e0e7311f63b
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -187,7 +187,7 @@ Mappings:
   RSPMRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-05803f9ce8201b1cd
+      AMI: ami-0b6ea9e7b34f1bb79
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -415,10 +415,22 @@ Resources:
 Outputs:
   RSPUI:
     Description: RStudio Server Pro UI
-    Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp, ":80"]]
+    Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
+  RSPUser:
+    Description: RStudio Server Pro default user
+    Value: rstudio-user
+  RSPUserPass:
+    Description: RStudio Server Pro initial default user password
+    Value: !Ref RSPInstance
   RSCUI:
     Description: RStudio Connect UI
-    Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp, ":80"]]
+    Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
+  RSCUser:
+    Description: RStudio Connect default user
+    Value: admin
+  RSCUserPass:
+    Description: RStudio Connect initial default user password
+    Value: !Ref RSCInstance
   RSPMUI:
     Description: RStudio Package Manager UI
-    Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp, ":80"]]
+    Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp]]
