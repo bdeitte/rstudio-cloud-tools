@@ -24,7 +24,7 @@ Parameters:
     Description: "AWS key pair to use to SSH to the VMs. SSH username for the VMs are ubuntu (has sudo privilege). SSH into machines for changing configuration, reviewing logs, etc."
   rspInstanceType:
     Type: String
-    Default: t3.large
+    Default: m5.large
     AllowedValues:
       - t3.medium
       - t3.large
@@ -47,7 +47,7 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Conenct. Default is t3.large.
+    Description: EC2 Instance type for RStudio Conenct. Default is m5.large.
   rspDiskSize:
     Type: Number
     Default: 50
@@ -55,7 +55,7 @@ Parameters:
     Description: Volume size for RStudio Connect EC2 Instance. Min 50 GB.
   rscInstanceType:
     Type: String
-    Default: t3.large
+    Default: m5.large
     AllowedValues:
       - t3.medium
       - t3.large
@@ -78,7 +78,7 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Conenct. Default is t3.large.
+    Description: EC2 Instance type for RStudio Conenct. Default is m5.large.
   rscDiskSize:
     Type: Number
     Default: 50
@@ -86,7 +86,7 @@ Parameters:
     Description: Volume size for RStudio Connect EC2 Instance. Min 50 GB.
   rspmInstanceType:
     Type: String
-    Default: t3.medium
+    Default: m5.large
     AllowedValues:
       - t3.medium
       - t3.large
@@ -109,7 +109,7 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Conenct. Default is t3.medium.
+    Description: EC2 Instance type for RStudio Conenct. Default is m5.large.
   rspmDiskSize:
     Type: Number
     Default: 120
@@ -211,7 +211,7 @@ Mappings:
   RSCRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-03b5c1e0e7311f63b
+      AMI: ami-040029bda69295065
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
