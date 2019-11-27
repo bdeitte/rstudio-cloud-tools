@@ -368,6 +368,7 @@ Resources:
 
             CONNECT_CONFIG_FILE=/etc/rstudio-connect/rstudio-connect.gcfg
             sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
+            sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
             sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
 
             systemctl start rstudio-connect
@@ -421,13 +422,6 @@ Resources:
             VolumeSize: !Ref rspmDiskSize
             DeleteOnTermination: true
             VolumeType: gp2
-      UserData:
-        Fn::Base64: !Sub
-          - |
-            #!/bin/bash -x
-            echo "Hi!"
-            echo "${VARIABLE_X}"
-          - VARIABLE_X: "Test"
 
   RSPMSecurityGroup:
     Type: AWS::EC2::SecurityGroup
