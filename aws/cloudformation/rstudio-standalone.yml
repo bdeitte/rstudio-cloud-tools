@@ -47,12 +47,12 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Conenct. Default is m5.large.
+    Description: EC2 Instance type for RStudio Server Pro. Default is m5.large.
   rspDiskSize:
     Type: Number
     Default: 50
     MinValue: 50
-    Description: Volume size for RStudio Connect EC2 Instance. Min 50 GB.
+    Description: Volume size for RStudio Server Pro EC2 Instance. Min 50 GB.
   rscInstanceType:
     Type: String
     Default: m5.large
@@ -78,7 +78,7 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Conenct. Default is m5.large.
+    Description: EC2 Instance type for RStudio Connect. Default is m5.large.
   rscDiskSize:
     Type: Number
     Default: 50
@@ -109,12 +109,12 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Conenct. Default is m5.large.
+    Description: EC2 Instance type for RStudio Package Manager. Default is m5.large.
   rspmDiskSize:
     Type: Number
     Default: 120
     MinValue: 120
-    Description: Volume size for RStudio Connect EC2 Instance. Min 120 GB.
+    Description: Volume size for RStudio Package Manager EC2 Instance. Min 120 GB.
 
 Metadata:
   AWS::CloudFormation::Interface:
