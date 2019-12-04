@@ -180,7 +180,7 @@ Mappings:
   RSPRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-01094137e74372254
+      AMI: ami-0c17308b9cc4bb15e
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -211,7 +211,7 @@ Mappings:
   RSCRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-07f930972039a9c98
+      AMI: ami-047e463ff04df4e0d
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -242,7 +242,7 @@ Mappings:
   RSPMRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0090cfbe3b8a1bb9d
+      AMI: ami-0641fb9109ae9eb85
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
