@@ -180,7 +180,7 @@ Mappings:
   RSPRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0513a8d0ca55d8f8c
+      AMI: ami-01094137e74372254
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -211,7 +211,7 @@ Mappings:
   RSCRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-040029bda69295065
+      AMI: ami-07f930972039a9c98
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -242,7 +242,7 @@ Mappings:
   RSPMRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0b6ea9e7b34f1bb79
+      AMI: ami-0090cfbe3b8a1bb9d
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -274,7 +274,11 @@ Resources:
   RSPInstance:
     Type: AWS::EC2::Instance
     DependsOn:
+      - RSCInstance
       - RSPMInstance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
     Properties:
       Tags:
         - Key: Name
@@ -299,12 +303,16 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
             sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_IP}|" $RSESSION_CONFIG_FILE
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
             RSPM_IP: !GetAtt RSPMInstance.PublicIp
@@ -337,6 +345,11 @@ Resources:
 
   RSCInstance:
     Type: AWS::EC2::Instance
+    DependsOn:
+      - RSPMInstance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
     Properties:
       Tags:
         - Key: Name
@@ -361,6 +374,7 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
             sleep 5  # Wait for admin user creation
@@ -372,6 +386,9 @@ Resources:
             sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
 
             systemctl start rstudio-connect
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSPM_IP: !GetAtt RSPMInstance.PublicIp
 
@@ -403,6 +420,9 @@ Resources:
 
   RSPMInstance:
     Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
     Properties:
       Tags:
         - Key: Name
@@ -422,6 +442,14 @@ Resources:
             VolumeSize: !Ref rspmDiskSize
             DeleteOnTermination: true
             VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
   RSPMSecurityGroup:
     Type: AWS::EC2::SecurityGroup
