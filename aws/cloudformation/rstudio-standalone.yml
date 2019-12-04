@@ -180,7 +180,7 @@ Mappings:
   RSPRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0c17308b9cc4bb15e
+      AMI: ami-098f950ca39c61a7e
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -211,7 +211,7 @@ Mappings:
   RSCRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-047e463ff04df4e0d
+      AMI: ami-0b5e6a7db110a17c6
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -242,7 +242,7 @@ Mappings:
   RSPMRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0641fb9109ae9eb85
+      AMI: ami-039b9c8309dead210
     us-east-2: # Ohio
       AMI: ami-
     us-west-1: # California
@@ -310,6 +310,11 @@ Resources:
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
+
+            /opt/R/3.6.1/bin/R --version
+            /opt/R/3.6.1/bin/R --no-save -e 'library(dplyr)'
+            /opt/python/3.7.3/bin/python --version
+            /opt/python/3.7.3/bin/python -c "import pandas"
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
