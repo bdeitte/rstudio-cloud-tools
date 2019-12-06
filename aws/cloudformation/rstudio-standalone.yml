@@ -180,9 +180,9 @@ Mappings:
   RSPRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-098f950ca39c61a7e
+      AMI: ami-09fa41caceda4ed8b
     us-east-2: # Ohio
-      AMI: ami-
+      AMI: ami-06980e5397a5881cd
     us-west-1: # California
       AMI: ami-
     us-west-2: # Oregon
@@ -211,9 +211,9 @@ Mappings:
   RSCRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-0b5e6a7db110a17c6
+      AMI: ami-046db48ea7d1776ad
     us-east-2: # Ohio
-      AMI: ami-
+      AMI: ami-08c2c41eb6dd5957d
     us-west-1: # California
       AMI: ami-
     us-west-2: # Oregon
@@ -242,9 +242,9 @@ Mappings:
   RSPMRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-039b9c8309dead210
+      AMI: ami-07a99c4e72d339f67
     us-east-2: # Ohio
-      AMI: ami-
+      AMI: ami-018284431bf34fcb9
     us-west-1: # California
       AMI: ami-
     us-west-2: # Oregon
@@ -303,7 +303,7 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            # trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
             sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_IP}|" $RSESSION_CONFIG_FILE
@@ -315,6 +315,13 @@ Resources:
             /opt/R/3.6.1/bin/R --no-save -e 'library(dplyr)'
             /opt/python/3.7.3/bin/python --version
             /opt/python/3.7.3/bin/python -c "import pandas"
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            rstudio-server stop || sleep 5
+            ln -s /opt/R/3.6.1/bin/R /usr/local/bin/R
+            rstudio-server verify-installation --verify-user rstudio-user
+            rm /usr/local/bin/R
+            rstudio-server start
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
