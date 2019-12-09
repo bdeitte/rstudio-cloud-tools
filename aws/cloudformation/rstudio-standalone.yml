@@ -180,13 +180,13 @@ Mappings:
   RSPRegionMap:
     # AMIs
     us-east-1: # N Virginia
-      AMI: ami-09fa41caceda4ed8b
+      AMI: ami-0083e38f1c05f82cf
     us-east-2: # Ohio
-      AMI: ami-06980e5397a5881cd
+      AMI: ami-06dca320d16d2907b
     us-west-1: # California
       AMI: ami-
     us-west-2: # Oregon
-      AMI: ami-
+      AMI: ami-03255a7055530855b
     ca-central-1: # Québec
       AMI: ami-
     eu-central-1: # Frankfurt
@@ -217,7 +217,7 @@ Mappings:
     us-west-1: # California
       AMI: ami-
     us-west-2: # Oregon
-      AMI: ami-
+      AMI: ami-0afc4696d9c0996ec
     ca-central-1: # Québec
       AMI: ami-
     eu-central-1: # Frankfurt
@@ -248,7 +248,7 @@ Mappings:
     us-west-1: # California
       AMI: ami-
     us-west-2: # Oregon
-      AMI: ami-
+      AMI: ami-0f7b429323abcee68
     ca-central-1: # Québec
       AMI: ami-
     eu-central-1: # Frankfurt
@@ -318,9 +318,7 @@ Resources:
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
             rstudio-server stop || sleep 5
-            ln -s /opt/R/3.6.1/bin/R /usr/local/bin/R
             rstudio-server verify-installation --verify-user rstudio-user
-            rm /usr/local/bin/R
             rstudio-server start
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
