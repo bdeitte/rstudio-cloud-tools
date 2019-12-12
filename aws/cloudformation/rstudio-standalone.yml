@@ -178,97 +178,26 @@ Metadata:
 
 Mappings:
   RSPRegionMap:
-    # AMIs
-    us-east-1: # N Virginia
-      AMI: ami-0083e38f1c05f82cf
-    us-east-2: # Ohio
-      AMI: ami-06dca320d16d2907b
-    us-west-1: # California
-      AMI: ami-
-    us-west-2: # Oregon
-      AMI: ami-03255a7055530855b
-    ca-central-1: # Québec
-      AMI: ami-
-    eu-central-1: # Frankfurt
-      AMI: ami-
-    eu-west-1: # Ireland
-      AMI: ami-
-    eu-west-2: # London
-      AMI: ami-
-    ap-southeast-1: # Singapore
-      AMI: ami-
-    ap-southeast-2: # Sydney
-      AMI: ami-
-    ap-south-1: # Mumbai
-      AMI: ami-
-    ap-northeast-1: # Tokyo
-      AMI: ami-
-    ap-northeast-2: # Seoul
-      AMI: ami-
-    sa-east-1: # São Paulo
-      AMI: ami-
-
+    us-east-1:
+      AMI: ami-0e5f13c3df8b7275a
+    us-east-2:
+      AMI: ami-0307b0ab11773b5b4
+    us-west-2:
+      AMI: ami-0c789bdeda9cd8cf5
   RSCRegionMap:
-    # AMIs
-    us-east-1: # N Virginia
-      AMI: ami-046db48ea7d1776ad
-    us-east-2: # Ohio
-      AMI: ami-08c2c41eb6dd5957d
-    us-west-1: # California
-      AMI: ami-
-    us-west-2: # Oregon
-      AMI: ami-0afc4696d9c0996ec
-    ca-central-1: # Québec
-      AMI: ami-
-    eu-central-1: # Frankfurt
-      AMI: ami-
-    eu-west-1: # Ireland
-      AMI: ami-
-    eu-west-2: # London
-      AMI: ami-
-    ap-southeast-1: # Singapore
-      AMI: ami-
-    ap-southeast-2: # Sydney
-      AMI: ami-
-    ap-south-1: # Mumbai
-      AMI: ami-
-    ap-northeast-1: # Tokyo
-      AMI: ami-
-    ap-northeast-2: # Seoul
-      AMI: ami-
-    sa-east-1: # São Paulo
-      AMI: ami-
-
+    us-east-1:
+      AMI: ami-05207d63e841cde15
+    us-east-2:
+      AMI: ami-0b9baa9e7a3647ed0
+    us-west-2:
+      AMI: ami-02f8697d48ae5d31b
   RSPMRegionMap:
-    # AMIs
-    us-east-1: # N Virginia
-      AMI: ami-07a99c4e72d339f67
-    us-east-2: # Ohio
-      AMI: ami-018284431bf34fcb9
-    us-west-1: # California
-      AMI: ami-
-    us-west-2: # Oregon
-      AMI: ami-0f7b429323abcee68
-    ca-central-1: # Québec
-      AMI: ami-
-    eu-central-1: # Frankfurt
-      AMI: ami-
-    eu-west-1: # Ireland
-      AMI: ami-
-    eu-west-2: # London
-      AMI: ami-
-    ap-southeast-1: # Singapore
-      AMI: ami-
-    ap-southeast-2: # Sydney
-      AMI: ami-
-    ap-south-1: # Mumbai
-      AMI: ami-
-    ap-northeast-1: # Tokyo
-      AMI: ami-
-    ap-northeast-2: # Seoul
-      AMI: ami-
-    sa-east-1: # São Paulo
-      AMI: ami-
+    us-east-1:
+      AMI: ami-0b4ab6945eeba0801
+    us-east-2:
+      AMI: ami-0f4141fa663993c86
+    us-west-2:
+      AMI: ami-069592bf8066f8ef8
 
 Resources:
   RSPInstance:
