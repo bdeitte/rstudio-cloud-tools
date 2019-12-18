@@ -146,7 +146,7 @@ Metadata:
           - rscDiskSize
       -
         Label:
-          default: RStudio Package manager EC2 resource configuration
+          default: RStudio Package Manager EC2 resource configuration
         Parameters:
           - rspmInstanceType
           - rspmDiskSize
@@ -417,7 +417,7 @@ Resources:
       SourceSecurityGroupId: !Ref RSPMSecurityGroup
 
 Outputs:
-  RSPUI:
+  RSP:
     Description: RStudio Server Pro UI
     Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
   RSPUser:
@@ -426,7 +426,7 @@ Outputs:
   RSPUserPass:
     Description: RStudio Server Pro initial default user password
     Value: !Ref RSPInstance
-  RSCUI:
+  RSC:
     Description: RStudio Connect UI
     Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
   RSCUser:
@@ -435,6 +435,6 @@ Outputs:
   RSCUserPass:
     Description: RStudio Connect initial default user password
     Value: !Ref RSCInstance
-  RSPMUI:
+  RSPM:
     Description: RStudio Package Manager UI
     Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp]]
