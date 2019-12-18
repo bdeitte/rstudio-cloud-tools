@@ -179,11 +179,11 @@ Metadata:
 Mappings:
   RSPRegionMap:
     us-east-1:
-      AMI: ami-0e5f13c3df8b7275a
+      AMI: ami-09fadc646999b88a1
     us-east-2:
-      AMI: ami-0307b0ab11773b5b4
+      AMI: ami-076b68550f4803724
     us-west-2:
-      AMI: ami-0c789bdeda9cd8cf5
+      AMI: ami-0281f260750fe1684
   RSCRegionMap:
     us-east-1:
       AMI: ami-05207d63e841cde15
