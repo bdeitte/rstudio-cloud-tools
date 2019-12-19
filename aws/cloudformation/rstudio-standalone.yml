@@ -193,11 +193,11 @@ Mappings:
       AMI: ami-02f8697d48ae5d31b
   RSPMRegionMap:
     us-east-1:
-      AMI: ami-0b4ab6945eeba0801
+      AMI: ami-04b04996a163e545a
     us-east-2:
-      AMI: ami-0f4141fa663993c86
+      AMI: ami-06fade168675035ad
     us-west-2:
-      AMI: ami-069592bf8066f8ef8
+      AMI: ami-04e4f0f8fbf1d4954
 
 Resources:
   RSPInstance:
