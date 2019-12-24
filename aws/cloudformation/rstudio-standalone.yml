@@ -185,7 +185,7 @@ Mappings:
     us-east-1:
       AMI: ami-03becc8b2a754a1f9
     us-east-2:
-      AMI:ami-0b6fae709032dc3d3
+      AMI: ami-0b6fae709032dc3d3
     us-west-2:
       AMI: ami-093eba008d5e2b235
   RSPMRegionMap:
