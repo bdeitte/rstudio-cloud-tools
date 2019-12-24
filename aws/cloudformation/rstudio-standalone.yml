@@ -26,7 +26,6 @@ Parameters:
     Type: String
     Default: m5.large
     AllowedValues:
-      - t3.medium
       - t3.large
       - t3.xlarge
       - t3.2xlarge
@@ -57,7 +56,6 @@ Parameters:
     Type: String
     Default: m5.large
     AllowedValues:
-      - t3.medium
       - t3.large
       - t3.xlarge
       - t3.2xlarge
@@ -88,7 +86,6 @@ Parameters:
     Type: String
     Default: m5.large
     AllowedValues:
-      - t3.medium
       - t3.large
       - t3.xlarge
       - t3.2xlarge
@@ -179,18 +176,18 @@ Metadata:
 Mappings:
   RSPRegionMap:
     us-east-1:
-      AMI: ami-09fadc646999b88a1
+      AMI: ami-08ca8a876cad77c8c
     us-east-2:
-      AMI: ami-076b68550f4803724
+      AMI: ami-09221f94bd71618c1
     us-west-2:
-      AMI: ami-0281f260750fe1684
+      AMI: ami-0413c8d51139a983c
   RSCRegionMap:
     us-east-1:
-      AMI: ami-05207d63e841cde15
+      AMI: ami-09e0fe570a41da06c
     us-east-2:
-      AMI: ami-0b9baa9e7a3647ed0
+      AMI: ami-0634a304447fabfb8
     us-west-2:
-      AMI: ami-02f8697d48ae5d31b
+      AMI: ami-0f3dcf4f9a45b7c1a
   RSPMRegionMap:
     us-east-1:
       AMI: ami-04b04996a163e545a
