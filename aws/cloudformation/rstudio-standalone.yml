@@ -1,0 +1,473 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'RStudio Team Standalone'
+
+Parameters:
+  useVPC:
+    Type: AWS::EC2::VPC::Id
+    Description: "VPC to deploy the cluster into."
+  useSubnet:
+    Type: AWS::EC2::Subnet::Id
+    Description: "Subnet to deploy the cluster into. Must be in the selected VPC."
+  cidrIpHTTP:
+    Type: String
+    Description: "Security groups CIDR range for ports 80 and 443."
+    Default: "0.0.0.0/0"
+  cidrIpSSH:
+    Type: String
+    Description: "Security groups CIDR range for port 22."
+    Default: "0.0.0.0/0"
+  keyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    AllowedPattern: ".+"
+    ConstraintDescription: Must select an existing EC2 KeyPair
+    Description: "AWS key pair to use to SSH to the VMs. SSH username for the VMs are ubuntu (has sudo privilege). SSH into machines for changing configuration, reviewing logs, etc."
+  rspInstanceType:
+    Type: String
+    Default: m5.large
+    AllowedValues:
+      - t3.large
+      - t3.xlarge
+      - t3.2xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
+      - m5.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - r5.large
+      - r5.xlarge
+      - r5.2xlarge
+      - r5.4xlarge
+      - r5.8xlarge
+      - r5.12xlarge
+      - r5.16xlarge
+      - r5.24xlarge
+    Description: EC2 Instance type for RStudio Server Pro. Default is m5.large.
+  rspDiskSize:
+    Type: Number
+    Default: 50
+    MinValue: 50
+    Description: Volume size for RStudio Server Pro EC2 Instance. Min 50 GB.
+  rscInstanceType:
+    Type: String
+    Default: m5.large
+    AllowedValues:
+      - t3.large
+      - t3.xlarge
+      - t3.2xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
+      - m5.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - r5.large
+      - r5.xlarge
+      - r5.2xlarge
+      - r5.4xlarge
+      - r5.8xlarge
+      - r5.12xlarge
+      - r5.16xlarge
+      - r5.24xlarge
+    Description: EC2 Instance type for RStudio Connect. Default is m5.large.
+  rscDiskSize:
+    Type: Number
+    Default: 50
+    MinValue: 50
+    Description: Volume size for RStudio Connect EC2 Instance. Min 50 GB.
+  rspmInstanceType:
+    Type: String
+    Default: m5.large
+    AllowedValues:
+      - t3.large
+      - t3.xlarge
+      - t3.2xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
+      - m5.8xlarge
+      - c5.large
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - r5.large
+      - r5.xlarge
+      - r5.2xlarge
+      - r5.4xlarge
+      - r5.8xlarge
+      - r5.12xlarge
+      - r5.16xlarge
+      - r5.24xlarge
+    Description: EC2 Instance type for RStudio Package Manager. Default is m5.large.
+  rspmDiskSize:
+    Type: Number
+    Default: 120
+    MinValue: 120
+    Description: Volume size for RStudio Package Manager EC2 Instance. Min 120 GB.
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: Global Network configuration
+        Parameters:
+          - useVPC
+          - useSubnet
+          - cidrIpHTTP
+          - cidrIpSSH
+      -
+        Label:
+          default: Global EC2 resource configuration
+        Parameters:
+          - keyName
+      -
+        Label:
+          default: RStudio Server Pro EC2 resource configuration
+        Parameters:
+          - rspInstanceType
+          - rspDiskSize
+      -
+        Label:
+          default: RStudio Connect EC2 resource configuration
+        Parameters:
+          - rscInstanceType
+          - rscDiskSize
+      -
+        Label:
+          default: RStudio Package Manager EC2 resource configuration
+        Parameters:
+          - rspmInstanceType
+          - rspmDiskSize
+    ParameterLabels:
+      useSubnet:
+        default: "Deploy to Subnet"
+      useVPC:
+        default: "Deploy to VPC"
+      cidrIpHTTP:
+        default: "Security group CIDR Range for HTTP/HTTPS"
+      cidrIpSSH:
+        default: "Security group CIDR Range for SSH"
+      useVPC:
+        default: "Deploy to VPC"
+      keyName:
+        default : "AWS keypair"
+      rspInstanceType:
+        default : "RStudio Server Pro Instance Type"
+      rspDiskSize:
+        default : "RStudio Server Pro Disk Size"
+      rscInstanceType:
+        default : "RStudio Connect Instance Type"
+      rscDiskSize:
+        default : "RStudio Connect Disk Size"
+      rspmInstanceType:
+        default : "RStudio Package Manager Instance Type"
+      rspmDiskSize:
+        default : "RStudio Package Manager Disk Size"
+
+Mappings:
+  RSPRegionMap:
+    eu-central-1:
+      AMI: ami-00113fce374488cb3
+    eu-north-1:
+      AMI: ami-04f0c52f163304dde
+    eu-west-1:
+      AMI: ami-0dbe6e799f46d2c79
+    eu-west-2:
+      AMI: ami-049ce0ed6be441720
+    eu-west-3:
+      AMI: ami-0a280f8fac5cea151
+    us-east-1:
+      AMI: ami-047170001b385e0d2
+    us-east-2:
+      AMI: ami-05455e6c295cf26d5
+    us-west-1:
+      AMI: ami-0fee0ec3c2840e7a3
+    us-west-2:
+      AMI: ami-0035a091f7cdc4331
+  RSCRegionMap:
+    eu-central-1:
+      AMI: ami-0a6b1f6c87deb94e5
+    eu-north-1:
+      AMI: ami-075e8c18549068932
+    eu-west-1:
+      AMI: ami-02b8297a2880adea1
+    eu-west-2:
+      AMI: ami-00d4f10aa9f2f2b86
+    eu-west-3:
+      AMI: ami-075f66d462ade5dbb
+    us-east-1:
+      AMI: ami-01a5dbd126dab062a
+    us-east-2:
+      AMI: ami-0c5ac3f5c91221fbf
+    us-west-1:
+      AMI: ami-04fde3648285d02c1
+    us-west-2:
+      AMI: ami-0226ebcb0b22e5340
+  RSPMRegionMap:
+    eu-central-1:
+      AMI: ami-0ab4fd05754af9ca9
+    eu-north-1:
+      AMI: ami-0e7662462467199ab
+    eu-west-1:
+      AMI: ami-08bf6b58e4b23db32
+    eu-west-2:
+      AMI: ami-0ce5614dc0c5b8166
+    eu-west-3:
+      AMI: ami-0c1a0596af78af4db
+    us-east-1:
+      AMI: ami-03afccfc337ea7031
+    us-east-2:
+      AMI: ami-0a961a8b51b0b45c1
+    us-west-1:
+      AMI: ami-04c8c228d6aadb8a2
+    us-west-2:
+      AMI: ami-09fa9dd3d7e5c0bb3
+
+Resources:
+  RSPInstance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - RSCInstance
+      - RSPMInstance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref "AWS::StackName", "RStudioServerPro"]]
+      ImageId: !FindInMap [RSPRegionMap, !Ref "AWS::Region", AMI]
+      KeyName: !Ref keyName
+      InstanceType: !Ref rspInstanceType
+      NetworkInterfaces:
+        - DeleteOnTermination: "true"
+          AssociatePublicIpAddress: "true"
+          DeviceIndex: 0
+          SubnetId: !Ref useSubnet
+          GroupSet: [!Ref RSPSecurityGroup]
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: !Ref rscDiskSize
+            DeleteOnTermination: true
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash -xe
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            # trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+
+            RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
+            sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_IP}|" $RSESSION_CONFIG_FILE
+
+            REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
+            sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
+
+            /opt/R/3.6.1/bin/R --version
+            /opt/R/3.6.1/bin/R --no-save -e 'library(dplyr)'
+            /opt/python/3.7.3/bin/python --version
+            /opt/python/3.7.3/bin/python -c "import pandas"
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            rstudio-server stop || sleep 5
+            rstudio-server verify-installation --verify-user rstudio-user
+            rstudio-server start
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
+
+          - RSC_IP: !GetAtt RSCInstance.PublicIp
+            RSPM_IP: !GetAtt RSPMInstance.PublicIp
+
+  RSPSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: RStudio Server Pro Access
+      VpcId: !Ref useVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: !Ref cidrIpSSH
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: !Ref cidrIpHTTP
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
+        CidrIp: !Ref cidrIpHTTP
+
+  RSPSecurityGroupSelfIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref RSPSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref RSPSecurityGroup
+
+  RSCInstance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - RSPMInstance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref "AWS::StackName", "RStudioConnect"]]
+      ImageId: !FindInMap [RSCRegionMap, !Ref "AWS::Region", AMI]
+      KeyName: !Ref keyName
+      InstanceType: !Ref rscInstanceType
+      NetworkInterfaces:
+        - DeleteOnTermination: "true"
+          AssociatePublicIpAddress: "true"
+          DeviceIndex: 0
+          SubnetId: !Ref useSubnet
+          GroupSet: [!Ref RSCSecurityGroup]
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: !Ref rscDiskSize
+            DeleteOnTermination: true
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash -xe
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            sleep 5  # Wait for admin user creation
+            systemctl stop rstudio-connect
+
+            CONNECT_CONFIG_FILE=/etc/rstudio-connect/rstudio-connect.gcfg
+            sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
+            sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
+            sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
+
+            systemctl start rstudio-connect
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
+
+          - RSPM_IP: !GetAtt RSPMInstance.PublicIp
+
+  RSCSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: RStudio Connect Access
+      VpcId: !Ref useVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: !Ref cidrIpSSH
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: !Ref cidrIpHTTP
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
+        CidrIp: !Ref cidrIpHTTP
+
+  RSCSecurityGroupSelfIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref RSCSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref RSCSecurityGroup
+
+  RSPMInstance:
+    Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref "AWS::StackName", "RStudioPM"]]
+      ImageId: !FindInMap [RSPMRegionMap, !Ref "AWS::Region", AMI]
+      KeyName: !Ref keyName
+      InstanceType: !Ref rspmInstanceType
+      NetworkInterfaces:
+        - DeleteOnTermination: "true"
+          AssociatePublicIpAddress: "true"
+          DeviceIndex: 0
+          SubnetId: !Ref useSubnet
+          GroupSet: [!Ref RSPMSecurityGroup]
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: !Ref rspmDiskSize
+            DeleteOnTermination: true
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
+
+  RSPMSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: RStudio Package Manager Access
+      VpcId: !Ref useVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: !Ref cidrIpSSH
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: !Ref cidrIpHTTP
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
+        CidrIp: !Ref cidrIpHTTP
+
+  RSPMSecurityGroupSelfIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref RSPMSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref RSPMSecurityGroup
+
+Outputs:
+  RSP:
+    Description: RStudio Server Pro UI
+    Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
+  RSPUser:
+    Description: RStudio Server Pro default user
+    Value: rstudio-user
+  RSPUserPass:
+    Description: RStudio Server Pro initial default user password
+    Value: !Ref RSPInstance
+  RSC:
+    Description: RStudio Connect UI
+    Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
+  RSCUser:
+    Description: RStudio Connect default user
+    Value: admin
+  RSCUserPass:
+    Description: RStudio Connect initial default user password
+    Value: !Ref RSCInstance
+  RSPM:
+    Description: RStudio Package Manager UI
+    Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp]]
