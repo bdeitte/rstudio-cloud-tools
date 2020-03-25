@@ -146,7 +146,8 @@
     "data_disk_size": "[concat(subscription().id, '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name'))]",
     "base_script_uri": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/",
     "install_r_script_url": "[concat(variables('base_script_uri'), 'install_r.sh')]",
-    "install_rspm_script_url": "[concat(variables('base_script_uri'), 'install_rspm.sh')]"
+    "install_rspm_script_url": "[concat(variables('base_script_uri'), 'install_rspm.sh')]",
+    "bootstrap_rspm_script_url": "[concat(variables('base_script_uri'), 'bootstrap_rspm.sh')]"
   },
   "resources": [
     {
@@ -274,7 +275,7 @@
       "resources": [
         {
           "type": "extensions",
-          "name": "installR",
+          "name": "configScript",
           "apiVersion": "[variables('computeAPIVersion')]",
           "location": "[variables('location')]",
           "dependsOn": [
@@ -287,37 +288,16 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "[variables('install_r_script_url')]"
+                "[variables('install_r_script_url')]",
+                "[variables('install_rspm_script_url')]",
+                "[variables('bootstrap_rspm_script_url')]"
               ]
             },
             "protectedSettings": {
-              "commandToExecute": "[concat('R_VERSION=\"', parameters('rVersion'), '\" sudo bash ', 'install_r.sh')]"
+              "commandToExecute": "[concat('sudo bash ', 'bootstrap_rspm.sh', '\"', parameters('rspmVersion'), '\" \"', parameters('rVersion')), '\"']"
             }
           }
-        },
-        {
-            "type": "extensions",
-            "name": "installRSPM",
-            "apiVersion": "[variables('computeAPIVersion')]",
-            "location": "[variables('location')]",
-            "dependsOn": [
-              "[concat(parameters('clusterName'), '-rspm')]"
-            ],
-            "properties": {
-              "publisher": "Microsoft.Azure.Extensions",
-              "type": "CustomScript",
-              "typeHandlerVersion": "2.0",
-              "autoUpgradeMinorVersion": true,
-              "settings": {
-                "fileUris": [
-                  "[variables('install_rspm_script_url')]"
-                ]
-              },
-              "protectedSettings": {
-                "commandToExecute": "[concat('RSPM_VERSION=\"', parameters('rspmVersion'), '\" sudo bash ', 'install_rspm.sh')]"
-              }
-            }
-          }
+        }
       ]
     }
   ]
