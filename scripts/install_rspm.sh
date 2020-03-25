@@ -12,7 +12,7 @@ fi
 apt-get update
 apt-get install -y gdebi-core
 curl -o /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb https://s3.amazonaws.com/rstudio-package-manager/ubuntu/amd64/rstudio-pm_${RSPM_VERSION}_amd64.deb
-sudo gdebi --non-interactive /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb
+gdebi --non-interactive /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb
 rm /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb
 
 # Config RSPM
