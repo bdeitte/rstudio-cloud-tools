@@ -1,0 +1,324 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "type": "string",
+      "defaultValue": "rstudio-pm",
+      "metadata": {
+        "description": "RStudio Package Manager deployment name"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_D4s_v3",
+      "allowedValues": [
+        "Standard_B4ms",
+        "Standard_DS3_v2",
+        "Standard_D4_v3",
+        "Standard_D4s_v3",
+        "Standard_D4as_v4",
+        "Standard_DS12",
+        "Standard_DS12_v2",
+        "Standard_DS13",
+        "Standard_DS13_v2",
+        "Standard_DS13-2_v2",
+        "Standard_DS13-4_v2",
+        "Standard_DS14",
+        "Standard_DS14_v2",
+        "Standard_DS14-4_v2",
+        "Standard_DS14-8_v2",
+        "Standard_DS15_v2",
+        "Standard_HB60rs",
+        "Standard_HC44rs"
+      ],
+      "metadata": {
+        "description": "The size of the Virtual Machines."
+      }
+    },
+    "sshUsername": {
+      "type": "string",
+      "defaultValue": "rstudio",
+      "metadata": {
+        "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
+      }
+    },
+    "authType": {
+      "type": "string",
+      "defaultValue": "password",
+      "allowedValues": [
+        "password",
+        "SSHPublicKey"
+      ],
+      "metadata": {
+        "description": "Type of authentication to use for SSH."
+      }
+    },
+    "sshPasswordOrKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+      }
+    },
+    "diskSize": {
+        "type": "int",
+        "defaultValue": 100,
+        "metadata": {
+          "description": "Size (in GB) of the RStudio Package Manager Disk"
+        }
+    },
+    "subnetId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource id of existing subnet to deploy to; the subnet needs to be in the same region as the cluster."
+        }
+    },
+    "usePrivateIP": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Select to use the private ip address of the subnet for RStudio access."
+        }
+    },
+    "publicIpNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "metadata": {
+          "description": "Determines whether or not a new public ip should be provisioned. Option: 'new' or IP existing address."
+        }
+    },
+    "publicIpAllocationMethod": {
+        "type": "string",
+        "defaultValue": "Static",
+        "allowedValues": [
+          "Dynamic",
+          "Static"
+        ],
+        "metadata": {
+          "description": "Allocation method for the public ip address (If new is selected)."
+        }
+    },
+    "rVersion": {
+        "type": "string",
+        "defaultValue": "3.6.3",
+        "metadata": {
+          "description": "One or multiple (space separated) versions of R to be installed."
+        }
+    },
+    "rspmVersion": {
+        "type": "string",
+        "defaultValue": "1.1.2-10",
+        "metadata": {
+          "description": "Version of RSPM to be installed."
+        }
+    }
+  },
+  "variables": {
+    "computeAPIVersion": "2018-06-01",
+    "rgName": "[resourceGroup().name]",
+    "location": "[resourceGroup().location]",
+    "baseImage": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "18.04-LTS",
+        "version": "18.04.202003170"
+    },
+    "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+            "publicKeys": [
+                {
+                    "path": "[concat('/home/', parameters('sshUsername'), '/.ssh/authorized_keys')]",
+                    "keyData": "[parameters('sshPasswordOrKey')]"
+                }
+            ]
+        }
+    },
+    "nicName": "[concat(parameters('clusterName'), '-nic')]",
+    "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rspm-nsg')]",
+    "privateIPAllocationMethod": "Dynamic",
+    "publicIpName": "[concat(parameters('clusterName'), '-rspm-public-ip')]",
+    "publicIpAddressId": {
+        "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+    },
+    "data_disk_name": "[concat(parameters('clusterName'), '-rspm-data-disk')]",
+    "data_disk_id": "[concat(subscription().id, '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name'))]",
+    "data_disk_size": "[concat(subscription().id, '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name'))]",
+    "base_script_uri": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/",
+    "install_r_script_url": "[concat(variables('base_script_uri'), 'install_r.sh')]",
+    "install_rspm_script_url": "[concat(variables('base_script_uri'), 'install_rspm.sh')]"
+  },
+  "resources": [
+    {
+        "name": "[variables('networkSecurityGroupName')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "[variables('computeAPIVersion')]",
+        "location": "[variables('location')]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-ssh",
+              "properties": {
+                "priority": 1000,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "22",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "default-allow-http",
+              "properties": {
+                "priority": 1100,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "80",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "default-allow-https",
+              "properties": {
+                "priority": 1200,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "443",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+    },
+    {
+        "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "[variables('computeAPIVersion')]",
+        "name": "[variables('publicIpName')]",
+        "location": "[variables('location')]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "[parameters('publicIpAllocationMethod')]"
+        }
+    },
+    {
+      "apiVersion": "[variables('computeAPIVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[variables('publicIpName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig-master",
+            "properties": {
+              "privateIPAllocationMethod": "[variables('privateIPAllocationMethod')]",
+              "subnet": {
+                "id": "[parameters('subnetId')]"
+              },
+              "publicIPAddress": "[if(and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new')), variables('publicIpAddressId') , json('null'))]"
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[variables('computeAPIVersion')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('clusterName'), '-rspm')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[variables('nicName')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('clusterName')]",
+          "adminUsername": "[parameters('sshUsername')]",
+          "adminPassword": "[parameters('sshPasswordOrKey')]",
+          "linuxConfiguration": "[if(equals(parameters('authType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+        },
+        "storageProfile": {
+          "imageReference": "[variables('baseImage')]",
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "diskSizeGB": "[parameters('diskSize')]"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "type": "extensions",
+          "name": "installR",
+          "apiVersion": "[variables('computeAPIVersion')]",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[concat(parameters('clusterName'), '-rspm')]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('install_r_script_url')]"
+              ]
+            },
+            "protectedSettings": {
+              "commandToExecute": "[concat('R_VERSION=\"', parameters('rVersion'), '\" sudo bash ', 'install_r.sh')]"
+            }
+          }
+        },
+        {
+            "type": "extensions",
+            "name": "installRSPM",
+            "apiVersion": "[variables('computeAPIVersion')]",
+            "location": "[variables('location')]",
+            "dependsOn": [
+              "[concat(parameters('clusterName'), '-rspm')]"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "[variables('install_rspm_script_url')]"
+                ]
+              },
+              "protectedSettings": {
+                "commandToExecute": "[concat('RSPM_VERSION=\"', parameters('rspmVersion'), '\" sudo bash ', 'install_rspm.sh')]"
+              }
+            }
+          }
+      ]
+    }
+  ]
+}

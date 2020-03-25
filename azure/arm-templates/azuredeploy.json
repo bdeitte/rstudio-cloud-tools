@@ -1,137 +1,181 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "cluster_name": {
-          "type": "string",
-          "defaultValue": "rstudio-team",
-          "metadata": {
-            "description": "RStudio Team deployment name"
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ClusterName": {
+      "type": "string",
+      "defaultValue": "rstudio-team",
+      "metadata": {
+        "description": "RStudio Team deployment name"
+      }
+    },
+    "rspmVmSize": {
+      "type": "string",
+      "defaultValue": "Standard_D4_v3",
+      "allowedValues": [
+        "Standard_D4_v3"
+      ],
+      "metadata": {
+        "description": "The size of the Virtual Machines."
+      }
+    },
+    "sshUsername": {
+      "type": "string",
+      "defaultValue": "rstudio",
+      "metadata": {
+        "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
+      }
+    },
+    "authType": {
+      "type": "string",
+      "defaultValue": "SSHPublicKey",
+      "allowedValues": [
+        "password",
+        "SSHPublicKey"
+      ],
+      "metadata": {
+        "description": "Type of authentication to use for SSH."
+      }
+    },
+    "sshPasswordOrKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+      }
+    },
+    "use_existing_subnet": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional - resource id of existing subnet to deploy to; the subnet needs to be in the same region as the cluster.  If empty, a new virtual network and subnet will be created."
+      }
+    }
+  },
+  "variables": {
+    "api_version": "2018-05-01",
+    "compute_api_version": "2018-06-01",
+    "storage_api_version": "2018-07-01",
+    "short_name": "[take(resourceGroup().name, 40)]",
+    "rg_name": "[resourceGroup().name]",
+    "location": "[resourceGroup().location]",
+    "baseImage": {
+      "publisher": "Canonical",
+      "offer": "UbuntuServer",
+      "sku": "18.04-LTS",
+      "version": "18.04.202003170"
+    },
+    "nic_name": "[concat(parameters('ClusterName'), '-nic')]",
+    "publicIpName": "[concat(parameters('ClusterName'), '-public-ip')]",
+    "data_disk_name_rspm": "[concat(parameters('ClusterName'), '-rspm-data-disk')]",
+    "data_disk_id_rspm": "[concat(subscription().id, '/resourceGroups/', variables('rg_name'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name_rspm'))]",
+    "linux_configuration": {
+      "disablePasswordAuthentication": true,
+      "ssh": {
+        "publicKeys": [
+          {
+            "path": "[concat('/home/', parameters('sshUsername'), '/.ssh/authorized_keys')]",
+            "keyData": "[parameters('sshPasswordOrKey')]"
           }
-        },
-        "rspm_vm_size": {
-            "type": "string",
-            "allowedValues": ["Standard_D4_v3"],
-            "metadata": {
-              "description": "The size of the Virtual Machines."
-            }
-        },
-        "ssh_username": {
-            "type": "string",
-            "defaultValue": "azuser",
-            "metadata": {
-                "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
-            }
-        },
-        "auth_type": {
-            "type": "string",
-            "defaultValue": "SSHPublicKey",
-            "allowedValues": [
-                "password",
-                "SSHPublicKey"
-            ],
-            "metadata": {
-                "description": "Type of authentication to use for SSH."
-            }
-        },
-        "ssh_password_or_key": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
-            }
-        },
-        "use_existing_subnet": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Optional - resource id of existing subnet to deploy to; the subnet needs to be in the same region as the cluster.  If empty, a new virtual network and subnet will be created."
-            }
-        }
+        ]
+      }
     },
-    "variables": {
-        "baseURI": "https://raw.githubusercontent.com/dremio/dremio-cloud-tools/master/azure/arm-templates/nested/",
-        "api_version": "2018-05-01",
-        "compute_api_version": "2018-06-01",
-        "storage_api_version": "2018-07-01",
-        "short_name": "[take(resourceGroup().name, 40)]",
-        "rg_name": "[resourceGroup().name]",
-        "location": "[resourceGroup().location]",
-        "data_disk_name": "[concat(parameters('cluster_name'), '-data-disk')]",
-        "data_disk_id": "[concat(subscription().id, '/resourceGroups/', variables('rg_name'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name'))]",
-        "baseImage": {
-            "publisher": "Canonical",
-            "offer": "UbuntuServer",
-            "sku": "18.04-LTS",
-            "version": "18.04.202003170"
-        },
-        "base_script_uri": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/",
-        "r_script_url": "[concat(variables('base_script_uri'), 'install_r.sh')]"
-    },
-    "resources": [
-        {
-            "apiVersion": "[variables('computeApiVersion')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('cluster_name'), '-rspm')]",
-            "location": "[variables('location')]",
-            "dependsOn": [
-            ],
+    "base_script_uri": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/scripts",
+    "install_r_script_url": "[concat(variables('base_script_uri'), 'install_r.sh')]",
+    "rVersion": "3.6.3"
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('compute_api_version')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[parameters('publicIpName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig-master",
             "properties": {
-              "hardwareProfile": {
-                "vmSize": "[parameters('rspm_vm_size')]"
+              "privateIPAllocationMethod": "[variables('ipAllocationMethod')]",
+              "subnet": {
+                "id": "[parameters('subnetId')]"
               },
-              "osProfile": {
-                "computerName": "[parameters('cluster_name')]",
-                "adminUsername": "[parameters('ssh_username')]",
-                "adminPassword": "[parameters('ssh_password_or_key')]",
-                "linuxConfiguration": "[if(equals(parameters('auth_type'), 'password'), json('null'), variables('linuxConfiguration'))]"
-              },
-              "storageProfile": {
-                "imageReference": "[variables('baseImage')]",
-                "osDisk": {
-                  "caching": "ReadWrite",
-                  "createOption": "FromImage"
-                },
-                "dataDisks": [
-                    {
-                      "lun": 0,
-                      "managedDisk": {
-                        "id": "[parameters('data_disk_id')]"
-                      },
-                      "caching": "ReadWrite",
-                      "createOption": "Attach"
-                    }
-                ]
-              },
-              "networkProfile": {
-                "networkInterfaces": [
-                  {
-                    "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
-                  }
-                ]
-              }
-            },
-            "resources": [
-              {
-                "type": "extensions",
-                "name": "configScript",
-                "apiVersion": "[variables('compute_api_version')]",
-                "location": "[variables('location')]",
-                "properties": {
-                  "publisher": "Microsoft.Azure.Extensions",
-                  "type": "CustomScript",
-                  "typeHandlerVersion": "2.0",
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "fileUris": [
-                      "[variables('r_script_url')]"
-                    ]
-                  },
-                  "protectedSettings": {
-                    "commandToExecute": "[(concat'R_VERSION=\"', parameters('r_version'), '\" sudo bash ', 'install_r.sh')]"
-                  }
-                }
-              }
-            ]
+              "publicIPAddress": "[if(and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new')), variables('publicIpAddressId') , json('null'))]"
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[parameters('nsgId')]"
         }
-    ]
+      }
+    },
+    {
+      "apiVersion": "[variables('compute_api_version')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('ClusterName'), '-rspm')]",
+      "location": "[variables('location')]",
+      "dependsOn": [],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('rspmVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('ClusterName')]",
+          "adminUsername": "[parameters('sshUsername')]",
+          "adminPassword": "[parameters('sshPasswordOrKey')]",
+          "linuxConfiguration": "[if(equals(parameters('authType'), 'password'), json('null'), variables('linux_configuration'))]"
+        },
+        "storageProfile": {
+          "imageReference": "[variables('baseImage')]",
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "lun": 0,
+              "managedDisk": {
+                "id": "[variables('data_disk_id_rspm')]"
+              },
+              "caching": "ReadWrite",
+              "createOption": "Attach"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_name'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "type": "extensions",
+          "name": "configScript",
+          "apiVersion": "[variables('compute_api_version')]",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[concat(parameters('ClusterName'), '-rspm')]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('install_r_script_url')]"
+              ]
+            },
+            "protectedSettings": {
+              "commandToExecute": "[concat('R_VERSION=\"', variables('rVersion'), '\" sudo bash ', 'install_r.sh')]"
+            }
+          }
+        }
+      ]
+    }
+  ]
 }
