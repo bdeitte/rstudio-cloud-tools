@@ -140,14 +140,7 @@
         "publicIpName": "[concat(parameters('clusterName'), '-rspm-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-        },
-        "data_disk_name": "[concat(parameters('clusterName'), '-rspm-data-disk')]",
-        "data_disk_id": "[concat(subscription().id, '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name'))]",
-        "data_disk_size": "[concat(subscription().id, '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Compute/disks/', variables('data_disk_name'))]",
-        "base_script_uri": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/",
-        "install_r_script_url": "[concat(variables('base_script_uri'), 'install_r.sh')]",
-        "install_rspm_script_url": "[concat(variables('base_script_uri'), 'install_rspm.sh')]",
-        "bootstrap_rspm_script_url": "[concat(variables('base_script_uri'), 'bootstrap_rspm.sh')]"
+        }
     },
     "resources": [
         {
@@ -274,9 +267,9 @@
             },
             "resources": [
                 {
-                    "type": "extensions",
-                    "name": "configScript",
-                    "apiVersion": "[variables('computeAPIVersion')]",
+                    "apiVersion": "2019-03-01",
+                    "type": "Extensions",
+                    "name": "installRSPM",
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[concat(parameters('clusterName'), '-rspm')]"
@@ -284,16 +277,16 @@
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
                         "type": "CustomScript",
-                        "typeHandlerVersion": "2.0",
+                        "typeHandlerVersion": "2.1",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "fileUris": [
-                                "[variables('install_r_script_url')]",
-                                "[variables('install_rspm_script_url')]",
-                                "[variables('bootstrap_rspm_script_url')]"
-                            ]
                         },
                         "protectedSettings": {
+                            "fileUris": [
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rspm.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rspm.sh"
+                            ],
                             "commandToExecute": "[concat('sudo bash bootstrap_rspm.sh ', '\"', parameters('rspmVersion') ,'\" \"', parameters('rVersion') ,'\"')]"
                         }
                     }
