@@ -4,9 +4,9 @@
     "parameters": {
         "clusterName": {
             "type": "string",
-            "defaultValue": "rstudio-pm",
+            "defaultValue": "rstudio-connect",
             "metadata": {
-                "description": "RStudio Package Manager deployment name"
+                "description": "RStudio COnnect deployment name"
             }
         },
         "vmSize": {
@@ -33,7 +33,7 @@
                 "Standard_HC44rs"
             ],
             "metadata": {
-                "description": "The size of the Virtual Machine"
+                "description": "The size of the Virtual Machine."
             }
         },
         "sshUsername": {
@@ -64,7 +64,7 @@
             "type": "int",
             "defaultValue": 100,
             "metadata": {
-                "description": "Size (in GB) of the RStudio Package Manager Disk"
+                "description": "Size (in GB) of the RStudio COnnect Disk"
             }
         },
         "subnetId": {
@@ -105,11 +105,11 @@
                 "description": "One or multiple (space separated) versions of R to be installed."
             }
         },
-        "rspmVersion": {
+        "rscVersion": {
             "type": "string",
             "defaultValue": "1.1.2-10",
             "metadata": {
-                "description": "Version of RStudio Package Manager to be installed."
+                "description": "Version of RStudio Connect to be installed."
             }
         }
     },
@@ -135,9 +135,9 @@
             }
         },
         "nicName": "[concat(parameters('clusterName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rspm-nsg')]",
+        "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsc-nsg')]",
         "privateIPAllocationMethod": "Dynamic",
-        "publicIpName": "[concat(parameters('clusterName'), '-rspm-public-ip')]",
+        "publicIpName": "[concat(parameters('clusterName'), '-rsc-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
         }
@@ -234,7 +234,7 @@
         {
             "apiVersion": "[variables('computeAPIVersion')]",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('clusterName'), '-rspm')]",
+            "name": "[concat(parameters('clusterName'), '-rsc')]",
             "location": "[variables('location')]",
             "dependsOn": [
                 "[variables('nicName')]"
@@ -272,7 +272,7 @@
                     "name": "installR",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[concat(parameters('clusterName'), '-rspm')]"
+                        "[concat(parameters('clusterName'), '-rsc')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
@@ -283,11 +283,11 @@
                         },
                         "protectedSettings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts2/install_r.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts2/install_rspm.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts2/bootstrap_rspm.sh"
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsc.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsc.sh"
                             ],
-                            "commandToExecute": "[concat('sudo bash bootstrap_rspm.sh ', '\"', parameters('rspmVersion') ,'\" \"', parameters('rVersion') ,'\"')]"
+                            "commandToExecute": "[concat('sudo bash bootstrap_rsc.sh ', '\"', parameters('rscVersion') ,'\" \"', parameters('rVersion') ,'\"')]"
                         }
                     }
                 }
