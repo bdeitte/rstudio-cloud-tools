@@ -283,6 +283,7 @@
                         },
                         "protectedSettings": {
                             "fileUris": [
+                                "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rspm.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rspm.sh"

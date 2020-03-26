@@ -37,6 +37,9 @@ setcap 'cap_net_bind_service=+ep' /opt/rstudio-pm/bin/rstudio-pm
 # Restart service
 systemctl restart rstudio-pm
 
+chmod +x wait-for-it.sh
+bash ./wait-for-it.sh localhost:80 -t 60
+
 # Create CRAN repo
 /opt/rstudio-pm/bin/rspm create repo --name=cran --description='Access CRAN packages'
 /opt/rstudio-pm/bin/rspm subscribe --repo=cran --source=cran
