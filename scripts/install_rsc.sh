@@ -52,7 +52,7 @@ EOL
 # Restart service
 systemctl restart rstudio-connect
 
-/usr/local/bin/wait-for-it.sh localhost:80 -t 60
+wait-for-it.sh localhost:80 -t 60
 
 USER=admin
 # Create connect admin user

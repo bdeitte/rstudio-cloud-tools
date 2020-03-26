@@ -4,7 +4,7 @@
     "parameters": {
         "clusterName": {
             "type": "string",
-            "defaultValue": "rstudio-pm",
+            "defaultValue": "rstudio-connect",
             "metadata": {
                 "description": "RStudio Connect deployment name"
             }
@@ -132,7 +132,7 @@
             "metadata": {
                 "description": "Version of RStudio Connect to be installed."
             }
-        },
+        }
     },
     "variables": {
         "computeAPIVersion": "2018-06-01",
