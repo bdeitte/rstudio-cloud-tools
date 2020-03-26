@@ -33,7 +33,7 @@
                 "Standard_HC44rs"
             ],
             "metadata": {
-                "description": "The size of the Virtual Machines."
+                "description": "The size of the Virtual Machine"
             }
         },
         "sshUsername": {
@@ -109,7 +109,7 @@
             "type": "string",
             "defaultValue": "1.1.2-10",
             "metadata": {
-                "description": "Version of RSPM to be installed."
+                "description": "Version of RStudio Package Manager to be installed."
             }
         }
     },

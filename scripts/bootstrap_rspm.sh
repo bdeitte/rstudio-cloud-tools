@@ -2,6 +2,8 @@
 
 set -xe
 
+echo "THis is a test"
+
 export RSPM_VERSION=$1
 export R_VERSION=$2
 
