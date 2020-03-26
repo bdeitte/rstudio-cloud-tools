@@ -15,7 +15,7 @@ curl -o /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb https://s3.amazonaws.com/rstud
 gdebi --non-interactive /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb
 rm /tmp/rstudio-pm_${RSPM_VERSION}_amd64.deb
 
-# Config RSPM
+# Configure RSPM
 cat >/etc/rstudio-pm/rstudio-pm.gcfg <<EOL
 ; RStudio Package Manager configuration file
 

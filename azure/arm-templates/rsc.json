@@ -4,9 +4,9 @@
     "parameters": {
         "clusterName": {
             "type": "string",
-            "defaultValue": "rstudio-connect",
+            "defaultValue": "rstudio-pm",
             "metadata": {
-                "description": "RStudio COnnect deployment name"
+                "description": "RStudio Connect deployment name"
             }
         },
         "vmSize": {
@@ -33,7 +33,7 @@
                 "Standard_HC44rs"
             ],
             "metadata": {
-                "description": "The size of the Virtual Machine."
+                "description": "The size of the Virtual Machine"
             }
         },
         "sshUsername": {
@@ -64,7 +64,7 @@
             "type": "int",
             "defaultValue": 100,
             "metadata": {
-                "description": "Size (in GB) of the RStudio COnnect Disk"
+                "description": "Size (in GB) of the RStudio Connect Disk"
             }
         },
         "subnetId": {
@@ -100,18 +100,39 @@
         },
         "rVersion": {
             "type": "string",
-            "defaultValue": "3.6.3",
+            "defaultValue": "3.6.3 3.5.3",
             "metadata": {
-                "description": "One or multiple (space separated) versions of R to be installed."
+                "description": "Version(s) of R to be installed. Can be multiple (space separated)."
+            }
+        },
+        "pythonVersion": {
+            "type": "string",
+            "defaultValue": "3.7.3 2.7.16",
+            "metadata": {
+                "description": "Version(s) of Python. Can be multiple (space separated) and should match Anaconda version."
+            }
+        },
+        "anacondaVersion": {
+            "type": "string",
+            "defaultValue": "Miniconda3-4.7.10 Miniconda2-4.7.12",
+            "metadata": {
+                "description": "Version(s) of Anaconda to be installed. Can be multiple (space separated) and should match Python version."
+            }
+        },
+        "driversVersion": {
+            "type": "string",
+            "defaultValue": "1.6.1",
+            "metadata": {
+                "description": "Version of RStudio Drivers to be installed."
             }
         },
         "rscVersion": {
             "type": "string",
-            "defaultValue": "1.1.2-10",
+            "defaultValue": "1.8.0.4-21",
             "metadata": {
                 "description": "Version of RStudio Connect to be installed."
             }
-        }
+        },
     },
     "variables": {
         "computeAPIVersion": "2018-06-01",
@@ -279,19 +300,27 @@
                         "type": "CustomScript",
                         "typeHandlerVersion": "2.1",
                         "autoUpgradeMinorVersion": true,
-                        "settings": {
-                        },
+                        "settings": {},
                         "protectedSettings": {
                             "fileUris": [
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/wait-for-it.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_python.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsc.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_drivers.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsc.sh"
                             ],
-                            "commandToExecute": "[concat('sudo bash bootstrap_rsc.sh ', '\"', parameters('rscVersion') ,'\" \"', parameters('rVersion') ,'\"')]"
+                            "commandToExecute": "[concat('sudo bash bootstrap_rsc.sh ', '\"', parameters('rscVersion') ,'\" \"', parameters('rVersion') ,'\" \"', parameters('pythonVersion') ,'\" \"', parameters('anacondaVersion') ,'\" \"', parameters('driversVersion') ,'\"')]"
                         }
                     }
                 }
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "rscHost": {
+            "type": "string",
+            "value": "[if(parameters('usePrivateIP'), first(reference(variables('nicName')).ipConfigurations).properties.privateIPAddress, reference(variables('publicIpName'), variables('computeApiVersion')).ipAddress)]"
+        }
+    }
 }

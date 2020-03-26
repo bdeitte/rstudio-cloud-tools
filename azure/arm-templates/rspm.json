@@ -279,8 +279,7 @@
                         "type": "CustomScript",
                         "typeHandlerVersion": "2.1",
                         "autoUpgradeMinorVersion": true,
-                        "settings": {
-                        },
+                        "settings": {},
                         "protectedSettings": {
                             "fileUris": [
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/wait-for-it.sh",
@@ -294,5 +293,11 @@
                 }
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "rspmHost": {
+            "type": "string",
+            "value": "[if(parameters('usePrivateIP'), first(reference(variables('nicName')).ipConfigurations).properties.privateIPAddress, reference(variables('publicIpName'), variables('computeApiVersion')).ipAddress)]"
+        }
+    }
 }
