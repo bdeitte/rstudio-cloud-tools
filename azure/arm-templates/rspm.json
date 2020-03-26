@@ -283,9 +283,9 @@
                         },
                         "protectedSettings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts2/install_r.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts2/install_rspm.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts2/bootstrap_rspm.sh"
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rspm.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rspm.sh"
                             ],
                             "commandToExecute": "[concat('sudo bash bootstrap_rspm.sh ', '\"', parameters('rspmVersion') ,'\" \"', parameters('rVersion') ,'\"')]"
                         }

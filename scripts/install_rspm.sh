@@ -34,11 +34,12 @@ EOL
 # Allow privileged ports
 setcap 'cap_net_bind_service=+ep' /opt/rstudio-pm/bin/rstudio-pm
 
+# Restart service
+systemctl restart rstudio-pm
+
 # Create CRAN repo
 /opt/rstudio-pm/bin/rspm create repo --name=cran --description='Access CRAN packages'
 /opt/rstudio-pm/bin/rspm subscribe --repo=cran --source=cran
 /opt/rstudio-pm/bin/rspm sync --wait
 echo "Listing repos:"
 /opt/rstudio-pm/bin/rspm list
-
-systemctl restart rstudio-pm.service
