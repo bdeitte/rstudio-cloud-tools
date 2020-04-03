@@ -105,6 +105,27 @@
                 "description": "Version(s) of R to be installed. Can be multiple (space separated)."
             }
         },
+        "rscVersion": {
+            "type": "string",
+            "defaultValue": "1.8.0.4-21",
+            "metadata": {
+                "description": "Version of RStudio Connect to be installed."
+            }
+        },
+        "rscUsername": {
+            "type": "string",
+            "defaultValue": "admin",
+            "metadata": {
+                "description": "Version of RStudio Connect to be installed."
+            }
+        },
+        "rscPassword": {
+            "type": "string",
+            "defaultValue": "rstudio",
+            "metadata": {
+                "description": "Version of RStudio Connect to be installed."
+            }
+        },
         "pythonVersion": {
             "type": "string",
             "defaultValue": "3.7.3 2.7.16",
@@ -126,25 +147,11 @@
                 "description": "Version of RStudio Drivers to be installed."
             }
         },
-        "rscVersion": {
+        "rspmURL": {
             "type": "string",
-            "defaultValue": "1.8.0.4-21",
+            "defaultValue": "",
             "metadata": {
-                "description": "Version of RStudio Connect to be installed."
-            }
-        },
-        "rscUsername": {
-            "type": "string",
-            "defaultValue": "admin",
-            "metadata": {
-                "description": "Version of RStudio Connect to be installed."
-            }
-        },
-        "rscPassword": {
-            "type": "string",
-            "defaultValue": "rstudio",
-            "metadata": {
-                "description": "Version of RStudio Connect to be installed."
+                "description": "URL to the RStudio Package Manager"
             }
         }
     },
@@ -324,7 +331,15 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_drivers.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsc.sh"
                             ],
-                            "commandToExecute": "[concat('sudo bash bootstrap_rsc.sh ', '\"', parameters('rscVersion') ,'\" \"', parameters('rscUsername') ,'\" \"', parameters('rscPassword') ,'\" \"', parameters('rVersion') ,'\" \"', parameters('pythonVersion') ,'\" \"', parameters('anacondaVersion') ,'\" \"', parameters('driversVersion') ,'\"')]"
+                            "commandToExecute": "[concat('RSC_VERSION=\"', parameters('rscVersion') ,'\" ',
+                                                         'RSC_USERNAME=\"', parameters('rscUsername') ,'\" ' 
+                                                         'RSC_PASSWORD=\"', parameters('rscPassword') ,'\" ' 
+                                                         'R_VERSION=\"', parameters('rVersion') ,'\" ' 
+                                                         'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ' 
+                                                         'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ' 
+                                                         'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ' 
+                                                         'RSPM_URL=\"', parameters('rspmURL') ,'\" ', 
+                                                         'sudo bash bootstrap_rsc.sh ')]"
                         }
                     }
                 }

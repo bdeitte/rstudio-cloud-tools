@@ -98,18 +98,18 @@
                 "description": "Allocation method for the public ip address (If new is selected)."
             }
         },
-        "rVersion": {
-            "type": "string",
-            "defaultValue": "3.6.3",
-            "metadata": {
-                "description": "One or multiple (space separated) versions of R to be installed."
-            }
-        },
         "rspmVersion": {
             "type": "string",
             "defaultValue": "1.1.2-10",
             "metadata": {
                 "description": "Version of RStudio Package Manager to be installed."
+            }
+        },
+        "rVersion": {
+            "type": "string",
+            "defaultValue": "3.6.3",
+            "metadata": {
+                "description": "One or multiple (space separated) versions of R to be installed."
             }
         }
     },
@@ -287,7 +287,7 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rspm.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rspm.sh"
                             ],
-                            "commandToExecute": "[concat('\"RSPM_VERSION=', parameters('rspmVersion') ,'\" \"R_VERSION=', parameters('rVersion') ,'\"' 'sudo bash bootstrap_rspm.sh ')]"
+                            "commandToExecute": "[concat('RSPM_VERSION=\"', parameters('rspmVersion') ,'\" R_VERSION=\"', parameters('rVersion') , '\"', 'sudo bash bootstrap_rspm.sh')]"
                         }
                     }
                 }
