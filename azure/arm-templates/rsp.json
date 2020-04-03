@@ -4,9 +4,9 @@
     "parameters": {
         "clusterName": {
             "type": "string",
-            "defaultValue": "rstudio-pm",
+            "defaultValue": "rstudio-server-pro",
             "metadata": {
-                "description": "RStudio Package Manager deployment name"
+                "description": "RStudio Server Pro deployment name"
             }
         },
         "vmSize": {
@@ -64,7 +64,7 @@
             "type": "int",
             "defaultValue": 100,
             "metadata": {
-                "description": "Size (in GB) of the RStudio Package Manager Disk"
+                "description": "Size (in GB) of the RStudio Server Pro Disk"
             }
         },
         "subnetId": {
@@ -100,16 +100,51 @@
         },
         "rVersion": {
             "type": "string",
-            "defaultValue": "3.6.3",
+            "defaultValue": "3.6.3 3.5.3",
             "metadata": {
-                "description": "One or multiple (space separated) versions of R to be installed."
+                "description": "Version(s) of R to be installed. Can be multiple (space separated)."
             }
         },
-        "rspmVersion": {
+        "pythonVersion": {
             "type": "string",
-            "defaultValue": "1.1.2-10",
+            "defaultValue": "3.7.3 2.7.16",
             "metadata": {
-                "description": "Version of RStudio Package Manager to be installed."
+                "description": "Version(s) of Python. Can be multiple (space separated) and should match Anaconda version."
+            }
+        },
+        "anacondaVersion": {
+            "type": "string",
+            "defaultValue": "Miniconda3-4.7.10 Miniconda2-4.7.12",
+            "metadata": {
+                "description": "Version(s) of Anaconda to be installed. Can be multiple (space separated) and should match Python version."
+            }
+        },
+        "driversVersion": {
+            "type": "string",
+            "defaultValue": "1.6.1",
+            "metadata": {
+                "description": "Version of RStudio Drivers to be installed."
+            }
+        },
+        "rspVersion": {
+            "type": "string",
+            "defaultValue": "1.2.5033-1",
+            "metadata": {
+                "description": "Version of RStudio Server Pro to be installed."
+            }
+        },
+        "rspUsername": {
+            "type": "string",
+            "defaultValue": "admin",
+            "metadata": {
+                "description": "Version of RStudio Server Pro to be installed."
+            }
+        },
+        "rspPassword": {
+            "type": "string",
+            "defaultValue": "rstudio",
+            "metadata": {
+                "description": "Version of RStudio Server Pro to be installed."
             }
         }
     },
@@ -135,9 +170,9 @@
             }
         },
         "nicName": "[concat(parameters('clusterName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rspm-nsg')]",
+        "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsp-nsg')]",
         "privateIPAllocationMethod": "Dynamic",
-        "publicIpName": "[concat(parameters('clusterName'), '-rspm-public-ip')]",
+        "publicIpName": "[concat(parameters('clusterName'), '-rsp-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
         }
@@ -234,7 +269,7 @@
         {
             "apiVersion": "[variables('computeAPIVersion')]",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('clusterName'), '-rspm')]",
+            "name": "[concat(parameters('clusterName'), '-rsp')]",
             "location": "[variables('location')]",
             "dependsOn": [
                 "[variables('nicName')]"
@@ -272,7 +307,7 @@
                     "name": "installR",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[concat(parameters('clusterName'), '-rspm')]"
+                        "[concat(parameters('clusterName'), '-rsp')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
@@ -284,10 +319,12 @@
                             "fileUris": [
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/wait-for-it.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rspm.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rspm.sh"
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_python.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsp.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_drivers.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsp.sh"
                             ],
-                            "commandToExecute": "[concat('\"RSPM_VERSION=', parameters('rspmVersion') ,'\" \"R_VERSION=', parameters('rVersion') ,'\"' 'sudo bash bootstrap_rspm.sh ')]"
+                            "commandToExecute": "[concat('sudo bash bootstrap_rsp.sh ', '\"', parameters('rspVersion') ,'\" \"', parameters('rspUsername') ,'\" \"', parameters('rspPassword') ,'\" \"', parameters('rVersion') ,'\" \"', parameters('pythonVersion') ,'\" \"', parameters('anacondaVersion') ,'\" \"', parameters('driversVersion') ,'\"')]"
                         }
                     }
                 }
@@ -295,7 +332,7 @@
         }
     ],
     "outputs": {
-        "rspmHost": {
+        "rspHost": {
             "type": "string",
             "value": "[if(parameters('usePrivateIP'), first(reference(variables('nicName')).ipConfigurations).properties.privateIPAddress, reference(variables('publicIpName'), variables('computeApiVersion')).ipAddress)]"
         }
