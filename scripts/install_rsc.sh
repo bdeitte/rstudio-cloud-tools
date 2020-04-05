@@ -50,10 +50,10 @@ Executable = /opt/python/2.7.16/bin/python
 EOL
 
 
-if [[ -z "${RSPM_URL}" ]]; then
-    sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "RSPM"\]|' /etc/rstudio-connect/rstudio-connect.gcfg
+if [[ ! -z "${RSPM_ADDRESS}" ]]; then
+    sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' /etc/rstudio-connect/rstudio-connect.gcfg
     sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' /etc/rstudio-connect/rstudio-connect.gcfg
-    sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" /etc/rstudio-connect/rstudio-connect.gcfg
+    sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = ${RSPM_ADDRESS}/cran/__linux__/bionic/latest|" /etc/rstudio-connect/rstudio-connect.gcfg
 fi
 
 # Restart service
