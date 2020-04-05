@@ -4,9 +4,9 @@ set -xe
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [[ -z "${RSP_VERSION}" ]]; then
-    RSP_VERSION=1.2.5033-1
-fi
+export RSP_VERSION=${RSP_VERSION:-1.2.5033-1}
+export RSP_USERNAME=${RSP_USERNAME:-rstudio}
+export RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
 
 # Use the first version of R and Python on the list as the default ones
 for R_VER in ${R_VERSION}
@@ -14,7 +14,6 @@ do
     break;
 done
 
-# Use the first version of R and Python on the list as the default ones
 for PYTHON_VER in ${PYTHON_VERSION}
 do
     break;
@@ -90,14 +89,14 @@ Environment: PATH=/opt/R/${R_VER}/bin:/opt/python/${PYTHON_VER}/bin:/usr/local/s
 EOL
 
 # Create RSP user
-adduser --disabled-password --gecos "" $USERNAME
+adduser --disabled-password --gecos "" $RSP_USERNAME
 
 # Set password
-echo "$USERNAME:$PASSWORD" | chpasswd
+echo "$RSP_USERNAME:$RSP_PASSWORD" | chpasswd
 groupadd rstudio-team
-usermod -aG rstudio-team $USERNAME
+usermod -aG rstudio-team $RSP_USERNAME
 # add default user to sudoers with no password
-echo "$USERNAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+echo "$RSP_USERNAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
 RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
