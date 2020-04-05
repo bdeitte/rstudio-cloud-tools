@@ -107,16 +107,16 @@
         },
         "rspUsername": {
             "type": "string",
-            "defaultValue": "admin",
+            "defaultValue": "rstudio",
             "metadata": {
-                "description": "Version of RStudio Server Pro to be installed."
+                "description": "Default user to be created."
             }
         },
         "rspPassword": {
             "type": "string",
             "defaultValue": "rstudio",
             "metadata": {
-                "description": "Version of RStudio Server Pro to be installed."
+                "description": "Default password for the user to be created."
             }
         },
         "rVersion": {
