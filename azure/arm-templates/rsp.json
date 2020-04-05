@@ -98,6 +98,27 @@
                 "description": "Allocation method for the public ip address (If new is selected)."
             }
         },
+        "rspVersion": {
+            "type": "string",
+            "defaultValue": "1.2.5033-1",
+            "metadata": {
+                "description": "Version of RStudio Server Pro to be installed."
+            }
+        },
+        "rspUsername": {
+            "type": "string",
+            "defaultValue": "admin",
+            "metadata": {
+                "description": "Version of RStudio Server Pro to be installed."
+            }
+        },
+        "rspPassword": {
+            "type": "string",
+            "defaultValue": "rstudio",
+            "metadata": {
+                "description": "Version of RStudio Server Pro to be installed."
+            }
+        },
         "rVersion": {
             "type": "string",
             "defaultValue": "3.6.3 3.5.3",
@@ -126,25 +147,18 @@
                 "description": "Version of RStudio Drivers to be installed."
             }
         },
-        "rspVersion": {
+        "rspmAddress": {
             "type": "string",
-            "defaultValue": "1.2.5033-1",
+            "defaultValue": "",
             "metadata": {
-                "description": "Version of RStudio Server Pro to be installed."
+                "description": "URL Address to RStudio Package Manager (e.g. http://myrspm.com/)"
             }
         },
-        "rspUsername": {
+        "rscAddress": {
             "type": "string",
-            "defaultValue": "admin",
+            "defaultValue": "",
             "metadata": {
-                "description": "Version of RStudio Server Pro to be installed."
-            }
-        },
-        "rspPassword": {
-            "type": "string",
-            "defaultValue": "rstudio",
-            "metadata": {
-                "description": "Version of RStudio Server Pro to be installed."
+                "description": "URL Address to RStudio Connect (e.g. http://myrsc.com/)"
             }
         }
     },
@@ -322,9 +336,10 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_python.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsp.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_drivers.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_jupyter.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsp.sh"
                             ],
-                            "commandToExecute": "[concat('sudo bash bootstrap_rsp.sh ', '\"', parameters('rspVersion') ,'\" \"', parameters('rspUsername') ,'\" \"', parameters('rspPassword') ,'\" \"', parameters('rVersion') ,'\" \"', parameters('pythonVersion') ,'\" \"', parameters('anacondaVersion') ,'\" \"', parameters('driversVersion') ,'\"')]"
+                            "commandToExecute": "[concat('sudo RSP_VERSION=\"', parameters('rspVersion') ,'\" ', 'RSP_USERNAME=\"', parameters('rspUsername') ,'\" ', 'RSP_PASSWORD=\"', parameters('rspPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'RSC_ADDRESS=\"', parameters('rscAddress') ,'\" ', 'bash bootstrap_rsp.sh')]"
                         }
                     }
                 }

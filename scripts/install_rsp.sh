@@ -101,6 +101,17 @@ usermod -aG rstudio-team $USERNAME
 # add default user to sudoers with no password
 echo "$USERNAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
+RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
+
+if [[ ! -z "${RSPM_ADDRESS}" ]]; then
+	sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_ADDRESS}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
+fi
+
+if [[ ! -z "${RSPM_ADDRESS}" ]]; then
+	sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_ADDRESS}|" $RSESSION_CONFIG_FILE
+fi
+
 # enable and start services
 systemctl enable rstudio-server
 systemctl enable rstudio-launcher
