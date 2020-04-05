@@ -287,7 +287,7 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rspm.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rspm.sh"
                             ], 
-                            "commandToExecute": "[concat('RSPM_VERSION=\"', parameters('rspmVersion') ,'\" R_VERSION=\"', parameters('rVersion'), '\" ', 'sudo bash bootstrap_rspm.sh')]"
+                            "commandToExecute": "[concat('sudo RSPM_VERSION=\"', parameters('rspmVersion') ,'\" R_VERSION=\"', parameters('rVersion'), '\" ', 'bash bootstrap_rspm.sh')]"
                         }
                     }
                 }

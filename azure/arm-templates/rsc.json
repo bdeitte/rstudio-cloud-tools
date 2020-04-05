@@ -331,7 +331,7 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsc.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsc.sh"
                             ],
-                            "commandToExecute": "[concat('RSC_VERSION=\"', parameters('rscVersion') ,'\" ', 'RSC_USERNAME=\"', parameters('rscUsername') ,'\" ', 'RSC_PASSWORD=\"', parameters('rscPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'sudo bash bootstrap_rsc.sh')]"
+                            "commandToExecute": "[concat('sudo RSC_VERSION=\"', parameters('rscVersion') ,'\" ', 'RSC_USERNAME=\"', parameters('rscUsername') ,'\" ', 'RSC_PASSWORD=\"', parameters('rscPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'bash bootstrap_rsc.sh')]"
                         }
                     }
                 }
