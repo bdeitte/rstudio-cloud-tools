@@ -4,9 +4,7 @@ set -xe
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [[ -z "${R_VERSION}" ]]; then
-    R_VERSION=3.6.3
-fi
+export R_VERSION=${R_VERSION:-3.6.3}
 
 mkdir -p /opt/R
 

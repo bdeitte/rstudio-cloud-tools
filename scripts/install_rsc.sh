@@ -4,9 +4,9 @@ set -xe
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [[ -z "${RSC_VERSION}" ]]; then
-    RSC_VERSION=1.8.0.4-21
-fi
+export RSC_VERSION=${RSC_VERSION:-1.8.0.4-21}
+export RSC_USERNAME=${RSC_USERNAME:-rstudio}
+export RSC_PASSWORD=${RSC_PASSWORD:-rstudio}
 
 # Install RSC
 apt-get update

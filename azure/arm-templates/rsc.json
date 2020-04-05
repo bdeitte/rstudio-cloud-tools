@@ -107,7 +107,7 @@
         },
         "rscUsername": {
             "type": "string",
-            "defaultValue": "admin",
+            "defaultValue": "rstudio",
             "metadata": {
                 "description": "Version of RStudio Connect to be installed."
             }
