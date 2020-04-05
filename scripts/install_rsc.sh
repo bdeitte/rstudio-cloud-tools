@@ -62,4 +62,4 @@ systemctl restart rstudio-connect
 bash ./wait-for-it.sh localhost:80 -t 60
 
 # Create connect admin user
-curl -i -X POST -d "{\"email\": \"rstudio@example.com\", \"username\": \"${USER}\", \"password\": \"${PASSWORD}\"}" localhost:80/__api__/v1/users
+curl -i -X POST -d "{\"email\": \"rstudio@example.com\", \"username\": \"${RSC_USERNAME}\", \"password\": \"${RSC_PASSWORD}\"}" localhost:80/__api__/v1/users
