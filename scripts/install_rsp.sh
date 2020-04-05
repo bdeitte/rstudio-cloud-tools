@@ -23,7 +23,6 @@ done
 # Install RSP
 apt-get update
 apt-get install -y gdebi-core
-curl -O
 
 curl -o /tmp/rstudio-server-pro-${RSP_VERSION}-amd64.deb https://download2.rstudio.org/server/trusty/amd64/rstudio-server-pro-${RSP_VERSION}-amd64.deb
 gdebi --non-interactive /tmp/rstudio-server-pro-${RSP_VERSION}-amd64.deb
