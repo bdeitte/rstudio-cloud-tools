@@ -4,7 +4,6 @@ set -xe
 
 export PYTHON_VERSION=${PYTHON_VERSION:-3.7.3 2.7.16}
 export ANACONDA_VERSION=${ANACONDA_VERSION:-Miniconda3-4.7.10 Miniconda2-4.7.12}
-export PREFIX_NAME=${PREFIX_NAME:-$PYTHON_VERSION}
 export URL_PATH=${URL_PATH:-miniconda}
 export ANACONDA_REPO=${ANACONDA_REPO:-https://repo.anaconda.com}
 

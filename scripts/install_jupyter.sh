@@ -24,7 +24,7 @@ mkdir -p /opt/python
 
 echo "Installing Python version $PY_VER (Anaconda version $ANA_VER)"
 curl -o /tmp/$ANA_VER-Linux-x86_64.sh $ANACONDA_REPO/$URL_PATH/$ANA_VER-Linux-x86_64.sh
-bash /tmp/$ANA_VER-Linux-x86_64.sh -b -p /opt/python/$PY_VER
+bash /tmp/$ANA_VER-Linux-x86_64.sh -b -p /opt/python/$PREFIX_NAME
 rm /tmp/$ANA_VER-Linux-x86_64.sh
 
 echo "Verify Python $PY_VER"
