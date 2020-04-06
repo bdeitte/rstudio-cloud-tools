@@ -88,13 +88,12 @@ JobType: any
 Environment: PATH=/opt/R/${R_VER}/bin:/opt/python/${PYTHON_VER}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 EOL
 
-# Create RSP user
-adduser --disabled-password --gecos "" $RSP_USERNAME
-
-# Set password
-echo "$RSP_USERNAME:$RSP_PASSWORD" | chpasswd
+# Create rstudio-team group
 groupadd rstudio-team
-usermod -aG rstudio-team $RSP_USERNAME
+GROUP_ID=$(cut -d: -f3 < <(getent group rstudio-team))
+# Create admin user
+adduser --disabled-password --gecos "" --gid $GROUP_ID $RSP_USERNAME
+echo "$RSP_USERNAME:$RSP_PASSWORD" | chpasswd
 # add default user to sudoers with no password
 echo "$RSP_USERNAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
