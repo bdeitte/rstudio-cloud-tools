@@ -183,7 +183,7 @@
                 ]
             }
         },
-        "nicName": "[concat(parameters('clusterName'), '-nic')]",
+        "nicName": "[concat(parameters('clusterName'), '-rsp-nic')]",
         "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsp-nsg')]",
         "privateIPAllocationMethod": "Dynamic",
         "publicIpName": "[concat(parameters('clusterName'), '-rsp-public-ip')]",

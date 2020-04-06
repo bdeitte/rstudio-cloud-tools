@@ -176,7 +176,7 @@
                 ]
             }
         },
-        "nicName": "[concat(parameters('clusterName'), '-nic')]",
+        "nicName": "[concat(parameters('clusterName'), '-rsc-nic')]",
         "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsc-nsg')]",
         "privateIPAllocationMethod": "Dynamic",
         "publicIpName": "[concat(parameters('clusterName'), '-rsc-public-ip')]",
