@@ -107,7 +107,7 @@
         },
         "rspUsername": {
             "type": "string",
-            "defaultValue": "rstudio",
+            "defaultValue": "admin",
             "metadata": {
                 "description": "Default user to be created."
             }
