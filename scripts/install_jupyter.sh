@@ -27,11 +27,11 @@ curl -o /tmp/$ANA_VER-Linux-x86_64.sh $ANACONDA_REPO/$URL_PATH/$ANA_VER-Linux-x8
 bash /tmp/$ANA_VER-Linux-x86_64.sh -b -p /opt/python/$PREFIX_NAME
 rm /tmp/$ANA_VER-Linux-x86_64.sh
 
-echo "Verify Python $PY_VER"
-/opt/python/$PY_VER/bin/python --version
+echo "Verify Python $PREFIX_NAME"
+/opt/python/$PREFIX_NAME/bin/python --version
 
-echo "Install virtualenv Python $PY_VER"
-/opt/python/$PY_VER/bin/pip install -U pip virtualenv==16.1.0
+echo "Install virtualenv Python $PREFIX_NAME"
+/opt/python/$PREFIX_NAME/bin/pip install -U pip virtualenv==16.1.0
 
 echo "Install Jupyter"
-/opt/python/$PY_VER/bin/pip install -U jupyter jupyterlab rsp_jupyter rsconnect_jupyter
+/opt/python/$PREFIX_NAME/bin/pip install -U jupyter jupyterlab rsp_jupyter rsconnect_jupyter

@@ -38,7 +38,6 @@ cat >/etc/rstudio/rserver.conf <<EOL
 # Server Configuration File
 
 www-port=80
-
 server-project-sharing=0
 server-health-check-enabled=1
 admin-enabled=1
@@ -111,5 +110,5 @@ fi
 # enable and start services
 systemctl enable rstudio-server
 systemctl enable rstudio-launcher
-systemctl start rstudio-server
-systemctl start rstudio-launcher
+systemctl restart rstudio-server
+systemctl restart rstudio-launcher
