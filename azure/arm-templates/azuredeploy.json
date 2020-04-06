@@ -128,16 +128,23 @@
             "description": "Select to use the private ip address of the subnet for RStudio access."
         }
     },
-    "rspmVersion": {
+    "rspVersion": {
         "type": "string",
-        "defaultValue": "1.1.2-10",
+        "defaultValue": "1.2.5033-1",
         "metadata": {
-            "description": "Version of RStudio Package Manager to be installed."
+            "description": "Version of RStudio Server Pro to be installed."
         }
     },
     "rscVersion": {
         "type": "string",
         "defaultValue": "1.8.2-10",
+        "metadata": {
+            "description": "Version of RStudio Package Manager to be installed."
+        }
+    },
+    "rspmVersion": {
+        "type": "string",
+        "defaultValue": "1.1.2-10",
         "metadata": {
             "description": "Version of RStudio Package Manager to be installed."
         }
@@ -257,6 +264,36 @@
            "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"}
         }
       }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "name": "[concat(parameters('clusterName'), '-rsp-deployment')]",
+      "resourceGroup": "[variables('rgName')]",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+           "uri": "[concat(variables('baseURI'), 'rsp.json')]",
+           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+           "clusterName": {"value": "[parameters('clusterName')]"},
+           "vmSize":  {"value": "[parameters('rspVmSize')]"},
+           "sshUsername": {"value": "[parameters('sshUsername')]"},
+           "authType": {"value": "[parameters('authType')]"},
+           "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
+           "subnetId": {"value": "[if(equals(variables('virtualNetworkNewOrExisting'), 'new'), resourceId(variables('rgName'), 'Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnetName')), parameters('useExistingSubnet'))]"},
+           "rspVersion": {"value": "[parameters('rspVersion')]"},
+           "rVersion": {"value": "[parameters('rVersion')]"},
+           "pythonVersion": {"value": "[parameters('pythonVersion')]"},
+           "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
+           "driversVersion": {"value": "[parameters('driversVersion')]"},
+           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
+           "rscAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"}
+        }
+      }
     }
   ],
   "outputs": {
@@ -266,7 +303,11 @@
       },
       "rscHost": {
         "type": "string",
-        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rspmHost.value)]"
+        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"
+      },
+      "rspHost": {
+        "type": "string",
+        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspHost.value)]"
       }
   }
 }
