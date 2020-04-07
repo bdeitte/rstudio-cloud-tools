@@ -66,32 +66,6 @@ EOL
 
 # Install R packages
 
-install_r_packages() {
-	# given a one-per-line file of R packages, parses the file and installs those R
-	# packages to the provided (or default) R installation.
-
-	set -xe
-
-	# passing a r binary as second arg will install with that R version
-	local R_BIN=${2:-"/usr/lib/R/bin/R"}
-
-	# passing a CRAN repo as third arg will install from that repo
-	local CRAN_REPO=${3:-"https://cran.rstudio.com"}
-
-	# loop and create an R matrix-style string of packages
-	local r_packages=""
-	while read line; do
-	# don't append empty lines
-	if [ ! -z "$line" ]; then
-	  r_packages="${r_packages} \"${line}\","
-	fi
-	done < $1
-
-	# install packages enumerated in the file to the R binary passed
-	pp "Installing R packages for $R_BIN"
-	$R_BIN --slave -e "install.packages(c(${r_packages%?}), repos = \"${CRAN_REPO}\")" > /dev/null
-}
-
 cat >/tmp/r_pkgs.txt <<EOL
 tidyverse
 rmarkdown
@@ -108,6 +82,32 @@ RCurl
 tensorflow
 keras
 EOL
+
+install_r_packages() {
+	# given a one-per-line file of R packages, parses the file and installs those R
+	# packages to the provided (or default) R installation.
+
+	set -xe
+
+	# passing a r binary as second arg will install with that R version
+	local DEPS_FILE=${1}
+	local R_BIN=${2:-"/usr/lib/R/bin/R"}
+
+	# passing a CRAN repo as third arg will install from that repo
+	local CRAN_REPO=${3:-"https://cran.rstudio.com"}
+
+	# loop and create an R matrix-style string of packages
+	local r_packages=""
+	while read line; do
+		# don't append empty lines
+		if [ ! -z "$line" ]; then
+		  r_packages="${r_packages} \"${line}\","
+		fi
+	done < $DEPS_FILE
+
+	# install packages enumerated in the file to the R binary passed
+	$R_BIN --slave -e "install.packages(c(${r_packages%?}), repos = \"${CRAN_REPO}\")" > /dev/null
+}
 
 install_r_packages /tmp/r_pkgs.txt /opt/R/${MAIN_R_VER}/bin/R "http://demo.rstudiopm.com/all/__linux__/bionic/latest"
 
