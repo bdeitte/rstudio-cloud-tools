@@ -303,11 +303,11 @@
       },
       "rspDefaultUser": {
         "type": "string",
-        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment').outputs.rspDefaultUsername.value)]"
+        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspDefaultUsername.value]"
       },
       "rspDefaultPass": {
         "type": "string",
-        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment').outputs.rspDefaultPassword.value)]"
+        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspDefaultPassword.value]"
       },
       "rscHost": {
         "type": "string",
@@ -315,11 +315,11 @@
       },
       "rscDefaultUser": {
         "type": "string",
-        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment').outputs.rscDefaultUsername.value)]"
+        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscDefaultUsername.value]"
       },
       "rscDefaultPass": {
         "type": "string",
-        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment').outputs.rscDefaultPassword.value)]"
+        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscDefaultPassword.value]"
       },
       "rspmHost": {
         "type": "string",
