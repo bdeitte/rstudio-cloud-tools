@@ -9,15 +9,108 @@ export RSP_USERNAME=${RSP_USERNAME:-rstudio}
 export RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
 
 # Use the first version of R and Python on the list as the default ones
-for R_VER in ${R_VERSION}
+for MAIN_R_VER in ${R_VERSION}
 do
     break;
 done
 
-for PYTHON_VER in ${PYTHON_VERSION}
+for MAIN_PYTHON_VER in ${PYTHON_VERSION}
 do
     break;
 done
+
+# Remove default "jupyter" kernel: don't show this environment as a kernel
+/opt/python/jupyter/bin/jupyter kernelspec remove python3 -f
+/opt/python/jupyter/bin/pip uninstall -y ipykernel
+
+
+# Install and configure kernels
+for PY_VER in ${PYTHON_VERSION}
+do
+    /opt/python/${PY_VER}/bin/pip install ipykernel
+    /opt/python/${PY_VER}/bin/python -m ipykernel install --name python"${PY_VER:0:1}" --display-name "Python ${PY_VER[i]}"
+done
+
+# Install Python packages
+
+cat >/tmp/requirements.txt <<EOL
+altair
+beautifulsoup4
+cloudpickle
+cython
+dask
+gensim
+ipykernel
+matplotlib
+nltk
+numpy
+pandas
+pillow
+pyarrow
+requests
+scipy
+scikit-image
+scikit-learn
+scrapy
+seaborn
+spacy
+sqlalchemy
+statsmodels
+tensorflow==1.15.0
+keras
+xgboost
+rsconnect_jupyter
+EOL
+
+/opt/python/${MAIN_PYTHON_VER}/bin/pip install -r /tmp/requirements.txt
+
+# Install R packages
+
+install_r_packages() {
+	# given a one-per-line file of R packages, parses the file and installs those R
+	# packages to the provided (or default) R installation.
+
+	set -xe
+
+	# passing a r binary as second arg will install with that R version
+	local R_BIN=${2:-"/usr/lib/R/bin/R"}
+
+	# passing a CRAN repo as third arg will install from that repo
+	local CRAN_REPO=${3:-"https://cran.rstudio.com"}
+
+	# loop and create an R matrix-style string of packages
+	local r_packages=""
+	while read line; do
+	# don't append empty lines
+	if [ ! -z "$line" ]; then
+	  r_packages="${r_packages} \"${line}\","
+	fi
+	done < $1
+
+	# install packages enumerated in the file to the R binary passed
+	pp "Installing R packages for $R_BIN"
+	$R_BIN --slave -e "install.packages(c(${r_packages%?}), repos = \"${CRAN_REPO}\")" > /dev/null
+}
+
+cat >/tmp/r_pkgs.txt <<EOL
+tidyverse
+rmarkdown
+shiny
+tidymodels
+data.table
+packrat
+odbc
+sparklyr
+reticulate
+rsconnect
+devtools
+RCurl
+tensorflow
+keras
+EOL
+
+install_r_packages /tmp/r_pkgs.txt /opt/R/${MAIN_R_VER}/bin/R "http://demo.rstudiopm.com/all/__linux__/bionic/latest"
+
 
 # Install RSP
 apt-get update
@@ -29,7 +122,7 @@ rm /tmp/rstudio-server-pro-${RSP_VERSION}-amd64.deb
 # Set global R and python version
 cat >/etc/profile.d/rstudio.sh <<EOL
 export SHELL=/bin/bash
-export PATH=/opt/R/${R_VER}/bin:/opt/python/${PYTHON_VER}/bin:$PATH
+export PATH=/opt/R/${MAIN_R_VER}/bin:/opt/python/${MAIN_PYTHON_VER}/bin:$PATH
 EOL
 
 # Config RSP and Launcher -----------------------------------------------------
@@ -84,7 +177,7 @@ EOL
 
 cat >/etc/rstudio/launcher-env <<EOL
 JobType: any
-Environment: PATH=/opt/R/${R_VER}/bin:/opt/python/${PYTHON_VER}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Environment: PATH=/opt/R/${MAIN_R_VER}/bin:/opt/python/${MAIN_PYTHON_VER}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 EOL
 
 # Create rstudio-team group
