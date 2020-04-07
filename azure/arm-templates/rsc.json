@@ -342,6 +342,14 @@
         "rscHost": {
             "type": "string",
             "value": "[if(parameters('usePrivateIP'), first(reference(variables('nicName')).ipConfigurations).properties.privateIPAddress, reference(variables('publicIpName'), variables('computeApiVersion')).ipAddress)]"
+        },
+        "rscDefaultUser": {
+            "type": "string",
+            "value": "[parameters('rscUsername')]"
+        },
+        "rscDefaultPass": {
+            "type": "string",
+            "value": "[parameters('rscPassword')]"
         }
     }
 }

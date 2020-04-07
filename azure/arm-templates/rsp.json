@@ -349,6 +349,14 @@
         "rspHost": {
             "type": "string",
             "value": "[if(parameters('usePrivateIP'), first(reference(variables('nicName')).ipConfigurations).properties.privateIPAddress, reference(variables('publicIpName'), variables('computeApiVersion')).ipAddress)]"
+        },
+        "rspDefaultUser": {
+            "type": "string",
+            "value": "[parameters('rspUsername')]"
+        },
+        "rspDefaultPass": {
+            "type": "string",
+            "value": "[parameters('rspPassword')]"
         }
     }
 }
