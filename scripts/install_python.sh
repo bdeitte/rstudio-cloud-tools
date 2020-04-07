@@ -1,31 +1,24 @@
 #!/bin/bash
-
 set -xe
 
-export PYTHON_VERSION=${PYTHON_VERSION:-3.7.3 2.7.16}
-export ANACONDA_VERSION=${ANACONDA_VERSION:-Miniconda3-4.7.10 Miniconda2-4.7.12}
-export URL_PATH=${URL_PATH:-miniconda}
-export ANACONDA_REPO=${ANACONDA_REPO:-https://repo.anaconda.com}
+PYTHON_VERSION=${PYTHON_VERSION:-3.7.3}
+ANACONDA_VERSION=${ANACONDA_VERSION:-Miniconda3-4.7.10}
+PREFIX_NAME=${PREFIX_NAME:-$PYTHON_VERSION}
+ANACONDA_REPO=${ANACONDA_REPO:-https://repo.anaconda.com}
+URL_PATH=${URL_PATH:-miniconda}
 
 mkdir -p /opt/python
 
-PY_VERS=($(echo $PYTHON_VERSION | tr " " "\n"))
-ANA_VERS=($(echo $ANACONDA_VERSION | tr " " "\n"))
+echo "Installing Python version $PYTHON_VERSION (Anaconda version $ANACONDA_VERSION)"
+curl -o /tmp/$ANACONDA_VERSION-Linux-x86_64.sh $ANACONDA_REPO/$URL_PATH/$ANACONDA_VERSION-Linux-x86_64.sh
+bash /tmp/$ANACONDA_VERSION-Linux-x86_64.sh -b -p /opt/python/$PREFIX_NAME
+rm /tmp/$ANACONDA_VERSION-Linux-x86_64.sh
 
-echo $PY_VERS
+echo "Verify Python $PREFIX_NAME"
+/opt/python/$PREFIX_NAME/bin/python --version
 
-for index in ${!PY_VERS[*]}; do
-    PY_VER=${PY_VERS[$index]}
-    ANA_VER=${ANA_VERS[$index]}
+echo "Install virtualenv Python $PREFIX_NAME"
+/opt/python/$PREFIX_NAME/bin/pip install -U pip virtualenv==16.1.0
 
-    echo "Installing Python version $PY_VER (Anaconda version $ANA_VER)"
-    curl -o /tmp/$ANA_VER-Linux-x86_64.sh $ANACONDA_REPO/$URL_PATH/$ANA_VER-Linux-x86_64.sh
-    bash /tmp/$ANA_VER-Linux-x86_64.sh -b -p /opt/python/$PY_VER
-    rm /tmp/$ANA_VER-Linux-x86_64.sh
-
-    echo "Verify Python $PY_VER"
-    /opt/python/$PY_VER/bin/python --version
-
-    echo "Install virtualenv Python $PY_VER"
-    /opt/python/$PY_VER/bin/pip install -U pip virtualenv==16.1.0
-done
+echo "Install Jupyter"
+/opt/python/$PREFIX_NAME/bin/pip install -U jupyter jupyterlab rsp_jupyter rsconnect_jupyter ipykernel

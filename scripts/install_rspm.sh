@@ -4,7 +4,7 @@ set -xe
 
 export DEBIAN_FRONTEND=noninteractive
 
-export RSPM_VERSION=${RSPM_VERSION:-1.1.2-10}
+RSPM_VERSION=${RSPM_VERSION:-1.1.2-10}
 
 # Install RSPM
 apt-get update

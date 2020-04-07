@@ -121,23 +121,23 @@
         },
         "rVersion": {
             "type": "string",
-            "defaultValue": "3.6.3 3.5.3",
+            "defaultValue": "3.6.3",
             "metadata": {
-                "description": "Version(s) of R to be installed. Can be multiple (space separated)."
+                "description": "Version of R to be installed."
             }
         },
         "pythonVersion": {
             "type": "string",
-            "defaultValue": "3.7.3 2.7.16",
+            "defaultValue": "3.7.3",
             "metadata": {
-                "description": "Version(s) of Python. Can be multiple (space separated) and should match Anaconda version."
+                "description": "Version of Python. Should match Anaconda version."
             }
         },
         "anacondaVersion": {
             "type": "string",
-            "defaultValue": "Miniconda3-4.7.10 Miniconda2-4.7.12",
+            "defaultValue": "Miniconda3-4.7.10",
             "metadata": {
-                "description": "Version(s) of Anaconda to be installed. Can be multiple (space separated) and should match Python version."
+                "description": "Version of Anaconda to be installed. Should match Python version."
             }
         },
         "driversVersion": {
@@ -336,7 +336,6 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_python.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsp.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_drivers.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_jupyter.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsp.sh"
                             ],
                             "commandToExecute": "[concat('sudo RSP_VERSION=\"', parameters('rspVersion') ,'\" ', 'RSP_USERNAME=\"', parameters('rspUsername') ,'\" ', 'RSP_PASSWORD=\"', parameters('rspPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'RSC_ADDRESS=\"', parameters('rscAddress') ,'\" ', 'bash bootstrap_rsp.sh')]"

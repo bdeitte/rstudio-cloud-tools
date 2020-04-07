@@ -109,7 +109,7 @@
             "type": "string",
             "defaultValue": "3.6.3",
             "metadata": {
-                "description": "One or multiple (space separated) versions of R to be installed."
+                "description": "Version of R to be installed."
             }
         }
     },
