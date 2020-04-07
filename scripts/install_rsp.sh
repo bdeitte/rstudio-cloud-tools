@@ -9,6 +9,7 @@ RSP_USERNAME=${RSP_USERNAME:-rstudio}
 RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
 R_VERSION=${R_VERSION:-3.6.3}
 PYTHON_VERSION=${PYTHON_VERSION:-3.7.3}
+TF_VERSION=${TF_VERSION:-1.15.0}
 
 # Kernels: Remove default "jupyter" kernel, don't show this environment as a kernel
 /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f
@@ -96,6 +97,26 @@ install_r_packages() {
 }
 
 install_r_packages /tmp/r_pkgs.txt /opt/R/${R_VERSION}/bin/R "http://demo.rstudiopm.com/all/__linux__/bionic/latest"
+
+
+# Disable HTTP warning for this installation of R
+cat << EOF >> /opt/R/$R_VERSION/lib/R/etc/Renviron.site
+RSTUDIO_DISABLE_SECURE_DOWNLOAD_WARNING=1
+EOF
+
+# Install TF
+
+# From https://www.tensorflow.org/install/lang_c
+curl -o /usr/local/src/libtensorflow.tar.gz https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-{$TF_VERSION}.tar.gz -o /usr/local/src/libtensorflow.tar.gz
+mkdir -p /usr/local/tensorflow
+tar -C /usr/local/tensorflow -xzf /usr/local/src/libtensorflow.tar.gz
+
+mkdir -p /etc/systemd/system/rstudio-connect.service.d
+cat << 'EOF' > /etc/systemd/system/rstudio-connect.service.d/env.conf
+[Service]
+Environment="LIBRARY_PATH=/usr/local/tensorflow/lib"
+Environment="LD_LIBRARY_PATH=/usr/local/tensorflow/lib"
+EOF
 
 # Install RSP
 apt-get update

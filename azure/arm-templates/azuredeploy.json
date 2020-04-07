@@ -291,23 +291,47 @@
            "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
            "driversVersion": {"value": "[parameters('driversVersion')]"},
            "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
-           "rscAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"}
+           "rscAddress": {"value": "[concat(reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"}
         }
       }
     }
   ],
   "outputs": {
-      "rspmHost": {
+      "rspHost": {
         "type": "string",
-        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"
+        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspHost.value)]"
+      },
+      "rspDefaultUser": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment').parameters.rspUsername.value)]"
+      },
+      "rspDefaultUser": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment').parameters.rspPassword.value)]"
       },
       "rscHost": {
         "type": "string",
         "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"
       },
-      "rspHost": {
+      "rscDefaultUser": {
         "type": "string",
-        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspHost.value)]"
-      }
+        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment').parameters.rscUsername.value)]"
+      },
+      "rscDefaultUser": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment').parameters.rscPassword.value)]"
+      },
+      "rspmHost": {
+        "type": "string",
+        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"
+      },
+      "rspmDefaultUser": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rspm-deployment').parameters.rspmUsername.value)]"
+      },
+      "rspmDefaultUser": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rspm-deployment').parameters.rspmPassword.value)]"
+      },
   }
 }
