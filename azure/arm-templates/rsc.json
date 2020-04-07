@@ -343,11 +343,11 @@
             "type": "string",
             "value": "[if(parameters('usePrivateIP'), first(reference(variables('nicName')).ipConfigurations).properties.privateIPAddress, reference(variables('publicIpName'), variables('computeApiVersion')).ipAddress)]"
         },
-        "rscDefaultUser": {
+        "rscDefaultUsername": {
             "type": "string",
             "value": "[parameters('rscUsername')]"
         },
-        "rscDefaultPass": {
+        "rscDefaultPassword": {
             "type": "string",
             "value": "[parameters('rscPassword')]"
         }
