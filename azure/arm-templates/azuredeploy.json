@@ -68,8 +68,8 @@
         }
     },
     "rspDiskSize": {
-        "type": "string",
-        "defaultValue": "150",
+        "type": "int",
+        "defaultValue": 150,
         "metadata": {
             "description": "Size (in GB) of the RStudio Server Pro Disk"
         }
@@ -109,8 +109,8 @@
         }
     },
     "rscDiskSize": {
-        "type": "string",
-        "defaultValue": "150",
+        "type": "int",
+        "defaultValue": 150,
         "metadata": {
             "description": "Size (in GB) of the RStudio Connect Disk"
         }
@@ -150,8 +150,8 @@
         }
     },
     "rspmDiskSize": {
-        "type": "string",
-        "defaultValue": "150",
+        "type": "int",
+        "defaultValue": 150,
         "metadata": {
             "description": "Size (in GB) of the RStudio Package Manager Disk"
         }
