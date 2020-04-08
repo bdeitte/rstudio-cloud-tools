@@ -62,7 +62,7 @@
         },
         "diskSize": {
             "type": "int",
-            "defaultValue": 100,
+            "defaultValue": 150,
             "metadata": {
                 "description": "Size (in GB) of the RStudio Package Manager Disk"
             }

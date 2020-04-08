@@ -9,6 +9,37 @@
         "description": "RStudio Team deployment name"
       }
     },
+    "useExistingSubnet": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional - resource id of existing subnet to deploy to; the subnet needs to be in the same region as the cluster.  If empty, a new virtual network and subnet will be created."
+      }
+    },
+    "sshUsername": {
+      "type": "string",
+      "defaultValue": "rstudio",
+      "metadata": {
+        "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
+      }
+    },
+    "authType": {
+      "type": "string",
+      "defaultValue": "password",
+      "allowedValues": [
+        "password",
+        "SSHPublicKey"
+      ],
+      "metadata": {
+        "description": "Type of authentication to use for SSH."
+      }
+    },
+    "sshPasswordOrKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+      }
+    },
     "rspVmSize": {
         "type": "string",
         "defaultValue": "Standard_D4s_v3",
@@ -34,6 +65,20 @@
         ],
         "metadata": {
             "description": "The size of the Virtual Machine for RStudio Server Pro"
+        }
+    },
+    "rspDiskSize": {
+        "type": "string",
+        "defaultValue": "150",
+        "metadata": {
+            "description": "Size (in GB) of the RStudio Server Pro Disk"
+        }
+    },
+    "rspVersion": {
+        "type": "string",
+        "defaultValue": "1.2.5033-1",
+        "metadata": {
+            "description": "Version of RStudio Server Pro to be installed."
         }
     },
     "rscVmSize": {
@@ -63,6 +108,20 @@
             "description": "The size of the Virtual Machine for RStudio Connect"
         }
     },
+    "rscDiskSize": {
+        "type": "string",
+        "defaultValue": "150",
+        "metadata": {
+            "description": "Size (in GB) of the RStudio Connect Disk"
+        }
+    },
+    "rscVersion": {
+        "type": "string",
+        "defaultValue": "1.8.2-10",
+        "metadata": {
+            "description": "Version of RStudio Package Manager to be installed."
+        }
+    },
     "rspmVmSize": {
         "type": "string",
         "defaultValue": "Standard_D4s_v3",
@@ -90,56 +149,11 @@
             "description": "The size of the Virtual Machine for RStudio Package Manager"
         }
     },
-    "sshUsername": {
-      "type": "string",
-      "defaultValue": "rstudio",
-      "metadata": {
-        "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
-      }
-    },
-    "authType": {
-      "type": "string",
-      "defaultValue": "password",
-      "allowedValues": [
-        "password",
-        "SSHPublicKey"
-      ],
-      "metadata": {
-        "description": "Type of authentication to use for SSH."
-      }
-    },
-    "sshPasswordOrKey": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
-      }
-    },
-    "useExistingSubnet": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Optional - resource id of existing subnet to deploy to; the subnet needs to be in the same region as the cluster.  If empty, a new virtual network and subnet will be created."
-      }
-    },
-    "usePrivateIP": {
-        "type": "bool",
-        "defaultValue": false,
-        "metadata": {
-            "description": "Select to use the private ip address of the subnet for RStudio access."
-        }
-    },
-    "rspVersion": {
+    "rspmDiskSize": {
         "type": "string",
-        "defaultValue": "1.2.5033-1",
+        "defaultValue": "150",
         "metadata": {
-            "description": "Version of RStudio Server Pro to be installed."
-        }
-    },
-    "rscVersion": {
-        "type": "string",
-        "defaultValue": "1.8.2-10",
-        "metadata": {
-            "description": "Version of RStudio Package Manager to be installed."
+            "description": "Size (in GB) of the RStudio Package Manager Disk"
         }
     },
     "rspmVersion": {
@@ -156,18 +170,18 @@
             "description": "Version of R to be installed."
         }
     },
-    "pythonVersion": {
-        "type": "string",
-        "defaultValue": "3.7.3",
-        "metadata": {
-            "description": "Version of Python to be installed. Should match Anaconda version."
-        }
-    },
     "anacondaVersion": {
         "type": "string",
         "defaultValue": "Miniconda3-4.7.10",
         "metadata": {
-            "description": "Version of Anaconda to be installed. Should match Python version."
+            "description": "Version of Anaconda to be installed."
+        }
+    },
+    "pythonVersion": {
+        "type": "string",
+        "defaultValue": "3.7.3",
+        "metadata": {
+            "description": "Version of Python included in the Anaconda installer above."
         }
     },
     "driversVersion": {
@@ -227,6 +241,7 @@
         "parameters": {
            "clusterName": {"value": "[parameters('clusterName')]"},
            "vmSize":  {"value": "[parameters('rspmVmSize')]"},
+           "diskSize":  {"value": "[parameters('rspmDiskSize')]"},
            "sshUsername": {"value": "[parameters('sshUsername')]"},
            "authType": {"value": "[parameters('authType')]"},
            "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
@@ -252,6 +267,7 @@
         "parameters": {
            "clusterName": {"value": "[parameters('clusterName')]"},
            "vmSize":  {"value": "[parameters('rscVmSize')]"},
+           "diskSize":  {"value": "[parameters('rscDiskSize')]"},
            "sshUsername": {"value": "[parameters('sshUsername')]"},
            "authType": {"value": "[parameters('authType')]"},
            "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
@@ -281,6 +297,7 @@
         "parameters": {
            "clusterName": {"value": "[parameters('clusterName')]"},
            "vmSize":  {"value": "[parameters('rspVmSize')]"},
+           "diskSize":  {"value": "[parameters('rspDiskSize')]"},
            "sshUsername": {"value": "[parameters('sshUsername')]"},
            "authType": {"value": "[parameters('authType')]"},
            "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
