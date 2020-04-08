@@ -331,12 +331,12 @@
                         "settings": {},
                         "protectedSettings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/wait-for-it.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_r.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_python.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_rsp.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/install_drivers.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/scripts/bootstrap_rsp.sh"
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/wait-for-it.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_r.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_python.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_rsp.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_drivers.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/bootstrap_rsp.sh"
                             ],
                             "commandToExecute": "[concat('sudo RSP_VERSION=\"', parameters('rspVersion') ,'\" ', 'RSP_USERNAME=\"', parameters('rspUsername') ,'\" ', 'RSP_PASSWORD=\"', parameters('rspPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'RSC_ADDRESS=\"', parameters('rscAddress') ,'\" ', 'bash bootstrap_rsp.sh')]"
                         }

@@ -193,7 +193,7 @@
     }
   },
   "variables": {
-    "baseURI": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/azure/azure/arm-templates/",
+    "baseURI": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/azure/arm-templates/",
     "apiVersion": "2018-05-01",
     "computeAPIVersion": "2018-06-01",
     "rgName": "[resourceGroup().name]",
