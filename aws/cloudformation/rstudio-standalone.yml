@@ -265,7 +265,7 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            # trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
             sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_IP}|" $RSESSION_CONFIG_FILE
@@ -273,11 +273,13 @@ Resources:
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
 
+            # Start Sessions
             /opt/R/3.6.1/bin/R --version
             /opt/R/3.6.1/bin/R --no-save -e 'library(dplyr)'
             /opt/python/3.7.3/bin/python --version
             /opt/python/3.7.3/bin/python -c "import pandas"
 
+            # Verify
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
             rstudio-server stop || sleep 5
             rstudio-server verify-installation --verify-user rstudio-user

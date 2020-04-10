@@ -13,8 +13,15 @@ export DRIVERS_VERSION=${DRIVERS_VERSION:-1.6.1}
 export RSPM_ADDRESS=${RSPM_ADDRESS}
 export RSC_ADDRESS=${RSC_ADDRESS}
 
+
+# Utility scripts
+mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
+chmod +x /usr/local/bin/wait-for-it.sh
+
+# Install
 bash ./install_r.sh
 bash ./install_python.sh
 PREFIX_NAME=jupyter bash ./install_python.sh
 bash ./install_drivers.sh
 bash ./install_rsp.sh
+bash ./config_rsp.sh
