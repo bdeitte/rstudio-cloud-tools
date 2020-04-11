@@ -18,7 +18,7 @@
     },
     "sshUsername": {
       "type": "string",
-      "defaultValue": "rstudio",
+      "defaultValue": "azuser",
       "metadata": {
         "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
       }

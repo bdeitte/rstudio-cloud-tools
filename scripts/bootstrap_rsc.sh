@@ -23,4 +23,5 @@ bash ./install_python.sh
 bash ./install_drivers.sh
 bash ./install_rsc.sh
 R_VERSIONS=${R_VERSION} PYTHON_VERSIONS=${PYTHON_VERSION} bash ./config_rsc.sh
+bash ./rsc_start.sh
 bash ./rsc_create_user.sh
