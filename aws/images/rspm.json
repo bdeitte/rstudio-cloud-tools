@@ -48,16 +48,6 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "../../scripts/bionic_packages.txt",
-      "destination": "/tmp/bionic_packages.txt"
-    },
-    {
-      "type": "file",
-      "source": "../../scripts/bionic_r_packages.txt",
-      "destination": "/tmp/bionic_r_packages.txt"
-    },
-    {
-      "type": "file",
       "source": "../../scripts/r_packages.txt",
       "destination": "/tmp/r_packages.txt"
     },
