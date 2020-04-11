@@ -38,7 +38,7 @@
         },
         "sshUsername": {
             "type": "string",
-            "defaultValue": "rstudio",
+            "defaultValue": "rstudio-user",
             "metadata": {
                 "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
             }
@@ -160,6 +160,13 @@
             "metadata": {
                 "description": "URL Address to RStudio Connect (e.g. http://myrsc.com/)"
             }
+        },
+        "gitBranch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+                "description": "Branch of github.com/rstudio/rstudio-cloud-tools"
+            }
         }
     },
     "variables": {
@@ -189,7 +196,8 @@
         "publicIpName": "[concat(parameters('clusterName'), '-rsp-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-        }
+        },
+        "gitBranch": "[parameters('gitBranch')]"
     },
     "resources": [
         {
@@ -336,6 +344,8 @@
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_python.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_rsp.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_drivers.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/config_rsp.sh",
+                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/rsp_create_user.sh",
                                 "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/bootstrap_rsp.sh"
                             ],
                             "commandToExecute": "[concat('sudo RSP_VERSION=\"', parameters('rspVersion') ,'\" ', 'RSP_USERNAME=\"', parameters('rspUsername') ,'\" ', 'RSP_PASSWORD=\"', parameters('rspPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'RSC_ADDRESS=\"', parameters('rscAddress') ,'\" ', 'bash bootstrap_rsp.sh')]"

@@ -1,12 +1,15 @@
 #!/bin/bash
-set -xe
+set -ex
 
 export DEBIAN_FRONTEND=noninteractive
 
-RSC_USERNAME=${RSC_USERNAME:-rstudio}
-RSC_PASSWORD=${RSC_PASSWORD:-rstudio}
-PYTHON_VERSION=${PYTHON_VERSION:-3.7.3}
+R_VERSIONS=${R_VERSIONS:-"3.6.3,3.5.3"}
+PYTHON_VERSIONS=${PYTHON_VERSIONS:-"3.7.3,2.7.16"}
 TF_VERSION=${TF_VERSION:-1.15.0}
+
+# Internal
+R_VERS=($(echo "$R_VERSIONS" | tr ',' '\n'))
+PY_VERS=($(echo "$PYTHON_VERSIONS" | tr ',' '\n'))
 
 
 # Tensorflow C lib ------------------------------------------------------------
@@ -51,7 +54,7 @@ Provider = sqlite
 
 [Python]
 Enabled = true
-Executable = /opt/python/$PYTHON_VERSION/bin/python
+Executable = /opt/python/${PY_VERS[0]}/bin/python
 
 ;[RPackageRepository "CRAN"]
 ;URL = RSPM_SERVER_ADDRESS
@@ -69,16 +72,3 @@ if [[ ! -z "${RSPM_ADDRESS}" ]]; then
     sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = ${RSPM_ADDRESS}/cran/__linux__/bionic/latest|" $RSC_CONFIG_FILE
 fi
 
-
-# Default user ----------------------------------------------------------------
-
-# Enable and start services
-systemctl enable rstudio-server
-systemctl enable rstudio-launcher
-systemctl start rstudio-server
-systemctl start rstudio-launcher
-
-/usr/local/bin/wait-for-it.sh localhost:80 -t 0
-
-# Create connect admin user
-curl -i -X POST -d "{\"email\": \"rstudio@example.com\", \"username\": \"${RSC_USERNAME}\", \"password\": \"${RSC_PASSWORD}\"}" localhost:80/__api__/v1/users

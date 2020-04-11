@@ -111,6 +111,13 @@
             "metadata": {
                 "description": "Version of R to be installed."
             }
+        },
+        "gitBranch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+                "description": "Branch of github.com/rstudio/rstudio-cloud-tools"
+            }
         }
     },
     "variables": {
@@ -140,7 +147,8 @@
         "publicIpName": "[concat(parameters('clusterName'), '-rspm-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-        }
+        },
+        "gitBranch": "[parameters('gitBranch')]"
     },
     "resources": [
         {

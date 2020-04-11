@@ -1,0 +1,154 @@
+{
+  "variables": {
+    "rsc_version": "{{ env `RSC_VERSION` }}"
+  },
+  "builders": [
+    {
+      "ami_name": "rsc-cloudformation-{{ timestamp }}",
+      "type": "amazon-ebs",
+      "region": "us-east-1",
+      "ami_groups": "all",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server*",
+          "root-device-type": "ebs",
+          "block-device-mapping.volume-type": "gp2"
+        },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
+      "instance_type": "c4.xlarge",
+      "ssh_username": "ubuntu",
+      "launch_block_device_mappings": [{
+        "device_name": "/dev/sda1",
+        "delete_on_termination": "true",
+        "volume_size": 30,
+        "volume_type": "gp2"
+      }],
+      "run_tags": {
+        "rs:project": "cloudformation-templates",
+        "rs:owner": "sol-eng@rstudio.com"
+      },
+      "tags": {
+        "rs:project": "RStudio Team - CloudFormation",
+        "rs:product": "RStudio Connect",
+        "rs:product-version": "{{ user `rsc_version` }}",
+        "rs:released": "no"
+      }
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "rsc-manifest.json",
+      "strip_path": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../../scripts/bionic_packages.txt",
+      "destination": "/tmp/bionic_packages.txt"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/bionic_r_packages.txt",
+      "destination": "/tmp/bionic_r_packages.txt"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/r_packages.txt",
+      "destination": "/tmp/r_packages.txt"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/python_packages.txt",
+      "destination": "/tmp/python_packages.txt"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/wait-for-it.sh",
+      "destination": "/tmp/wait-for-it.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/aws_rsc_first_boot.sh",
+      "destination": "/tmp/rsc_first_boot.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "../../scripts/aws_pre_bootstrap.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "R_VERSION=3.6.3"
+      ],
+      "script": "../../scripts/install_r.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "R_VERSION=3.5.3"
+      ],
+      "script": "../../scripts/install_r.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "ANACONDA_VERSION=Miniconda3-4.7.10",
+        "PYTHON_VERSION=3.7.3"
+      ],
+      "script": "../../scripts/install_python.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "ANACONDA_VERSION=Miniconda2-4.7.10",
+        "PYTHON_VERSION=2.7.16"
+      ],
+      "script": "../../scripts/install_python.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "DRIVERS_VERSION=1.6.1"
+      ],
+      "script": "../../scripts/install_drivers.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "RSC_VERSION={{ user `rsc_version` }}"
+      ],
+      "script": "../../scripts/install_rsc.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "R_VERSIONS=\"3.6.3,3.5.3\"",
+        "PYTHON_VERSIONS=\"3.7.3,2.7.16\""
+      ],
+      "script": "../../scripts/config_rsc.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "../../scripts/aws_rsc_post.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "../../scripts/aws_cleanup.sh"
+    }
+  ]
+}

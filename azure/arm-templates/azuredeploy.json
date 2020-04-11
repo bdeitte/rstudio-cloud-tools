@@ -202,7 +202,8 @@
     "virtualNetworkName":  "[concat(parameters('clusterName'), '-vnet')]",
     "addressPrefixes": ["10.0.0.0/16"],
     "subnetName": "default",
-    "subnetPrefix": "10.0.0.0/24"
+    "subnetPrefix": "10.0.0.0/24",
+    "git-branch": "master"
   },
   "resources": [
     {
@@ -266,6 +267,7 @@
         },
         "parameters": {
            "clusterName": {"value": "[parameters('clusterName')]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"},
            "vmSize":  {"value": "[parameters('rscVmSize')]"},
            "diskSize":  {"value": "[parameters('rscDiskSize')]"},
            "sshUsername": {"value": "[parameters('sshUsername')]"},

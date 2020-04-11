@@ -280,6 +280,11 @@ Resources:
             /opt/python/3.7.3/bin/python -c "import pandas"
 
             # Verify
+            systemctl enable rstudio-server
+            systemctl enable rstudio-launcher
+            systemctl start rstudio-server
+            systemctl start rstudio-launcher
+
             /usr/local/bin/wait-for-it.sh localhost:80 -t 0
             rstudio-server stop || sleep 5
             rstudio-server verify-installation --verify-user rstudio-user
