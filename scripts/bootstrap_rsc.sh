@@ -3,7 +3,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 set -xe
 
 export RSC_VERSION=${RSC_VERSION:-1.8.2-10}
-export RSC_USERNAME=${RSC_USERNAME:-admin}
+export RSC_USERNAME=${RSC_USERNAME:-rstudio-admin}
 export RSC_PASSWORD=${RSC_PASSWORD:-rstudio}
 export R_VERSION=${R_VERSION:-3.6.3}
 export PYTHON_VERSION=${PYTHON_VERSION:-3.7.3}

@@ -38,7 +38,7 @@
         },
         "sshUsername": {
             "type": "string",
-            "defaultValue": "rstudio-user",
+            "defaultValue": "rstudio",
             "metadata": {
                 "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
             }
@@ -107,7 +107,7 @@
         },
         "rspUsername": {
             "type": "string",
-            "defaultValue": "admin",
+            "defaultValue": "rstudio-admin",
             "metadata": {
                 "description": "Default user to be created."
             }
