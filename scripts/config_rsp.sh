@@ -87,7 +87,6 @@ EOL
 
 cat >/etc/rstudio/rserver.conf <<EOL
 # Server Configuration File
-
 www-port=80
 
 server-project-sharing=0
