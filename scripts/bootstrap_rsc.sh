@@ -16,6 +16,7 @@ export RSPM_ADDRESS=${RSPM_ADDRESS}
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
 chmod +x /usr/local/bin/wait-for-it.sh
 
+
 # Install
 bash ./install_r.sh
 bash ./install_python.sh

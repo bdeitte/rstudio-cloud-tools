@@ -10,6 +10,7 @@ export R_VERSION=${R_VERSION:-3.6.3}
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
 chmod +x /usr/local/bin/wait-for-it.sh
 
+
 # Install
 bash ./install_r.sh
-bash ./install_rspm.sh
+R_VERSIONS=${R_VERSION} bash ./install_rspm.sh

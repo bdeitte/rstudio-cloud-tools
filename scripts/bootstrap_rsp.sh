@@ -17,6 +17,7 @@ export RSC_ADDRESS=${RSC_ADDRESS}
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
 chmod +x /usr/local/bin/wait-for-it.sh
 
+
 cat >/tmp/r_packages.txt <<EOL
 tidyverse
 rmarkdown
@@ -74,5 +75,5 @@ bash ./install_python.sh
 PREFIX_NAME=jupyter bash ./install_python.sh
 bash ./install_drivers.sh
 bash ./install_rsp.sh
-bash ./config_rsp.sh
+R_VERSIONS=${R_VERSION} PYTHON_VERSIONS=${PYTHON_VERSION} bash ./config_rsp.sh
 bash ./rsp_create_user.sh

@@ -193,7 +193,6 @@
     }
   },
   "variables": {
-    "baseURI": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/azure/arm-templates/",
     "apiVersion": "2018-05-01",
     "computeAPIVersion": "2018-06-01",
     "rgName": "[resourceGroup().name]",
@@ -203,7 +202,8 @@
     "addressPrefixes": ["10.0.0.0/16"],
     "subnetName": "default",
     "subnetPrefix": "10.0.0.0/24",
-    "git-branch": "master"
+    "gitBranch": "aws-amis",
+    "baseURI": "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/azure/arm-templates/",
   },
   "resources": [
     {
@@ -248,7 +248,8 @@
            "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
            "subnetId": {"value": "[if(equals(variables('virtualNetworkNewOrExisting'), 'new'), resourceId(variables('rgName'), 'Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnetName')), parameters('useExistingSubnet'))]"},
            "rspmVersion": {"value": "[parameters('rspmVersion')]"},
-           "rVersion": {"value": "[parameters('rVersion')]"}
+           "rVersion": {"value": "[parameters('rVersion')]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }
     },
@@ -267,7 +268,6 @@
         },
         "parameters": {
            "clusterName": {"value": "[parameters('clusterName')]"},
-           "gitBranch": {"value": "[variables('gitBranch')]"},
            "vmSize":  {"value": "[parameters('rscVmSize')]"},
            "diskSize":  {"value": "[parameters('rscDiskSize')]"},
            "sshUsername": {"value": "[parameters('sshUsername')]"},
@@ -279,7 +279,8 @@
            "pythonVersion": {"value": "[parameters('pythonVersion')]"},
            "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
            "driversVersion": {"value": "[parameters('driversVersion')]"},
-           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"}
+           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }
     },
@@ -310,7 +311,8 @@
            "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
            "driversVersion": {"value": "[parameters('driversVersion')]"},
            "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
-           "rscAddress": {"value": "[concat(reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"}
+           "rscAddress": {"value": "[concat(reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }
     }
