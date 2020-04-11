@@ -1,4 +1,4 @@
-# RStudio Team AMIs
+# RStudio Team AMIs List
 
 ## RStudio Server Pro
 
