@@ -5,9 +5,9 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-RSP_VERSION ?=  1.2.5033-1
-RSC_VERSION ?=  1.8.2-10
-RSPM_VERSION ?=  1.1.4-3
+RSP_VERSION ?= 1.2.5033-1
+RSC_VERSION ?= 1.8.2-10
+RSPM_VERSION ?= 1.1.4-3
 
 all: help
 
