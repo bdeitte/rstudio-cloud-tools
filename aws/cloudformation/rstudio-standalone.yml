@@ -285,12 +285,12 @@ Resources:
             systemctl start rstudio-server
             systemctl start rstudio-launcher
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             rstudio-server stop || sleep 5
             rstudio-server verify-installation --verify-user rstudio-user
             rstudio-server start
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
@@ -355,7 +355,7 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             sleep 5  # Wait for admin user creation
             systemctl stop rstudio-connect
 
@@ -366,7 +366,7 @@ Resources:
 
             systemctl start rstudio-connect
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSPM_IP: !GetAtt RSPMInstance.PublicIp
@@ -427,7 +427,7 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
   RSPMSecurityGroup:

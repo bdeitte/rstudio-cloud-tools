@@ -13,4 +13,7 @@ chmod +x /usr/local/bin/wait-for-it.sh
 
 # Install
 bash ./install_r.sh
-R_VERSIONS=${R_VERSION} bash ./install_rspm.sh
+bash ./install_rspm.sh
+R_VERSIONS=${R_VERSION} bash ./config_rspm.sh
+bash ./rspm_start.sh
+bash ./rspm_create_repo.sh

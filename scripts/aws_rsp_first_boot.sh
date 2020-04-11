@@ -25,7 +25,7 @@ systemctl enable rstudio-launcher
 systemctl start rstudio-server
 systemctl start rstudio-launcher
 
-/usr/local/bin/wait-for-it.sh localhost:80 -t 0
+/usr/local/bin/wait-for-it.sh localhost:80 -t 60
 
 # Clean up
 sed -i '/\/usr\/local\/bin\/rsp_first_boot.sh/d' /etc/crontab

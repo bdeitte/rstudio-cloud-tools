@@ -9,6 +9,8 @@ RSP_VERSION ?= 1.2.5033-1
 RSC_VERSION ?= 1.8.2-10
 RSPM_VERSION ?= 1.1.4-3
 
+DATE ?= $(shell date +"%Y/%m/%d")
+
 all: help
 
 
@@ -20,7 +22,11 @@ rsp:  ## Build RSP AMIs
 
 .PHONY: parse-rsp-manifest
 parse-rsp-manifest:  ## Parse the rsp-manifest.json and print the CloudFormation AMIs text
+	@echo "CloudFormation:"
 	@cat rsp-manifest.json | jq -r '.builds[0].artifact_id' |  awk -v RS=',' '1' | awk -F':' 'NF > 1 {print "  "$$1":\n    AMI: "$$2}' | (echo "RSPRegionMap:"; cat -;)
+	@echo ""
+	@echo "MD Table:"
+	@cat rsp-manifest.json | jq -r '.builds[0].artifact_id' |  awk -v RS=',' '1' | awk -F':' 'NF > 1 {print "| $(RSP_VERSION) | "$$1" | "$$2" | $(DATE) |"}'
 
 
 .PHONY: rsc
@@ -31,7 +37,11 @@ rsc:  ## Build RSC AMIs
 
 .PHONY: parse-rsc-manifest
 parse-rsc-manifest:  ## Parse the rsc-manifest.json and print the CloudFormation AMIs text
+	@echo "CloudFormation:"
 	@cat rsc-manifest.json | jq -r '.builds[0].artifact_id' |  awk -v RS=',' '1' | awk -F':' 'NF > 1 {print "  "$$1":\n    AMI: "$$2}' | (echo "RSCRegionMap:"; cat -;)
+	@echo ""
+	@echo "MD Table:"
+	@cat rsc-manifest.json | jq -r '.builds[0].artifact_id' |  awk -v RS=',' '1' | awk -F':' 'NF > 1 {print "| $(RSC_VERSION) | "$$1" | "$$2" | $(DATE) |"}'
 
 
 .PHONY: rspm
@@ -42,7 +52,11 @@ rspm:  ## Build RSPM AMIs
 
 .PHONY: parse-rspm-manifest
 parse-rspm-manifest:  ## Parse the rspm-manifest.json and print the CloudFormation AMIs text
+	@echo "CloudFormation:"
 	@cat rspm-manifest.json | jq -r '.builds[0].artifact_id' |  awk -v RS=',' '1' | awk -F':' 'NF > 1 {print "  "$$1":\n    AMI: "$$2}' | (echo "RSPMRegionMap:"; cat -;)
+	@echo ""
+	@echo "MD Table:"
+	@cat rspm-manifest.json | jq -r '.builds[0].artifact_id' |  awk -v RS=',' '1' | awk -F':' 'NF > 1 {print "| $(RSPM_VERSION) | "$$1" | "$$2" | $(DATE) |"}'
 
 
 .PHONY: clean

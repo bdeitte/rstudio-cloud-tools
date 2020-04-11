@@ -76,4 +76,5 @@ PREFIX_NAME=jupyter bash ./install_python.sh
 bash ./install_drivers.sh
 bash ./install_rsp.sh
 R_VERSIONS=${R_VERSION} PYTHON_VERSIONS=${PYTHON_VERSION} bash ./config_rsp.sh
+bash ./rsp_start.sh
 bash ./rsp_create_user.sh

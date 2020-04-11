@@ -346,6 +346,7 @@
                                 "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_python.sh')]",
                                 "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_drivers.sh')]",
                                 "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/config_rsp.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rsp_start.sh')]",
                                 "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rsp_create_user.sh')]"
                             ],
                             "commandToExecute": "[concat('sudo RSP_VERSION=\"', parameters('rspVersion') ,'\" ', 'RSP_USERNAME=\"', parameters('rspUsername') ,'\" ', 'RSP_PASSWORD=\"', parameters('rspPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'RSC_ADDRESS=\"', parameters('rscAddress') ,'\" ', 'bash bootstrap_rsp.sh')]"
