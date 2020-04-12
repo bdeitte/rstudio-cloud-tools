@@ -68,13 +68,6 @@ for ((i = 0; i < ${#PY_VERS[@]}; ++i)); do
     /opt/python/${PY_VERS[i]}/bin/python -m ipykernel install --name python"${PY_VERS[i]:0:1}" --display-name "Python ${PY_VERS[i]}"
 done
 
-# Configure jupyter extensions
-/opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
-/opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter
-/opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter
-/opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter
-/opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
-
 
 # Config RSP and Launcher -----------------------------------------------------
 

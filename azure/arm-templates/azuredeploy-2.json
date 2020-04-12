@@ -1,0 +1,318 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "type": "string",
+      "defaultValue": "rstudio-team",
+      "metadata": {
+        "description": "RStudio Team deployment name"
+      }
+    },
+    "useExistingSubnet": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional - resource id of existing subnet to deploy to; the subnet needs to be in the same region as the cluster.  If empty, a new virtual network and subnet will be created."
+      }
+    },
+    "sshUsername": {
+      "type": "string",
+      "defaultValue": "azuser",
+      "metadata": {
+        "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
+      }
+    },
+    "authType": {
+      "type": "string",
+      "defaultValue": "password",
+      "allowedValues": [
+        "password",
+        "SSHPublicKey"
+      ],
+      "metadata": {
+        "description": "Type of authentication to use for SSH."
+      }
+    },
+    "sshPasswordOrKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+      }
+    },
+    "rspVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "allowedValues": [
+            "Standard_B4ms",
+            "Standard_DS3_v2",
+            "Standard_D4_v3",
+            "Standard_D4s_v3",
+            "Standard_D4as_v4",
+            "Standard_DS12",
+            "Standard_DS12_v2",
+            "Standard_DS13",
+            "Standard_DS13_v2",
+            "Standard_DS13-2_v2",
+            "Standard_DS13-4_v2",
+            "Standard_DS14",
+            "Standard_DS14_v2",
+            "Standard_DS14-4_v2",
+            "Standard_DS14-8_v2",
+            "Standard_DS15_v2",
+            "Standard_HB60rs",
+            "Standard_HC44rs"
+        ],
+        "metadata": {
+            "description": "The size of the Virtual Machine for RStudio Server Pro"
+        }
+    },
+    "rspDiskSize": {
+        "type": "int",
+        "defaultValue": 150,
+        "metadata": {
+            "description": "Size (in GB) of the RStudio Server Pro Disk"
+        }
+    },
+    "rspVersion": {
+        "type": "string",
+        "defaultValue": "1.2.5033-1",
+        "metadata": {
+            "description": "Version of RStudio Server Pro to be installed."
+        }
+    },
+    "rscVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "allowedValues": [
+            "Standard_B4ms",
+            "Standard_DS3_v2",
+            "Standard_D4_v3",
+            "Standard_D4s_v3",
+            "Standard_D4as_v4",
+            "Standard_DS12",
+            "Standard_DS12_v2",
+            "Standard_DS13",
+            "Standard_DS13_v2",
+            "Standard_DS13-2_v2",
+            "Standard_DS13-4_v2",
+            "Standard_DS14",
+            "Standard_DS14_v2",
+            "Standard_DS14-4_v2",
+            "Standard_DS14-8_v2",
+            "Standard_DS15_v2",
+            "Standard_HB60rs",
+            "Standard_HC44rs"
+        ],
+        "metadata": {
+            "description": "The size of the Virtual Machine for RStudio Connect"
+        }
+    },
+    "rscDiskSize": {
+        "type": "int",
+        "defaultValue": 150,
+        "metadata": {
+            "description": "Size (in GB) of the RStudio Connect Disk"
+        }
+    },
+    "rscVersion": {
+        "type": "string",
+        "defaultValue": "1.7.8-7",
+        "metadata": {
+            "description": "Version of RStudio Package Manager to be installed."
+        }
+    },
+    "rspmVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "allowedValues": [
+            "Standard_B4ms",
+            "Standard_DS3_v2",
+            "Standard_D4_v3",
+            "Standard_D4s_v3",
+            "Standard_D4as_v4",
+            "Standard_DS12",
+            "Standard_DS12_v2",
+            "Standard_DS13",
+            "Standard_DS13_v2",
+            "Standard_DS13-2_v2",
+            "Standard_DS13-4_v2",
+            "Standard_DS14",
+            "Standard_DS14_v2",
+            "Standard_DS14-4_v2",
+            "Standard_DS14-8_v2",
+            "Standard_DS15_v2",
+            "Standard_HB60rs",
+            "Standard_HC44rs"
+        ],
+        "metadata": {
+            "description": "The size of the Virtual Machine for RStudio Package Manager"
+        }
+    },
+    "rspmDiskSize": {
+        "type": "int",
+        "defaultValue": 150,
+        "metadata": {
+            "description": "Size (in GB) of the RStudio Package Manager Disk"
+        }
+    },
+    "rspmVersion": {
+        "type": "string",
+        "defaultValue": "1.1.2-10",
+        "metadata": {
+            "description": "Version of RStudio Package Manager to be installed."
+        }
+    },
+    "rVersion": {
+        "type": "string",
+        "defaultValue": "3.6.3",
+        "metadata": {
+            "description": "Version of R to be installed."
+        }
+    },
+    "anacondaVersion": {
+        "type": "string",
+        "defaultValue": "Miniconda3-4.7.10",
+        "metadata": {
+            "description": "Version of Anaconda to be installed."
+        }
+    },
+    "pythonVersion": {
+        "type": "string",
+        "defaultValue": "3.7.3",
+        "metadata": {
+            "description": "Version of Python included in the Anaconda installer above."
+        }
+    },
+    "driversVersion": {
+        "type": "string",
+        "defaultValue": "1.6.1",
+        "metadata": {
+            "description": "Version of RStudio Drivers to be installed."
+        }
+    }
+  },
+  "variables": {
+    "apiVersion": "2018-05-01",
+    "computeAPIVersion": "2018-06-01",
+    "rgName": "[resourceGroup().name]",
+    "location": "[resourceGroup().location]",
+    "virtualNetworkNewOrExisting": "[if(equals(trim(parameters('useExistingSubnet')), ''), 'new', 'existing')]",
+    "virtualNetworkName":  "[concat(parameters('clusterName'), '-vnet')]",
+    "addressPrefixes": ["10.0.0.0/16"],
+    "subnetName": "default",
+    "subnetPrefix": "10.0.0.0/24",
+    "gitBranch": "aws-amis",
+    "baseURI": "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/azure/arm-templates/')]"
+  },
+  "resources": [
+    {
+      "condition": "[equals(variables('virtualNetworkNewOrExisting'), 'new')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "[variables('computeApiVersion')]",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": "[variables('addressPrefixes')]"
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnetName')]",
+            "properties": {
+              "addressPrefix": "[variables('subnetPrefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "name": "[concat(parameters('clusterName'), '-rsc-deployment')]",
+      "resourceGroup": "[variables('rgName')]",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+           "uri": "[concat(variables('baseURI'), 'rsc.json')]",
+           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+           "clusterName": {"value": "[parameters('clusterName')]"},
+           "vmSize":  {"value": "[parameters('rscVmSize')]"},
+           "diskSize":  {"value": "[parameters('rscDiskSize')]"},
+           "sshUsername": {"value": "[parameters('sshUsername')]"},
+           "authType": {"value": "[parameters('authType')]"},
+           "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
+           "subnetId": {"value": "[if(equals(variables('virtualNetworkNewOrExisting'), 'new'), resourceId(variables('rgName'), 'Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnetName')), parameters('useExistingSubnet'))]"},
+           "rscVersion": {"value": "[parameters('rscVersion')]"},
+           "rVersion": {"value": "[parameters('rVersion')]"},
+           "pythonVersion": {"value": "[parameters('pythonVersion')]"},
+           "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
+           "driversVersion": {"value": "[parameters('driversVersion')]"},
+           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "name": "[concat(parameters('clusterName'), '-rsp-deployment')]",
+      "resourceGroup": "[variables('rgName')]",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+           "uri": "[concat(variables('baseURI'), 'rsp.json')]",
+           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+           "clusterName": {"value": "[parameters('clusterName')]"},
+           "vmSize":  {"value": "[parameters('rspVmSize')]"},
+           "diskSize":  {"value": "[parameters('rspDiskSize')]"},
+           "sshUsername": {"value": "[parameters('sshUsername')]"},
+           "authType": {"value": "[parameters('authType')]"},
+           "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
+           "subnetId": {"value": "[if(equals(variables('virtualNetworkNewOrExisting'), 'new'), resourceId(variables('rgName'), 'Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnetName')), parameters('useExistingSubnet'))]"},
+           "rspVersion": {"value": "[parameters('rspVersion')]"},
+           "rVersion": {"value": "[parameters('rVersion')]"},
+           "pythonVersion": {"value": "[parameters('pythonVersion')]"},
+           "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
+           "driversVersion": {"value": "[parameters('driversVersion')]"},
+           "rscAddress": {"value": "[concat(reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
+        }
+      }
+    }
+  ],
+  "outputs": {
+      "rspHost": {
+        "type": "string",
+        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspHost.value)]"
+      },
+      "rspDefaultUser": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspDefaultUsername.value]"
+      },
+      "rspDefaultPassword": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsp-deployment')).outputs.rspDefaultPassword.value]"
+      },
+      "rscHost": {
+        "type": "string",
+        "value": "[concat('http://', reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"
+      },
+      "rscDefaultUsername": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscDefaultUsername.value]"
+      },
+      "rscDefaultPassword": {
+        "type": "string",
+        "value": "[reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscDefaultPassword.value]"
+      }
+  }
+}
