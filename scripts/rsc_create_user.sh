@@ -2,7 +2,7 @@
 set -ex
 
 
-RSP_USERNAME=${RSP_USERNAME:-rstudio-admin}
+RSP_USERNAME=${RSP_USERNAME:-admin}
 RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
 
 

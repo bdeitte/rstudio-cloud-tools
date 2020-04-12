@@ -2,7 +2,7 @@
 set -ex
 
 
-RSP_USERNAME=${RSP_USERNAME:-rstudio-admin}
+RSP_USERNAME=${RSP_USERNAME:-rstudio-user}
 RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
 
 # Create rstudio-team group
