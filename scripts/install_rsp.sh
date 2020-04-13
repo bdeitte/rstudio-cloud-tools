@@ -3,7 +3,7 @@ set -xe
 
 export DEBIAN_FRONTEND=noninteractive
 
-RSP_VERSION=${RSP_VERSION:-1.2.5033-1}
+RSP_VERSION=${RSP_VERSION:-1.2.5042-1}
 
 apt-get update
 apt-get install -y gdebi-core

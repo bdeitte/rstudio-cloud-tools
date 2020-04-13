@@ -70,11 +70,7 @@ done
 for ((i = 0; i < ${#PY_VERS[@]}; ++i)); do
     # Install Python dependencies
     /opt/python/${PY_VERS[i]}/bin/pip install -U ipykernel rsp-jupyter rsconnect-jupyter rsconnect-python
-    
-    # if Python 3: Install other deps
-    if (( "${PY_VERS[i]:0:1}" == "3" )); then
-        /opt/python/${PY_VERS[i]}/bin/pip install -r /tmp/python_packages.txt
-    fi
+    /opt/python/${PY_VERS[i]}/bin/pip install -r /tmp/python_packages.txt
     
     # Kernels: Make Python installation available
     /opt/python/${PY_VERS[i]}/bin/python -m ipykernel install --name python"${PY_VERS[i]}" --display-name "Python ${PY_VERS[i]}"

@@ -92,7 +92,17 @@
       "type": "shell",
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
       "environment_vars": [
-        "ANACONDA_VERSION=Miniconda3-py38_4.8.2 ",
+        "ANACONDA_VERSION=Miniconda3-py37_4.8.2",
+        "PYTHON_VERSION=3.7.6",
+        "PREFIX_NAME=jupyter"
+      ],
+      "script": "../../scripts/install_python.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars": [
+        "ANACONDA_VERSION=Miniconda3-py38_4.8.2",
         "PYTHON_VERSION=3.8.1"
       ],
       "script": "../../scripts/install_python.sh"
@@ -103,16 +113,6 @@
       "environment_vars": [
         "ANACONDA_VERSION=Miniconda3-py37_4.8.2",
         "PYTHON_VERSION=3.7.6"
-      ],
-      "script": "../../scripts/install_python.sh"
-    },
-    {
-      "type": "shell",
-      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "environment_vars": [
-        "ANACONDA_VERSION=Miniconda3-py37_4.8.2",
-        "PYTHON_VERSION=3.7.6",
-        "PREFIX_NAME=jupyter"
       ],
       "script": "../../scripts/install_python.sh"
     },

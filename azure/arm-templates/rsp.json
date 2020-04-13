@@ -100,7 +100,7 @@
         },
         "rspVersion": {
             "type": "string",
-            "defaultValue": "1.2.5033-1",
+            "defaultValue": "1.2.5042-1",
             "metadata": {
                 "description": "Version of RStudio Server Pro to be installed."
             }
