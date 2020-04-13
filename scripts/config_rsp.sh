@@ -4,7 +4,7 @@ set -ex
 export DEBIAN_FRONTEND=noninteractive
 
 R_VERSIONS=${R_VERSIONS:-"3.6.3,3.5.3"}
-PYTHON_VERSIONS=${PYTHON_VERSION:-"3.7.3,2.7.16"}
+PYTHON_VERSIONS=${PYTHON_VERSION:-"3.7.6,2.7.16"}
 
 # Internal
 R_VERS=($(echo "$R_VERSIONS" | tr ',' '\n'))
@@ -63,7 +63,7 @@ done
 
 # Jupyter: Kernels: Remove default "jupyter" kernel, don't show this environment as a kernel
 /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f
-/opt/python/jupyter/bin/pip uninstall ipykernel
+/opt/python/jupyter/bin/pip uninstall -y ipykernel
 
 
 # For each Python version
