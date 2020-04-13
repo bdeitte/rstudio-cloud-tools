@@ -9,6 +9,7 @@ gensim
 ipykernel
 matplotlib
 nltk
+notebook
 numpy
 pandas
 pillow

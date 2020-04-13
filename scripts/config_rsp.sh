@@ -53,27 +53,31 @@ done
 
 # Python ----------------------------------------------------------------------
 
-# Jupyter: Kernels: Remove default "jupyter" kernel, don't show this environment as a kernel
-/opt/python/jupyter/bin/jupyter kernelspec remove python3 -f
-
 # Jupyter: Install and configure extensions
-/opt/python/jupyter/bin/pip install rsp-jupyter rsconnect-python rsconnect-jupyter
+/opt/python/jupyter/bin/pip install -U notebook rsp-jupyter rsconnect-python rsconnect-jupyter
 /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
 /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter
 /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter
 /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter
 /opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
 
+# Jupyter: Kernels: Remove default "jupyter" kernel, don't show this environment as a kernel
+/opt/python/jupyter/bin/jupyter kernelspec remove python3 -f
+/opt/python/jupyter/bin/pip uninstall ipykernel
+
 
 # For each Python version
 for ((i = 0; i < ${#PY_VERS[@]}; ++i)); do
     # Install Python dependencies
+    /opt/python/${PY_VERS[i]}/bin/pip install -U ipykernel rsp-jupyter rsconnect-jupyter rsconnect-python
+    
+    # if Python 3: Install other deps
     if (( "${PY_VERS[i]:0:1}" == "3" )); then
         /opt/python/${PY_VERS[i]}/bin/pip install -r /tmp/python_packages.txt
     fi
     
     # Kernels: Make Python installation available
-    /opt/python/${PY_VERS[i]}/bin/python -m ipykernel install --name python"${PY_VERS[i]:0:1}" --display-name "Python ${PY_VERS[i]}"
+    /opt/python/${PY_VERS[i]}/bin/python -m ipykernel install --name python"${PY_VERS[i]}" --display-name "Python ${PY_VERS[i]}"
 
     # Configure Jupyter extensions
     /opt/python/${PY_VERS[i]}/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
