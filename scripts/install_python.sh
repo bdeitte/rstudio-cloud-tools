@@ -21,11 +21,11 @@ rm /tmp/$ANACONDA_VERSION-Linux-x86_64.sh
 # Verify Python
 /opt/python/$PREFIX_NAME/bin/python --version
 
-# Install virtualenv Python
+# Install virtualenv
 /opt/python/$PREFIX_NAME/bin/pip install -U pip==19.3.1 virtualenv==16.1.0
 
 # Install and configure Jupyter and extensions
-/opt/python/$PREFIX_NAME/bin/pip install -U jupyter jupyterlab rsp_jupyter rsconnect_jupyter ipykernel nbconvert
+/opt/python/$PREFIX_NAME/bin/pip install -U jupyter ipykernel nbconvert jupyterlab rsp-jupyter rsconnect-python rsconnect-jupyter
 
 /opt/python/$PREFIX_NAME/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
 /opt/python/$PREFIX_NAME/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter

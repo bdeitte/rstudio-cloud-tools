@@ -37,35 +37,36 @@ EOL
 
 
 cat >/tmp/python_packages.txt <<EOL
-altair
-beautifulsoup4
-cloudpickle
-cython
-dash
-dask
-flask
-gensim
-ipykernel
-matplotlib
-nltk
-numpy
+# altair
+# beautifulsoup4
+# cloudpickle
+# cython
+# dash
+# dask
+# flask
+# gensim
+# ipykernel
+# matplotlib
+# nltk
+# numpy
 pandas
-pillow
-plotly
-pyarrow
-requests
-scipy
-scikit-image
-scikit-learn
-scrapy
-seaborn
-spacy
-sqlalchemy
-statsmodels
-tensorflow
-keras
-xgboost
-rsconnect_jupyter
+# pillow
+# plotly
+# pyarrow
+# requests
+# scipy
+# scikit-image
+# scikit-learn
+# scrapy
+# seaborn
+# spacy
+# sqlalchemy
+# statsmodels
+# tensorflow
+# keras
+# xgboost
+# rsconnect_jupyter
+# rsconnect_python
 EOL
 
 
