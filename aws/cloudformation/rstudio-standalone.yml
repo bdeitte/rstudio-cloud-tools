@@ -457,24 +457,24 @@ Resources:
       SourceSecurityGroupId: !Ref RSPMSecurityGroup
 
 Outputs:
-  RSP:
+  RSPHost:
     Description: RStudio Server Pro UI
     Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
-  RSPUser:
+  RSPDefaultUser:
     Description: RStudio Server Pro default user
     Value: rstudio-user
-  RSPUserPass:
+  RSPDefaultPassword:
     Description: RStudio Server Pro initial default user password
     Value: !Ref RSPInstance
-  RSC:
+  RSCHost:
     Description: RStudio Connect UI
     Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
-  RSCUser:
+  RSCDefaultUser:
     Description: RStudio Connect default user
     Value: admin
-  RSCUserPass:
+  RSCDefaultPassword:
     Description: RStudio Connect initial default user password
     Value: !Ref RSCInstance
-  RSPM:
+  RSPMHost:
     Description: RStudio Package Manager UI
     Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp]]

@@ -252,7 +252,6 @@
            "pythonVersion": {"value": "[parameters('pythonVersion')]"},
            "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
            "driversVersion": {"value": "[parameters('driversVersion')]"},
-           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
            "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }

@@ -2,8 +2,8 @@
 set -ex
 
 
-RSP_USERNAME=${RSP_USERNAME:-admin}
-RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
+RSC_USERNAME=${RSC_USERNAME:-admin}
+RSC_PASSWORD=${RSC_PASSWORD:-rstudio}
 
 
 /usr/local/bin/wait-for-it.sh localhost:80 -t 60
