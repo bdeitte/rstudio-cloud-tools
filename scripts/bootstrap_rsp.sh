@@ -19,20 +19,20 @@ chmod +x /usr/local/bin/wait-for-it.sh
 
 
 cat >/tmp/r_packages.txt <<EOL
-tidyverse
-rmarkdown
-shiny
-tidymodels
-data.table
-packrat
-odbc
-sparklyr
-reticulate
-rsconnect
-devtools
-RCurl
-tensorflow
-keras
+# tidyverse
+# rmarkdown
+# shiny
+# tidymodels
+# data.table
+# packrat
+# odbc
+# sparklyr
+# reticulate
+# rsconnect
+# devtools
+# RCurl
+# tensorflow
+# keras
 EOL
 
 
