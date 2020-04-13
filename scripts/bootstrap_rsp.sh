@@ -19,54 +19,55 @@ chmod +x /usr/local/bin/wait-for-it.sh
 
 
 cat >/tmp/r_packages.txt <<EOL
-# tidyverse
-# rmarkdown
-# shiny
-# tidymodels
-# data.table
-# packrat
-# odbc
-# sparklyr
-# reticulate
-# rsconnect
-# devtools
-# RCurl
-# tensorflow
-# keras
+tidyverse
+rmarkdown
+shiny
+tidymodels
+data.table
+packrat
+odbc
+sparklyr
+reticulate
+rsconnect
+devtools
+RCurl
+tensorflow
+keras
 EOL
 
 
 cat >/tmp/python_packages.txt <<EOL
-# altair
-# beautifulsoup4
-# cloudpickle
-# cython
-# dash
-# dask
-# flask
-# gensim
-# ipykernel
-# matplotlib
-# nltk
-# numpy
+altair
+beautifulsoup4
+cloudpickle
+cython
+dash
+dask
+flask
+gensim
+ipykernel
+matplotlib
+nltk
+numpy
 pandas
-# pillow
-# plotly
-# pyarrow
-# requests
-# scipy
-# scikit-image
-# scikit-learn
-# scrapy
-# seaborn
-# spacy
-# sqlalchemy
-# statsmodels
-# tensorflow
-# keras
-# xgboost
-# rsconnect_jupyter
-# rsconnect_python
+pillow
+plotly
+pyarrow
+requests
+scipy
+scikit-image
+scikit-learn
+scrapy
+seaborn
+spacy
+sqlalchemy
+statsmodels
+tensorflow
+keras
+xgboost
+rsp-jupyter
+rsconnect-python
+rsconnect-jupyter
 EOL
 
 

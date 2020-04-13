@@ -53,8 +53,17 @@ done
 
 # Python ----------------------------------------------------------------------
 
-# Kernels: Remove default "jupyter" kernel, don't show this environment as a kernel
+# Jupyter: Kernels: Remove default "jupyter" kernel, don't show this environment as a kernel
 /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f
+
+# Jupyter: Install and configure extensions
+/opt/python/jupyter/bin/pip install rsp-jupyter rsconnect-python rsconnect-jupyter
+/opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
+/opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter
+/opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter
+/opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter
+/opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
+
 
 # For each Python version
 for ((i = 0; i < ${#PY_VERS[@]}; ++i)); do
@@ -64,8 +73,13 @@ for ((i = 0; i < ${#PY_VERS[@]}; ++i)); do
     fi
     
     # Kernels: Make Python installation available
-    /opt/python/${PY_VERS[i]}/bin/pip install ipykernel
     /opt/python/${PY_VERS[i]}/bin/python -m ipykernel install --name python"${PY_VERS[i]:0:1}" --display-name "Python ${PY_VERS[i]}"
+
+    # Configure Jupyter extensions
+    /opt/python/${PY_VERS[i]}/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
+    /opt/python/${PY_VERS[i]}/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter
+    /opt/python/${PY_VERS[i]}/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter
+    /opt/python/${PY_VERS[i]}/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter
 done
 
 

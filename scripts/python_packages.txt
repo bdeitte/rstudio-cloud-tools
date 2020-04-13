@@ -26,4 +26,6 @@ statsmodels
 tensorflow
 keras
 xgboost
-rsconnect_jupyter
+rsp-jupyter
+rsconnect-python
+rsconnect-jupyter
