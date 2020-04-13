@@ -4,7 +4,7 @@ set -ex
 export DEBIAN_FRONTEND=noninteractive
 
 R_VERSIONS=${R_VERSIONS:-"3.6.3,3.5.3"}
-PYTHON_VERSIONS=${PYTHON_VERSION:-"3.7.6,2.7.16"}
+PYTHON_VERSIONS=${PYTHON_VERSION:-"3.8.1,3.7.6"}
 
 # Internal
 R_VERS=($(echo "$R_VERSIONS" | tr ',' '\n'))
