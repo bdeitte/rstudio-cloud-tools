@@ -176,42 +176,42 @@ Metadata:
 Mappings:
   RSPRegionMap:
     eu-central-1:
-      AMI: ami-00113fce374488cb3
+      AMI: ami-029985c8d940f9caa
     eu-north-1:
-      AMI: ami-04f0c52f163304dde
+      AMI: ami-05b72abddc2e3ec02
     eu-west-1:
-      AMI: ami-0dbe6e799f46d2c79
+      AMI: ami-03abc68d9eb99eb43
     eu-west-2:
-      AMI: ami-049ce0ed6be441720
+      AMI: ami-0549e9c3728c1fb31
     eu-west-3:
-      AMI: ami-0a280f8fac5cea151
+      AMI: ami-01ec8bbb62d13de2d
     us-east-1:
-      AMI: ami-047170001b385e0d2
+      AMI: ami-0192a17c1cfe5397e
     us-east-2:
-      AMI: ami-05455e6c295cf26d5
+      AMI: ami-0669db943559be66f
     us-west-1:
-      AMI: ami-0fee0ec3c2840e7a3
+      AMI: ami-0465434161f258535
     us-west-2:
-      AMI: ami-0035a091f7cdc4331
+      AMI: ami-03a7e02531577ba33
   RSCRegionMap:
     eu-central-1:
-      AMI: ami-0763a3dd5015327da
+      AMI: ami-0faaca192bc344ca7
     eu-north-1:
-      AMI: ami-07d18fcdcc49aa38f
+      AMI: ami-09f3821d002e0185f
     eu-west-1:
-      AMI: ami-0aef93f564049ed25
+      AMI: ami-0b4c735742aa0f719
     eu-west-2:
-      AMI: ami-042c8b9b561890ac3
+      AMI: ami-086099de3c87c5cd6
     eu-west-3:
-      AMI: ami-0567981ac1f457588
+      AMI: ami-0059be4bf04d31767
     us-east-1:
-      AMI: ami-0fd3b48ae75c6300a
+      AMI: ami-0d9df8186eb5b41cc
     us-east-2:
-      AMI: ami-0ae79272bcbc570f5
+      AMI: ami-08f74bdea32420280
     us-west-1:
-      AMI: ami-05ef54e863546fdff
+      AMI: ami-08eeddd864496e57f
     us-west-2:
-      AMI: ami-03d339ff3b8c45dc2
+      AMI: ami-032fa00f41a764e3b
   RSPMRegionMap:
     eu-central-1:
       AMI: ami-01aa8c68198f50949

@@ -16,7 +16,7 @@ all: help
 
 .PHONY: rsp
 rsp:  ## Build RSP AMIs
-	PACKER_LOG=1 RSP_VERSION=$(RSP_VERSION) \
+	PACKER_LOG=1 AWS_MAX_ATTEMPTS=300 AWS_POLL_DELAY_SECONDS=30 RSP_VERSION=$(RSP_VERSION) \
 	packer build --only=amazon-ebs rsp.json >> rsp.log 2>&1
 
 
@@ -31,7 +31,7 @@ parse-rsp-manifest:  ## Parse the rsp-manifest.json and print the CloudFormation
 
 .PHONY: rsc
 rsc:  ## Build RSC AMIs
-	PACKER_LOG=1 RSC_VERSION=$(RSC_VERSION) \
+	PACKER_LOG=1 AWS_MAX_ATTEMPTS=300 AWS_POLL_DELAY_SECONDS=30 RSC_VERSION=$(RSC_VERSION) \
 	packer build --only=amazon-ebs rsc.json >> rsc.log 2>&1
 
 
@@ -46,7 +46,7 @@ parse-rsc-manifest:  ## Parse the rsc-manifest.json and print the CloudFormation
 
 .PHONY: rspm
 rspm:  ## Build RSPM AMIs
-	PACKER_LOG=1 RSPM_VERSION=$(RSPM_VERSION) \
+	PACKER_LOG=1 AWS_MAX_ATTEMPTS=300 AWS_POLL_DELAY_SECONDS=30 RSPM_VERSION=$(RSPM_VERSION) \
 	packer build --only=amazon-ebs rspm.json >> rspm.log 2>&1
 
 

@@ -2,8 +2,17 @@
 
 ## RStudio Server Pro
 
-| Version | Region | AMI ID  | Release date |
+| Version | Region | AMI ID  | AMI Release date |
 | --- | --- | --- | --- |
+| 1.2.5042-1 | eu-central-1 | ami-029985c8d940f9caa | 2020/04/13 |
+| 1.2.5042-1 | eu-north-1 | ami-05b72abddc2e3ec02 | 2020/04/13 |
+| 1.2.5042-1 | eu-west-1 | ami-03abc68d9eb99eb43 | 2020/04/13 |
+| 1.2.5042-1 | eu-west-2 | ami-0549e9c3728c1fb31 | 2020/04/13 |
+| 1.2.5042-1 | eu-west-3 | ami-01ec8bbb62d13de2d | 2020/04/13 |
+| 1.2.5042-1 | us-east-1 | ami-0192a17c1cfe5397e | 2020/04/13 |
+| 1.2.5042-1 | us-east-2 | ami-0669db943559be66f | 2020/04/13 |
+| 1.2.5042-1 | us-west-1 | ami-0465434161f258535 | 2020/04/13 |
+| 1.2.5042-1 | us-west-2 | ami-03a7e02531577ba33 | 2020/04/13 |
 | 1.2.5033-1 | us-east-1 | ami-047170001b385e0d2 | 2020/01/14 |
 | 1.2.5033-1 | us-east-2 | ami-05455e6c295cf26d5 | 2020/01/14 |
 | 1.2.5033-1 | us-west-1 | ami-0fee0ec3c2840e7a3 | 2020/01/14 |
@@ -16,8 +25,17 @@
 
 ## RStudio Connect
 
-| Version | Region | AMI ID  | Release date |
+| Version | Region | AMI ID  | AMI Release date |
 | --- | --- | --- | --- |
+| 1.8.2-10 | eu-central-1 | ami-0faaca192bc344ca7 | 2020/04/13 |
+| 1.8.2-10 | eu-north-1 | ami-09f3821d002e0185f | 2020/04/13 |
+| 1.8.2-10 | eu-west-1 | ami-0b4c735742aa0f719 | 2020/04/13 |
+| 1.8.2-10 | eu-west-2 | ami-086099de3c87c5cd6 | 2020/04/13 |
+| 1.8.2-10 | eu-west-3 | ami-0059be4bf04d31767 | 2020/04/13 |
+| 1.8.2-10 | us-east-1 | ami-0d9df8186eb5b41cc | 2020/04/13 |
+| 1.8.2-10 | us-east-2 | ami-08f74bdea32420280 | 2020/04/13 |
+| 1.8.2-10 | us-west-1 | ami-08eeddd864496e57f | 2020/04/13 |
+| 1.8.2-10 | us-west-2 | ami-032fa00f41a764e3b | 2020/04/13 |
 | 1.7.8-7 | us-east-1 | ami-01a5dbd126dab062a | 2020/01/13 |
 | 1.7.8-7 | us-east-2 | ami-0c5ac3f5c91221fbf | 2020/01/13 |
 | 1.7.8-7 | us-west-1 | ami-04fde3648285d02c1 | 2020/01/13 |
@@ -30,8 +48,17 @@
 
 ## RStudio Package Manager
 
-| Version | Region | AMI ID  | Release date |
+| Version | Region | AMI ID  | AMI Release date |
 | --- | --- | --- | --- |
+| 1.1.4-3 | eu-central-1 | ami-01aa8c68198f50949 | 2020/04/12 |
+| 1.1.4-3 | eu-north-1 | ami-0f91b8833026dc677 | 2020/04/12 |
+| 1.1.4-3 | eu-west-1 | ami-0a35783d62a694f07 | 2020/04/12 |
+| 1.1.4-3 | eu-west-2 | ami-04f3891b57f72d156 | 2020/04/12 |
+| 1.1.4-3 | eu-west-3 | ami-07f15e5d10f19f45c | 2020/04/12 |
+| 1.1.4-3 | us-east-1 | ami-0b67497386d94876f | 2020/04/12 |
+| 1.1.4-3 | us-east-2 | ami-077706d681ccd250b | 2020/04/12 |
+| 1.1.4-3 | us-west-1 | ami-0ea37668564fd9ada | 2020/04/12 |
+| 1.1.4-3 | us-west-2 | ami-0dc8151e53de2a56f | 2020/04/12 |
 | 1.1.0.1-17 | us-east-1 | ami-03afccfc337ea7031 | 2020/01/13 |
 | 1.1.0.1-17 | us-east-2 | ami-0a961a8b51b0b45c1 | 2020/01/13 |
 | 1.1.0.1-17 | us-west-1 | ami-04c8c228d6aadb8a2 | 2020/01/13 |
