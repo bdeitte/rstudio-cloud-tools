@@ -176,61 +176,61 @@ Metadata:
 Mappings:
   RSPRegionMap:
     eu-central-1:
-      AMI: ami-00113fce374488cb3
+      AMI: ami-029985c8d940f9caa
     eu-north-1:
-      AMI: ami-04f0c52f163304dde
+      AMI: ami-05b72abddc2e3ec02
     eu-west-1:
-      AMI: ami-0dbe6e799f46d2c79
+      AMI: ami-03abc68d9eb99eb43
     eu-west-2:
-      AMI: ami-049ce0ed6be441720
+      AMI: ami-0549e9c3728c1fb31
     eu-west-3:
-      AMI: ami-0a280f8fac5cea151
+      AMI: ami-01ec8bbb62d13de2d
     us-east-1:
-      AMI: ami-047170001b385e0d2
+      AMI: ami-0192a17c1cfe5397e
     us-east-2:
-      AMI: ami-05455e6c295cf26d5
+      AMI: ami-0669db943559be66f
     us-west-1:
-      AMI: ami-0fee0ec3c2840e7a3
+      AMI: ami-0465434161f258535
     us-west-2:
-      AMI: ami-0035a091f7cdc4331
+      AMI: ami-03a7e02531577ba33
   RSCRegionMap:
     eu-central-1:
-      AMI: ami-0a6b1f6c87deb94e5
+      AMI: ami-0faaca192bc344ca7
     eu-north-1:
-      AMI: ami-075e8c18549068932
+      AMI: ami-09f3821d002e0185f
     eu-west-1:
-      AMI: ami-02b8297a2880adea1
+      AMI: ami-0b4c735742aa0f719
     eu-west-2:
-      AMI: ami-00d4f10aa9f2f2b86
+      AMI: ami-086099de3c87c5cd6
     eu-west-3:
-      AMI: ami-075f66d462ade5dbb
+      AMI: ami-0059be4bf04d31767
     us-east-1:
-      AMI: ami-01a5dbd126dab062a
+      AMI: ami-0d9df8186eb5b41cc
     us-east-2:
-      AMI: ami-0c5ac3f5c91221fbf
+      AMI: ami-08f74bdea32420280
     us-west-1:
-      AMI: ami-04fde3648285d02c1
+      AMI: ami-08eeddd864496e57f
     us-west-2:
-      AMI: ami-0226ebcb0b22e5340
+      AMI: ami-032fa00f41a764e3b
   RSPMRegionMap:
     eu-central-1:
-      AMI: ami-0ab4fd05754af9ca9
+      AMI: ami-01aa8c68198f50949
     eu-north-1:
-      AMI: ami-0e7662462467199ab
+      AMI: ami-0f91b8833026dc677
     eu-west-1:
-      AMI: ami-08bf6b58e4b23db32
+      AMI: ami-0a35783d62a694f07
     eu-west-2:
-      AMI: ami-0ce5614dc0c5b8166
+      AMI: ami-04f3891b57f72d156
     eu-west-3:
-      AMI: ami-0c1a0596af78af4db
+      AMI: ami-07f15e5d10f19f45c
     us-east-1:
-      AMI: ami-03afccfc337ea7031
+      AMI: ami-0b67497386d94876f
     us-east-2:
-      AMI: ami-0a961a8b51b0b45c1
+      AMI: ami-077706d681ccd250b
     us-west-1:
-      AMI: ami-04c8c228d6aadb8a2
+      AMI: ami-0ea37668564fd9ada
     us-west-2:
-      AMI: ami-09fa9dd3d7e5c0bb3
+      AMI: ami-0dc8151e53de2a56f
 
 Resources:
   RSPInstance:
@@ -265,7 +265,7 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            # trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
             sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_IP}|" $RSESSION_CONFIG_FILE
@@ -273,17 +273,24 @@ Resources:
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
 
+            # Start Sessions
             /opt/R/3.6.1/bin/R --version
             /opt/R/3.6.1/bin/R --no-save -e 'library(dplyr)'
-            /opt/python/3.7.3/bin/python --version
-            /opt/python/3.7.3/bin/python -c "import pandas"
+            /opt/python/3.7.6/bin/python --version
+            /opt/python/3.7.6/bin/python -c "import pandas"
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            # Verify
+            systemctl enable rstudio-server
+            systemctl enable rstudio-launcher
+            systemctl start rstudio-server
+            systemctl start rstudio-launcher
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             rstudio-server stop || sleep 5
             rstudio-server verify-installation --verify-user rstudio-user
             rstudio-server start
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
@@ -348,7 +355,7 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             sleep 5  # Wait for admin user creation
             systemctl stop rstudio-connect
 
@@ -359,7 +366,7 @@ Resources:
 
             systemctl start rstudio-connect
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSPM_IP: !GetAtt RSPMInstance.PublicIp
@@ -420,7 +427,7 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 0
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
   RSPMSecurityGroup:
@@ -450,24 +457,24 @@ Resources:
       SourceSecurityGroupId: !Ref RSPMSecurityGroup
 
 Outputs:
-  RSP:
+  RSPHost:
     Description: RStudio Server Pro UI
     Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
-  RSPUser:
+  RSPDefaultUser:
     Description: RStudio Server Pro default user
     Value: rstudio-user
-  RSPUserPass:
+  RSPDefaultPassword:
     Description: RStudio Server Pro initial default user password
     Value: !Ref RSPInstance
-  RSC:
+  RSCHost:
     Description: RStudio Connect UI
     Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
-  RSCUser:
+  RSCDefaultUser:
     Description: RStudio Connect default user
     Value: admin
-  RSCUserPass:
+  RSCDefaultPassword:
     Description: RStudio Connect initial default user password
     Value: !Ref RSCInstance
-  RSPM:
+  RSPMHost:
     Description: RStudio Package Manager UI
     Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp]]

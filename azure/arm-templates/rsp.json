@@ -38,7 +38,7 @@
         },
         "sshUsername": {
             "type": "string",
-            "defaultValue": "rstudio",
+            "defaultValue": "azuser",
             "metadata": {
                 "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
             }
@@ -57,7 +57,7 @@
         "sshPasswordOrKey": {
             "type": "securestring",
             "metadata": {
-                "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+                "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 12 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
             }
         },
         "diskSize": {
@@ -100,14 +100,14 @@
         },
         "rspVersion": {
             "type": "string",
-            "defaultValue": "1.2.5033-1",
+            "defaultValue": "1.2.5042-1",
             "metadata": {
                 "description": "Version of RStudio Server Pro to be installed."
             }
         },
         "rspUsername": {
             "type": "string",
-            "defaultValue": "admin",
+            "defaultValue": "rstudio-user",
             "metadata": {
                 "description": "Default user to be created."
             }
@@ -128,14 +128,14 @@
         },
         "pythonVersion": {
             "type": "string",
-            "defaultValue": "3.7.3",
+            "defaultValue": "3.7.6",
             "metadata": {
                 "description": "Version of Python. Should match Anaconda version."
             }
         },
         "anacondaVersion": {
             "type": "string",
-            "defaultValue": "Miniconda3-4.7.10",
+            "defaultValue": "Miniconda3-py37_4.8.2",
             "metadata": {
                 "description": "Version of Anaconda to be installed. Should match Python version."
             }
@@ -159,6 +159,13 @@
             "defaultValue": "",
             "metadata": {
                 "description": "URL Address to RStudio Connect (e.g. http://myrsc.com/)"
+            }
+        },
+        "gitBranch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+                "description": "Branch of github.com/rstudio/rstudio-cloud-tools"
             }
         }
     },
@@ -189,7 +196,8 @@
         "publicIpName": "[concat(parameters('clusterName'), '-rsp-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-        }
+        },
+        "gitBranch": "[parameters('gitBranch')]"
     },
     "resources": [
         {
@@ -331,12 +339,15 @@
                         "settings": {},
                         "protectedSettings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/wait-for-it.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_r.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_python.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_rsp.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_drivers.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/bootstrap_rsp.sh"
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/bootstrap_rsp.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/wait-for-it.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_r.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_rsp.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_python.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_drivers.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/config_rsp.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rsp_start.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rsp_create_user.sh')]"
                             ],
                             "commandToExecute": "[concat('sudo RSP_VERSION=\"', parameters('rspVersion') ,'\" ', 'RSP_USERNAME=\"', parameters('rspUsername') ,'\" ', 'RSP_PASSWORD=\"', parameters('rspPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'RSC_ADDRESS=\"', parameters('rscAddress') ,'\" ', 'bash bootstrap_rsp.sh')]"
                         }

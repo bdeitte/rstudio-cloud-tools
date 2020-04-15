@@ -18,7 +18,7 @@
     },
     "sshUsername": {
       "type": "string",
-      "defaultValue": "rstudio",
+      "defaultValue": "azuser",
       "metadata": {
         "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
       }
@@ -76,7 +76,7 @@
     },
     "rspVersion": {
         "type": "string",
-        "defaultValue": "1.2.5033-1",
+        "defaultValue": "1.2.5042-1",
         "metadata": {
             "description": "Version of RStudio Server Pro to be installed."
         }
@@ -172,14 +172,14 @@
     },
     "anacondaVersion": {
         "type": "string",
-        "defaultValue": "Miniconda3-4.7.10",
+        "defaultValue": "Miniconda3-py38_4.8.2",
         "metadata": {
             "description": "Version of Anaconda to be installed."
         }
     },
     "pythonVersion": {
         "type": "string",
-        "defaultValue": "3.7.3",
+        "defaultValue": "3.8.1",
         "metadata": {
             "description": "Version of Python included in the Anaconda installer above."
         }
@@ -193,7 +193,6 @@
     }
   },
   "variables": {
-    "baseURI": "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/azure/arm-templates/",
     "apiVersion": "2018-05-01",
     "computeAPIVersion": "2018-06-01",
     "rgName": "[resourceGroup().name]",
@@ -202,7 +201,9 @@
     "virtualNetworkName":  "[concat(parameters('clusterName'), '-vnet')]",
     "addressPrefixes": ["10.0.0.0/16"],
     "subnetName": "default",
-    "subnetPrefix": "10.0.0.0/24"
+    "subnetPrefix": "10.0.0.0/24",
+    "gitBranch": "master",
+    "baseURI": "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/azure/arm-templates/')]"
   },
   "resources": [
     {
@@ -247,7 +248,8 @@
            "sshPasswordOrKey": {"value": "[parameters('sshPasswordOrKey')]"},
            "subnetId": {"value": "[if(equals(variables('virtualNetworkNewOrExisting'), 'new'), resourceId(variables('rgName'), 'Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnetName')), parameters('useExistingSubnet'))]"},
            "rspmVersion": {"value": "[parameters('rspmVersion')]"},
-           "rVersion": {"value": "[parameters('rVersion')]"}
+           "rVersion": {"value": "[parameters('rVersion')]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }
     },
@@ -277,7 +279,8 @@
            "pythonVersion": {"value": "[parameters('pythonVersion')]"},
            "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
            "driversVersion": {"value": "[parameters('driversVersion')]"},
-           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"}
+           "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }
     },
@@ -308,7 +311,8 @@
            "anacondaVersion": {"value": "[parameters('anacondaVersion')]"},
            "driversVersion": {"value": "[parameters('driversVersion')]"},
            "rspmAddress": {"value": "[concat('http://', reference(concat(parameters('clusterName'), '-rspm-deployment')).outputs.rspmHost.value)]"},
-           "rscAddress": {"value": "[concat(reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"}
+           "rscAddress": {"value": "[concat(reference(concat(parameters('clusterName'), '-rsc-deployment')).outputs.rscHost.value)]"},
+           "gitBranch": {"value": "[variables('gitBranch')]"}
         }
       }
     }

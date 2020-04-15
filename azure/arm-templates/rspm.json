@@ -38,7 +38,7 @@
         },
         "sshUsername": {
             "type": "string",
-            "defaultValue": "rstudio",
+            "defaultValue": "azuser",
             "metadata": {
                 "description": "SSH username for the virtual machines. (Can be used to SSH into machines for changing configuration, reviewing logs, etc.)"
             }
@@ -57,7 +57,7 @@
         "sshPasswordOrKey": {
             "type": "securestring",
             "metadata": {
-                "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 8 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+                "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 12 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
             }
         },
         "diskSize": {
@@ -111,6 +111,13 @@
             "metadata": {
                 "description": "Version of R to be installed."
             }
+        },
+        "gitBranch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+                "description": "Branch of github.com/rstudio/rstudio-cloud-tools"
+            }
         }
     },
     "variables": {
@@ -140,7 +147,8 @@
         "publicIpName": "[concat(parameters('clusterName'), '-rspm-public-ip')]",
         "publicIpAddressId": {
             "id": "[resourceId(variables('rgName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-        }
+        },
+        "gitBranch": "[parameters('gitBranch')]"
     },
     "resources": [
         {
@@ -282,10 +290,13 @@
                         "settings": {},
                         "protectedSettings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/wait-for-it.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_r.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/install_rspm.sh",
-                                "https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/master/scripts/bootstrap_rspm.sh"
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/bootstrap_rspm.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/wait-for-it.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_r.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_rspm.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/config_rspm.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rspm_start.sh')]",
+                                "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rspm_create_repo.sh')]"
                             ], 
                             "commandToExecute": "[concat('sudo RSPM_VERSION=\"', parameters('rspmVersion') ,'\" R_VERSION=\"', parameters('rVersion'), '\" ', 'bash bootstrap_rspm.sh')]"
                         }

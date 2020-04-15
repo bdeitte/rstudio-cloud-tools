@@ -1,0 +1,14 @@
+tidyverse
+rmarkdown
+shiny
+tidymodels
+data.table
+packrat
+odbc
+sparklyr
+reticulate
+rsconnect
+devtools
+RCurl
+tensorflow
+keras
