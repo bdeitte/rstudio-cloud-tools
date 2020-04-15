@@ -195,23 +195,23 @@ Mappings:
       AMI: ami-03a7e02531577ba33
   RSCRegionMap:
     eu-central-1:
-      AMI: ami-0faaca192bc344ca7
+      AMI: ami-094b7f5cae87907dd
     eu-north-1:
-      AMI: ami-09f3821d002e0185f
+      AMI: ami-0ea31068e99f8df91
     eu-west-1:
-      AMI: ami-0b4c735742aa0f719
+      AMI: ami-0e958dba717422144
     eu-west-2:
-      AMI: ami-086099de3c87c5cd6
+      AMI: ami-0e0633ab0869ee960
     eu-west-3:
-      AMI: ami-0059be4bf04d31767
+      AMI: ami-0355e9150a06de678
     us-east-1:
-      AMI: ami-0d9df8186eb5b41cc
+      AMI: ami-01b2d1ebce4dba914
     us-east-2:
-      AMI: ami-08f74bdea32420280
+      AMI: ami-09103663a28d3b6ce
     us-west-1:
-      AMI: ami-08eeddd864496e57f
+      AMI: ami-04ed4e5e4ce91002c
     us-west-2:
-      AMI: ami-032fa00f41a764e3b
+      AMI: ami-05aa2331ff635008d
   RSPMRegionMap:
     eu-central-1:
       AMI: ami-01aa8c68198f50949
