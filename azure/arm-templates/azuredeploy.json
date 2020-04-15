@@ -202,7 +202,7 @@
     "addressPrefixes": ["10.0.0.0/16"],
     "subnetName": "default",
     "subnetPrefix": "10.0.0.0/24",
-    "gitBranch": "aws-amis",
+    "gitBranch": "master",
     "baseURI": "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/azure/arm-templates/')]"
   },
   "resources": [

@@ -12,9 +12,9 @@ Documentation: [https://docs.rstudio.com/rstudio-team/cloudformation/](https://d
 
 ## AWS AMIs
 
-List of public AMIs for RStudio Team products:
+Publicly available AMIs for RStudio Team products, full list:
 
-https://github.com/rstudio/rstudio-cloud-tools/blob/aws-amis/aws/images/AMIs.md
+https://github.com/rstudio/rstudio-cloud-tools/master/aws/images/AMIs.md
 
 ## Azure ARM
 
