@@ -46,8 +46,10 @@ dask
 flask
 gensim
 ipykernel
+jupyterlab
 matplotlib
 nltk
+notebook
 numpy
 pandas
 pillow

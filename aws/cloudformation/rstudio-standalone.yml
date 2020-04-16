@@ -275,7 +275,7 @@ Resources:
 
             # Start Sessions
             /opt/R/3.6.3/bin/R --version
-            /opt/R/3.6.3/bin/R --no-save -e 'library(dplyr)'
+            /opt/R/3.6.3/bin/R --no-save -e "library(dplyr)"
             /opt/python/3.8.1/bin/python --version
             /opt/python/3.8.1/bin/python -c "import pandas"
 
