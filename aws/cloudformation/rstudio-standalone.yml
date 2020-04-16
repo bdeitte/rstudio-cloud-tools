@@ -274,10 +274,10 @@ Resources:
             sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
 
             # Start Sessions
-            /opt/R/3.6.1/bin/R --version
-            /opt/R/3.6.1/bin/R --no-save -e 'library(dplyr)'
-            /opt/python/3.7.6/bin/python --version
-            /opt/python/3.7.6/bin/python -c "import pandas"
+            /opt/R/3.6.3/bin/R --version
+            /opt/R/3.6.3/bin/R --no-save -e 'library(dplyr)'
+            /opt/python/3.8.1/bin/python --version
+            /opt/python/3.8.1/bin/python -c "import pandas"
 
             # Verify
             systemctl enable rstudio-server
