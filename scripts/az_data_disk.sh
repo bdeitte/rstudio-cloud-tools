@@ -19,5 +19,5 @@ function partition_disk {
 mkdir -p $DISK_MNT
 lsblk -no FSTYPE $DISK_NAME | grep ext4 || partition_disk
 mount $DISK_PART $DISK_MNT
-chown $MNT_USER:$MNT_GROUP $DISK_MNT
+# chown $MNT_USER:$MNT_GROUP $DISK_MNT
 echo "$DISK_PART $DISK_MNT ext4 defaults 0 0" >> /etc/fstab

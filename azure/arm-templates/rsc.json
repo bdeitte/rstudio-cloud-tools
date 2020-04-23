@@ -57,12 +57,12 @@
     "sshPasswordOrKey": {
       "type": "securestring",
       "metadata": {
-        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 12 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+        "description": "Password or SSH public key for the virtual machines. If password, it must be minimum 12 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
       }
     },
     "dataDiskSize": {
       "type": "int",
-      "defaultValue": 150,
+      "defaultValue": 100,
       "metadata": {
         "description": "Size (in GB) of the RStudio Connect Data Disk"
       }
@@ -95,7 +95,7 @@
         "Static"
       ],
       "metadata": {
-        "description": "Allocation method for the public ip address (If new is selected)."
+        "description": "Allocation method for the public ip address (if new IP address is selected)."
       }
     },
     "rscVersion": {
@@ -109,14 +109,14 @@
       "type": "string",
       "defaultValue": "admin",
       "metadata": {
-        "description": "Version of RStudio Connect to be installed."
+        "description": "Default user to be created."
       }
     },
     "rscPassword": {
       "type": "string",
       "defaultValue": "rstudio",
       "metadata": {
-        "description": "Version of RStudio Connect to be installed."
+        "description": "Password for the default user that will be created."
       }
     },
     "rVersion": {
@@ -151,7 +151,7 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "URL Address to the RStudio Package Manager (e.g. http://myrspm.com/)"
+        "description": "(Optional) Address URL an the RStudio Package Manager instance (e.g. http://myrspm.com/)."
       }
     },
     "gitBranch": {
@@ -181,7 +181,7 @@
         }]
       }
     },
-    "instanceName": "[concat(parameters('clusterName'), '-rsc')]",
+    "instanceName": "[concat(parameters('clusterName'), '-rsc-instance')]",
     "dataDiskName": "[concat(parameters('clusterName'), '-rsc-data')]",
     "nicName": "[concat(parameters('clusterName'), '-rsc-nic')]",
     "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsc-nsg')]",
