@@ -181,6 +181,7 @@
         }]
       }
     },
+    "instanceName": "[concat(parameters('clusterName'), '-rsc')]",
     "dataDiskName": "[concat(parameters('clusterName'), '-rsc-data')]",
     "nicName": "[concat(parameters('clusterName'), '-rsc-nic')]",
     "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsc-nsg')]",
@@ -192,9 +193,9 @@
     "gitBranch": "[parameters('gitBranch')]"
   },
   "resources": [{
-      "name": "[variables('networkSecurityGroupName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "[variables('computeApiVersion')]",
+      "name": "[variables('networkSecurityGroupName')]",
       "location": "[variables('location')]",
       "properties": {
         "securityRules": [{
@@ -253,8 +254,8 @@
       }
     },
     {
-      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "[variables('computeApiVersion')]",
       "name": "[variables('nicName')]",
       "location": "[variables('location')]",
       "dependsOn": [
@@ -277,8 +278,8 @@
       }
     },
     {
-      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Compute/disks",
+      "apiVersion": "[variables('computeApiVersion')]",
       "name": "[variables('dataDiskName')]",
       "location": "[variables('location')]",
       "sku": {
@@ -294,9 +295,9 @@
       }
     },
     {
-      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('clusterName'), '-rsc')]",
+      "apiVersion": "[variables('computeApiVersion')]",
+      "name": "[variables('instanceName')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[variables('nicName')]",
@@ -339,7 +340,7 @@
         "name": "installR",
         "location": "[variables('location')]",
         "dependsOn": [
-          "[concat(parameters('clusterName'), '-rsc')]"
+          "[variables('instanceName')]"
         ],
         "properties": {
           "publisher": "Microsoft.Azure.Extensions",
