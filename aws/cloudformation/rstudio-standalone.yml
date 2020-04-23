@@ -176,23 +176,23 @@ Metadata:
 Mappings:
   RSPRegionMap:
     eu-central-1:
-      AMI: ami-029985c8d940f9caa
+      AMI: ami-01d5c9ecc1993d2d2
     eu-north-1:
-      AMI: ami-05b72abddc2e3ec02
+      AMI: ami-01b401925be8aeb27
     eu-west-1:
-      AMI: ami-03abc68d9eb99eb43
+      AMI: ami-0ada421c6cbd3cb50
     eu-west-2:
-      AMI: ami-0549e9c3728c1fb31
+      AMI: ami-0e7fb830cfaffba6d
     eu-west-3:
-      AMI: ami-01ec8bbb62d13de2d
+      AMI: ami-00534ed303a2e096a
     us-east-1:
-      AMI: ami-0192a17c1cfe5397e
+      AMI: ami-0029b7ba0450ba2ad
     us-east-2:
-      AMI: ami-0669db943559be66f
+      AMI: ami-0b9addc10cb8a3eae
     us-west-1:
-      AMI: ami-0465434161f258535
+      AMI: ami-0ca075c6e0ac2bfb6
     us-west-2:
-      AMI: ami-03a7e02531577ba33
+      AMI: ami-082890f3bc15cfa52
   RSCRegionMap:
     eu-central-1:
       AMI: ami-094b7f5cae87907dd
