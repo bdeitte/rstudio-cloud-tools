@@ -54,7 +54,7 @@ done
 # Python ----------------------------------------------------------------------
 
 # Jupyter: Install and configure extensions
-/opt/python/jupyter/bin/pip install -U notebook rsp-jupyter rsconnect-python rsconnect-jupyter
+/opt/python/jupyter/bin/pip install -U notebook jupyterlab rsp-jupyter rsconnect-python rsconnect-jupyter
 /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter
 /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter
 /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter
@@ -71,7 +71,7 @@ for ((i = 0; i < ${#PY_VERS[@]}; ++i)); do
     # Install Python dependencies
     /opt/python/${PY_VERS[i]}/bin/pip install -U ipykernel rsp-jupyter rsconnect-jupyter rsconnect-python
     /opt/python/${PY_VERS[i]}/bin/pip install -r /tmp/python_packages.txt
-    
+
     # Kernels: Make Python installation available
     /opt/python/${PY_VERS[i]}/bin/python -m ipykernel install --name python"${PY_VERS[i]}" --display-name "Python ${PY_VERS[i]}"
 
