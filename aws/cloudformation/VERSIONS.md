@@ -9,6 +9,6 @@ we provide versioned CloudFormation templates that have been validated to work t
 
 | CF Bundle Version | RSP Version | RSC Version | RSPM Version | Link |
 | --- | --- | --- | --- | --- |
-| latest (1.0.0) | 1.2.5033-1 | 1.7.8-7 | 1.1.0.1-17 | [Launch on AWS](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?templateURL=https://rstudio-cloud-tools.s3.amazonaws.com/rstudio-standalone.yml&stackName=RStudioTeam) |
+| latest (1.1.0) | 1.2.5042-1 | 1.8.2-10 | 1.1.4-3 | [Launch on AWS](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?templateURL=https://rstudio-cloud-tools.s3.amazonaws.com/rstudio-standalone.yml&stackName=RStudioTeam) |
 | 1.1.0 | 1.2.5042-1 | 1.8.2-10 | 1.1.4-3 | [Launch on AWS](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?templateURL=https://rstudio-cloud-tools.s3.amazonaws.com/cloudformation/rstudio-standalone-1.1.0.yml&stackName=RStudioTeam-1-1-0) |
 | 1.0.0 | 1.2.5033-1 | 1.7.8-7 | 1.1.0.1-17 | [Launch on AWS](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?templateURL=https://rstudio-cloud-tools.s3.amazonaws.com/cloudformation/rstudio-standalone-1.0.0.yml&stackName=RStudioTeam-1-0-0) |
