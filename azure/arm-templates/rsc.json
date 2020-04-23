@@ -300,7 +300,7 @@
       "location": "[variables('location')]",
       "dependsOn": [
         "[variables('nicName')]",
-        "[variables('nicName')]"
+        "[variables('dataDiskName')]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -350,7 +350,7 @@
           "protectedSettings": {
             "fileUris": [
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/az_bootstrap_rsc.sh')]",
-              "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/az_data_disk.sh')]"
+              "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/az_data_disk.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/wait-for-it.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_r.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_python.sh')]",

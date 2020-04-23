@@ -1,14 +1,14 @@
 #!/bin/bash
 set -ex
 
+DISK_MNT=${DISK_MNT:-/mnt/rstudio}
+MNT_USER=${MNT_USER:-rstudio}
+MNT_GROUP=${MNT_GROUP:-rstudio}
+
 # In Azure, /dev/sdb is ephemeral storage mapped to /mnt/resource.
 # Additional disks are mounted after that...
 DISK_NAME=/dev/sdc
 DISK_PART=${DISK_NAME}1
-
-DISK_MNT=/mnt/rstudio
-MNT_USER=rstudio
-MNT_GROUP=rstudio
 
 function partition_disk {
     parted $DISK_NAME mklabel msdos
