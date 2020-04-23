@@ -2,6 +2,10 @@
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 set -xe
 
+export RSC_DATA_DIR=${RSC_DATA_DIR:-/mnt/rstudio-connect}
+export RSC_DATA_DIR_USER=${RSC_DATA_DIR_USER:-rstudio-connect}
+export RSC_DATA_DIR_GROUP=${RSC_DATA_DIR_GROUP:-rstudio-connect}
+
 export RSC_VERSION=${RSC_VERSION:-1.8.2-10}
 export RSC_USERNAME=${RSC_USERNAME:-admin}
 export RSC_PASSWORD=${RSC_PASSWORD:-rstudio}
@@ -16,6 +20,8 @@ export RSPM_ADDRESS=${RSPM_ADDRESS}
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
 chmod +x /usr/local/bin/wait-for-it.sh
 
+# Config Data Disk
+DISK_MNT=${RSC_DATA_DIR} MNT_USER=${RSC_DATA_DIR_USER} MNT_GROUP=${RSC_DATA_DIR_GROUP} bash ./az_data_disk.sh
 
 # Install
 bash ./install_r.sh
