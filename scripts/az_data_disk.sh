@@ -2,8 +2,8 @@
 set -ex
 
 DISK_MNT=${DISK_MNT:-/mnt/rstudio}
-MNT_USER=${MNT_USER:-rstudio}
-MNT_GROUP=${MNT_GROUP:-rstudio}
+MNT_USER=${MNT_USER}
+MNT_GROUP=${MNT_GROUP}
 
 # In Azure, /dev/sdb is ephemeral storage mapped to /mnt/resource.
 # Additional disks are mounted after that...
