@@ -3,9 +3,11 @@ exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 set -xe
 
 export RSP_VERSION=${RSP_VERSION:-1.2.5042-1}
-export RSP_DATA_DIR=${RSP_DATA_DIR:-/mnt/rstudio}
 export RSP_USERNAME=${RSP_USERNAME:-rstudio-user}
 export RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
+export RSP_DATA_DIR=${RSP_DATA_DIR:-/mnt/rstudio}
+export MNT_USER=${MNT_USER:-rstudio}
+export MNT_GROUP=${MNT_GROUP:-rstudio}
 export R_VERSION=${R_VERSION:-3.6.3}
 export PYTHON_VERSION=${PYTHON_VERSION:-3.8.1}
 export ANACONDA_VERSION=${ANACONDA_VERSION:-Miniconda3-py38_4.8.2}
@@ -13,9 +15,6 @@ export DRIVERS_VERSION=${DRIVERS_VERSION:-1.6.1}
 export RSPM_ADDRESS=${RSPM_ADDRESS}
 export RSC_ADDRESS=${RSC_ADDRESS}
 
-
-# Config Data Disk
-DISK_MNT=${RSP_DATA_DIR} bash ./az_data_disk.sh
 
 # Utility scripts
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
@@ -80,6 +79,7 @@ bash ./install_python.sh
 PREFIX_NAME=jupyter bash ./install_python.sh
 bash ./install_drivers.sh
 bash ./install_rsp.sh
+DISK_MNT=${RSP_DATA_DIR} MNT_USER=${MNT_USER} MNT_GROUP=${MNT_GROUP} bash ./az_data_disk.sh
 R_VERSIONS=${R_VERSION} PYTHON_VERSIONS=${PYTHON_VERSION} bash ./config_rsp.sh
 bash ./rsp_start.sh
 bash ./rsp_create_user.sh
