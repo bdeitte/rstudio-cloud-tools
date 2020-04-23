@@ -95,7 +95,7 @@
         "Static"
       ],
       "metadata": {
-        "description": "Allocation method for the public ip address (if new IP address is selected)."
+        "description": "Allocation method for the public ip address (if `new` IP address is selected)."
       }
     },
     "rscVersion": {
@@ -194,8 +194,8 @@
   },
   "resources": [{
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "[variables('computeApiVersion')]",
       "name": "[variables('networkSecurityGroupName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "properties": {
         "securityRules": [{
@@ -241,10 +241,10 @@
       }
     },
     {
-      "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "[variables('computeApiVersion')]",
+      "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
       "name": "[variables('publicIpName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "sku": {
         "name": "Standard"
@@ -255,8 +255,8 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "[variables('computeApiVersion')]",
       "name": "[variables('nicName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[variables('publicIpName')]"
@@ -296,8 +296,8 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "[variables('computeApiVersion')]",
       "name": "[variables('instanceName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[variables('nicName')]",
@@ -335,9 +335,9 @@
         }
       },
       "resources": [{
-        "apiVersion": "2019-03-01",
         "type": "Extensions",
         "name": "installR",
+        "apiVersion": "2019-03-01",
         "location": "[variables('location')]",
         "dependsOn": [
           "[variables('instanceName')]"
