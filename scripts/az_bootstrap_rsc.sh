@@ -24,9 +24,9 @@ chmod +x /usr/local/bin/wait-for-it.sh
 DISK_MNT=${RSC_DATA_DIR} MNT_USER=${RSC_DATA_DIR_USER} MNT_GROUP=${RSC_DATA_DIR_GROUP} bash ./az_data_disk.sh
 
 # Install
-bash ./install_r.sh
-bash ./install_python.sh
-bash ./install_drivers.sh
+# bash ./install_r.sh
+# bash ./install_python.sh
+# bash ./install_drivers.sh
 bash ./install_rsc.sh
 R_VERSIONS=${R_VERSION} PYTHON_VERSIONS=${PYTHON_VERSION} bash ./config_rsc.sh
 bash ./rsc_start.sh
