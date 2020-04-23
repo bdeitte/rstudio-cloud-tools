@@ -65,7 +65,7 @@ Executable = /opt/python/${PY_VERS[0]}/bin/python
 EOL
 
 if [[ ! -z "${RSC_DATA_DIR}" ]]; then
-    sed -i -e "s|;DataDir = /mnt/rstudio-connect|;DataDir = ${RSC_DATA_DIR}|" $RSC_CONFIG_FILE
+    sed -i -e "s|;DataDir = /mnt/rstudio-connect|DataDir = ${RSC_DATA_DIR}|" $RSC_CONFIG_FILE
 fi
 
 if [[ ! -z "${RSPM_ADDRESS}" ]]; then
