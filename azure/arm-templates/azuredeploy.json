@@ -67,16 +67,20 @@
         "description": "The size of the Virtual Machine for RStudio Server Pro"
       }
     },
-    "rspDiskSize": {
+    "rspDataDiskSize": {
       "type": "int",
-      "defaultValue": 150,
+      "defaultValue": 50,
       "metadata": {
-        "description": "Size (in GB) of the RStudio Server Pro Disk"
+        "description": "Size (in GB) of the RStudio Server Pro Data Disk"
       }
     },
     "rspVersion": {
       "type": "string",
       "defaultValue": "1.2.5042-1",
+      "allowedValues": [
+        "1.2.5042-1",
+        "1.2.5033-1",
+      ],
       "metadata": {
         "description": "Version of RStudio Server Pro to be installed."
       }
@@ -108,7 +112,7 @@
         "description": "The size of the Virtual Machine for RStudio Connect"
       }
     },
-    "rscDiskSize": {
+    "rscDataDiskSize": {
       "type": "int",
       "defaultValue": 150,
       "metadata": {
@@ -118,6 +122,11 @@
     "rscVersion": {
       "type": "string",
       "defaultValue": "1.8.2-10",
+      "allowedValues": [
+        "1.8.2-10",
+        "1.8.0.4-21",
+        "1.7.8-7",
+      ],
       "metadata": {
         "description": "Version of RStudio Package Manager to be installed."
       }
@@ -149,7 +158,7 @@
         "description": "The size of the Virtual Machine for RStudio Package Manager"
       }
     },
-    "rspmDiskSize": {
+    "rspmDataDiskSize": {
       "type": "int",
       "defaultValue": 150,
       "metadata": {
@@ -159,6 +168,10 @@
     "rspmVersion": {
       "type": "string",
       "defaultValue": "1.1.4-3",
+      "allowedValues": [
+        "1.1.4-3",
+        "1.1.0.1-17",
+      ],
       "metadata": {
         "description": "Version of RStudio Package Manager to be installed."
       }
@@ -244,8 +257,8 @@
           "vmSize": {
             "value": "[parameters('rspmVmSize')]"
           },
-          "diskSize": {
-            "value": "[parameters('rspmDiskSize')]"
+          "dataDiskSize": {
+            "value": "[parameters('rspmDataDiskSize')]"
           },
           "sshUsername": {
             "value": "[parameters('sshUsername')]"
@@ -290,8 +303,8 @@
           "vmSize": {
             "value": "[parameters('rscVmSize')]"
           },
-          "diskSize": {
-            "value": "[parameters('rscDiskSize')]"
+          "dataDiskSize": {
+            "value": "[parameters('rscDataDiskSize')]"
           },
           "sshUsername": {
             "value": "[parameters('sshUsername')]"
@@ -348,8 +361,8 @@
           "vmSize": {
             "value": "[parameters('rspVmSize')]"
           },
-          "diskSize": {
-            "value": "[parameters('rspDiskSize')]"
+          "dataDiskSize": {
+            "value": "[parameters('rspDataDiskSize')]"
           },
           "sshUsername": {
             "value": "[parameters('sshUsername')]"

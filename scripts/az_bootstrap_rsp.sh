@@ -3,6 +3,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 set -xe
 
 export RSP_VERSION=${RSP_VERSION:-1.2.5042-1}
+export RSP_DATA_DIR=${RSP_DATA_DIR:-/mnt/rstudio}
 export RSP_USERNAME=${RSP_USERNAME:-rstudio-user}
 export RSP_PASSWORD=${RSP_PASSWORD:-rstudio}
 export R_VERSION=${R_VERSION:-3.6.3}
@@ -13,10 +14,12 @@ export RSPM_ADDRESS=${RSPM_ADDRESS}
 export RSC_ADDRESS=${RSC_ADDRESS}
 
 
+# Config Data Disk
+DISK_MNT=${RSP_DATA_DIR} bash ./az_data_disk.sh
+
 # Utility scripts
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
 chmod +x /usr/local/bin/wait-for-it.sh
-
 
 cat >/tmp/r_packages.txt <<EOL
 tidyverse
@@ -34,7 +37,6 @@ RCurl
 tensorflow
 keras
 EOL
-
 
 cat >/tmp/python_packages.txt <<EOL
 altair
@@ -71,7 +73,6 @@ rsp-jupyter
 rsconnect-python
 rsconnect-jupyter
 EOL
-
 
 # Install
 bash ./install_r.sh

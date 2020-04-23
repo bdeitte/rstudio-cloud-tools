@@ -14,7 +14,7 @@ export RSPM_ADDRESS=${RSPM_ADDRESS}
 
 
 # Config Data Disk
-DISK_MNT=${RSC_DATA_DIR} MNT_USER=${RSC_DATA_DIR_USER} MNT_GROUP=${RSC_DATA_DIR_GROUP} bash ./az_data_disk.sh
+DISK_MNT=${RSC_DATA_DIR} bash ./az_data_disk.sh
 
 # Utility scripts
 mv ./wait-for-it.sh /usr/local/bin/wait-for-it.sh

@@ -151,8 +151,6 @@ Environment: PATH=/opt/R/${R_VERS[0]}/bin:/opt/python/${PY_VERS[0]}/bin:/usr/loc
 EOL
 
 
-# Other Services --------------------------------------------------------------
-
 REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
 RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
 

@@ -151,7 +151,7 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "(Optional) Address URL an the RStudio Package Manager instance (e.g. http://myrspm.com/)."
+        "description": "(Optional) Address URL an RStudio Package Manager instance (e.g. http://myrspm.com/)."
       }
     },
     "gitBranch": {
@@ -242,8 +242,8 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
       "name": "[variables('publicIpName')]",
+      "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
       "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "sku": {
