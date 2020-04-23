@@ -305,7 +305,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[variables('rscDeploymentName']",
+      "name": "[variables('rscDeploymentName')]",
       "apiVersion": "[variables('apiVersion')]",
       "resourceGroup": "[variables('rgName')]",
       "dependsOn": [],
@@ -414,7 +414,7 @@
             "value": "[concat('http://', reference(variables('rspmDeploymentName')).outputs.rspmHost.value)]"
           },
           "rscAddress": {
-            "value": "[concat(reference(variables('rscDeploymentName').outputs.rscHost.value)]"
+            "value": "[concat(reference(variables('rscDeploymentName')).outputs.rscHost.value)]"
           },
           "gitBranch": {
             "value": "[variables('gitBranch')]"
@@ -438,15 +438,15 @@
     },
     "rscHost": {
       "type": "string",
-      "value": "[concat('http://', reference(variables('rscDeploymentName').outputs.rscHost.value)]"
+      "value": "[concat('http://', reference(variables('rscDeploymentName')).outputs.rscHost.value)]"
     },
     "rscDefaultUsername": {
       "type": "string",
-      "value": "[reference(variables('rscDeploymentName').outputs.rscDefaultUsername.value]"
+      "value": "[reference(variables('rscDeploymentName')).outputs.rscDefaultUsername.value]"
     },
     "rscDefaultPassword": {
       "type": "string",
-      "value": "[reference(variables('rscDeploymentName').outputs.rscDefaultPassword.value]"
+      "value": "[reference(variables('rscDeploymentName')).outputs.rscDefaultPassword.value]"
     },
     "rspmHost": {
       "type": "string",
