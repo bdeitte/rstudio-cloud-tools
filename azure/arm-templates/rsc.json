@@ -57,14 +57,14 @@
     "sshPasswordOrKey": {
       "type": "securestring",
       "metadata": {
-        "description": "Password or SSH public key for the virtual machines. If password, password must be minimum 12 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
+        "description": "Password or SSH public key for the virtual machines. If password, it must be minimum 12 characters with at least 1 upper case letter, 1 lower case letter and 1 number."
       }
     },
-    "diskSize": {
+    "dataDiskSize": {
       "type": "int",
-      "defaultValue": 150,
+      "defaultValue": 100,
       "metadata": {
-        "description": "Size (in GB) of the RStudio Connect Disk"
+        "description": "Size (in GB) of the RStudio Connect Data Disk"
       }
     },
     "subnetId": {
@@ -95,7 +95,7 @@
         "Static"
       ],
       "metadata": {
-        "description": "Allocation method for the public ip address (If new is selected)."
+        "description": "Allocation method for the public ip address (if `new` IP address is selected)."
       }
     },
     "rscVersion": {
@@ -109,14 +109,14 @@
       "type": "string",
       "defaultValue": "admin",
       "metadata": {
-        "description": "Version of RStudio Connect to be installed."
+        "description": "Default user to be created."
       }
     },
     "rscPassword": {
       "type": "string",
       "defaultValue": "rstudio",
       "metadata": {
-        "description": "Version of RStudio Connect to be installed."
+        "description": "Password for the default user that will be created."
       }
     },
     "rVersion": {
@@ -151,19 +151,19 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "URL Address to the RStudio Package Manager (e.g. http://myrspm.com/)"
+        "description": "(Optional) Address URL an RStudio Package Manager instance (e.g. http://myrspm.com/)."
       }
     },
     "gitBranch": {
       "type": "string",
       "defaultValue": "master",
       "metadata": {
-        "description": "Branch of github.com/rstudio/rstudio-cloud-tools"
+        "description": "Branch of github.com/rstudio/rstudio-cloud-tools to pull the install scripts from."
       }
     }
   },
   "variables": {
-    "computeAPIVersion": "2018-06-01",
+    "computeApiVersion": "2018-06-01",
     "rgName": "[resourceGroup().name]",
     "location": "[resourceGroup().location]",
     "baseImage": {
@@ -181,6 +181,8 @@
         }]
       }
     },
+    "instanceName": "[concat(parameters('clusterName'), '-rsc-instance')]",
+    "dataDiskName": "[concat(parameters('clusterName'), '-rsc-data')]",
     "nicName": "[concat(parameters('clusterName'), '-rsc-nic')]",
     "networkSecurityGroupName": "[concat(parameters('clusterName'), '-rsc-nsg')]",
     "privateIPAllocationMethod": "Dynamic",
@@ -191,9 +193,9 @@
     "gitBranch": "[parameters('gitBranch')]"
   },
   "resources": [{
-      "name": "[variables('networkSecurityGroupName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "[variables('computeAPIVersion')]",
+      "name": "[variables('networkSecurityGroupName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "properties": {
         "securityRules": [{
@@ -239,10 +241,10 @@
       }
     },
     {
-      "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "[variables('computeAPIVersion')]",
       "name": "[variables('publicIpName')]",
+      "condition": "[and(not(parameters('usePrivateIP')), equals(parameters('publicIpNewOrExisting'), 'new'))]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "sku": {
         "name": "Standard"
@@ -252,9 +254,9 @@
       }
     },
     {
-      "apiVersion": "[variables('computeAPIVersion')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[variables('publicIpName')]"
@@ -276,12 +278,30 @@
       }
     },
     {
-      "apiVersion": "[variables('computeAPIVersion')]",
+      "type": "Microsoft.Compute/disks",
+      "apiVersion": "[variables('computeApiVersion')]",
+      "name": "[variables('dataDiskName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "StandardSSD_LRS",
+        "tier": "Standard"
+      },
+      "scale": null,
+      "properties": {
+        "creationData": {
+          "createOption": "Empty"
+        },
+        "diskSizeGB": "[parameters('dataDiskSize')]"
+      }
+    },
+    {
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('clusterName'), '-rsc')]",
+      "name": "[variables('instanceName')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[variables('nicName')]"
+        "[variables('nicName')]",
+        "[variables('dataDiskName')]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -297,9 +317,16 @@
           "imageReference": "[variables('baseImage')]",
           "osDisk": {
             "caching": "ReadWrite",
-            "createOption": "FromImage",
-            "diskSizeGB": "[parameters('diskSize')]"
-          }
+            "createOption": "FromImage"
+          },
+          "dataDisks": [{
+            "lun": 0,
+            "managedDisk": {
+              "id": "[resourceId(variables('rgName'), 'Microsoft.Compute/disks', variables('dataDiskName'))]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "Attach"
+          }]
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -308,12 +335,12 @@
         }
       },
       "resources": [{
-        "apiVersion": "2019-03-01",
         "type": "Extensions",
         "name": "installR",
+        "apiVersion": "2019-03-01",
         "location": "[variables('location')]",
         "dependsOn": [
-          "[concat(parameters('clusterName'), '-rsc')]"
+          "[variables('instanceName')]"
         ],
         "properties": {
           "publisher": "Microsoft.Azure.Extensions",
@@ -323,7 +350,8 @@
           "settings": {},
           "protectedSettings": {
             "fileUris": [
-              "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/bootstrap_rsc.sh')]",
+              "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/az_bootstrap_rsc.sh')]",
+              "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/az_data_disk.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/wait-for-it.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_r.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/install_python.sh')]",
@@ -333,7 +361,7 @@
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rsc_start.sh')]",
               "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/scripts/rsc_create_user.sh')]"
             ],
-            "commandToExecute": "[concat('sudo RSC_VERSION=\"', parameters('rscVersion') ,'\" ', 'RSC_USERNAME=\"', parameters('rscUsername') ,'\" ', 'RSC_PASSWORD=\"', parameters('rscPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'bash bootstrap_rsc.sh')]"
+            "commandToExecute": "[concat('sudo RSC_VERSION=\"', parameters('rscVersion') ,'\" ', 'RSC_USERNAME=\"', parameters('rscUsername') ,'\" ', 'RSC_PASSWORD=\"', parameters('rscPassword') ,'\" ',  'R_VERSION=\"', parameters('rVersion') ,'\" ', 'PYTHON_VERSION=\"', parameters('pythonVersion') ,'\" ', 'ANACONDA_VERSION=\"', parameters('anacondaVersion') ,'\" ', 'DRIVERS_VERSION=\"', parameters('driversVersion') ,'\" ', 'RSPM_ADDRESS=\"', parameters('rspmAddress') ,'\" ', 'bash az_bootstrap_rsc.sh')]"
           }
         }
       }]

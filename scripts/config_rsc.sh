@@ -40,8 +40,9 @@ cat >$RSC_CONFIG_FILE <<EOL
 ; in terms of that proxy.
 ;
 ; Address = https://rstudio-connect.company.com
-;[Server]
+[Server]
 ;Address = RSC_SERVER_ADDRESS
+;DataDir = /mnt/rstudio-connect
 
 [HTTP]
 Listen = :80
@@ -63,12 +64,12 @@ Executable = /opt/python/${PY_VERS[0]}/bin/python
 ;URL = RSPM_SERVER_ADDRESS
 EOL
 
-
-# Other services --------------------------------------------------------------
+if [[ ! -z "${RSC_DATA_DIR}" ]]; then
+    sed -i -e "s|;DataDir = /mnt/rstudio-connect|DataDir = ${RSC_DATA_DIR}|" $RSC_CONFIG_FILE
+fi
 
 if [[ ! -z "${RSPM_ADDRESS}" ]]; then
     sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $RSC_CONFIG_FILE
     sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $RSC_CONFIG_FILE
     sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = ${RSPM_ADDRESS}/cran/__linux__/bionic/latest|" $RSC_CONFIG_FILE
 fi
-
