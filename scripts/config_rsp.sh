@@ -155,9 +155,9 @@ REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
 RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
 
 if [[ ! -z "${RSC_ADDRESS}" ]]; then
-    sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_ADDRESS}|" $RSESSION_CONFIG_FILE
+    sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=${RSC_ADDRESS}|" $RSESSION_CONFIG_FILE
 fi
 
 if [[ ! -z "${RSPM_ADDRESS}" ]]; then
-    sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_ADDRESS}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
+    sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=${RSPM_ADDRESS}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
 fi
