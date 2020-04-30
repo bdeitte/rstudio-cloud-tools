@@ -236,7 +236,7 @@
     "rspDeploymentName": "[concat(parameters('clusterName'), '-rsp-deployment')]",
     "rscDeploymentName": "[concat(parameters('clusterName'), '-rsc-deployment')]",
     "rspmDeploymentName": "[concat(parameters('clusterName'), '-rspm-deployment')]",
-    "gitBranch": "fix-az-rspm",
+    "gitBranch": "master",
     "baseURI": "[concat('https://raw.githubusercontent.com/rstudio/rstudio-cloud-tools/', variables('gitBranch'), '/azure/arm-templates/')]"
   },
   "resources": [{
