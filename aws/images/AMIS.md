@@ -4,6 +4,20 @@
 
 | Version | Region | AMI ID  | AMI Release date |
 | --- | --- | --- | --- |
+| 1.3.959-1 | ap-northeast-1 | ami-089dbb2aafe4507ad | 2020/06/24 |
+| 1.3.959-1 | ap-northeast-2 | ami-0281606354e8e6768 | 2020/06/24 |
+| 1.3.959-1 | ap-south-1 | ami-0c1a7524f33545ce5 | 2020/06/24 |
+| 1.3.959-1 | ap-southeast-1 | ami-0bf8a29c62d5156e8 | 2020/06/24 |
+| 1.3.959-1 | ap-southeast-2 | ami-06b0fade7edc313ad | 2020/06/24 |
+| 1.3.959-1 | eu-central-1 | ami-0e284982aeeadfa8e | 2020/06/24 |
+| 1.3.959-1 | eu-north-1 | ami-0ba34fa2cb4e369b9 | 2020/06/24 |
+| 1.3.959-1 | eu-west-1 | ami-010bd93e570070ca0 | 2020/06/24 |
+| 1.3.959-1 | eu-west-2 | ami-02332278c2064b57c | 2020/06/24 |
+| 1.3.959-1 | eu-west-3 | ami-0790eaebd8188279e | 2020/06/24 |
+| 1.3.959-1 | us-east-1 | ami-0893c8bcf961b37fc | 2020/06/24 |
+| 1.3.959-1 | us-east-2 | ami-0a0fcfe7249fac9f5 | 2020/06/24 |
+| 1.3.959-1 | us-west-1 | ami-0d604623cad21cbac | 2020/06/24 |
+| 1.3.959-1 | us-west-2 | ami-0afb3900b3e6fd59a | 2020/06/24 |
 | 1.2.5042-1 | eu-central-1 | ami-01d5c9ecc1993d2d2 | 2020/04/23 |
 | 1.2.5042-1 | eu-north-1 | ami-01b401925be8aeb27 | 2020/04/23 |
 | 1.2.5042-1 | eu-west-1 | ami-0ada421c6cbd3cb50 | 2020/04/23 |
@@ -27,6 +41,11 @@
 
 | Version | Region | AMI ID  | AMI Release date |
 | --- | --- | --- | --- |
+| 1.8.2-10 | ap-northeast-1 | ami-0c72a69fd8f76bfbf | 2020/06/24 |
+| 1.8.2-10 | ap-northeast-2 | ami-04912a71571a0e3fd | 2020/06/24 |
+| 1.8.2-10 | ap-south-1 | ami-0b0e0f8a466687432 | 2020/06/24 |
+| 1.8.2-10 | ap-southeast-1 | ami-0eb2e999f192e0f3f | 2020/06/24 |
+| 1.8.2-10 | ap-southeast-2 | ami-08f4772373c299cea | 2020/06/24 |
 | 1.8.2-10 | eu-central-1 | ami-094b7f5cae87907dd | 2020/04/15 |
 | 1.8.2-10 | eu-north-1 | ami-0ea31068e99f8df91 | 2020/04/15 |
 | 1.8.2-10 | eu-west-1 | ami-0e958dba717422144 | 2020/04/15 |
@@ -59,6 +78,11 @@
 | 1.1.4-3 | us-east-2 | ami-077706d681ccd250b | 2020/04/12 |
 | 1.1.4-3 | us-west-1 | ami-0ea37668564fd9ada | 2020/04/12 |
 | 1.1.4-3 | us-west-2 | ami-0dc8151e53de2a56f | 2020/04/12 |
+| 1.1.4-3 | ap-northeast-1 | ami-01b24d36b8500b4a4 | 2020/06/24 |
+| 1.1.4-3 | ap-northeast-2 | ami-008bd0a5a27463e9d | 2020/06/24 |
+| 1.1.4-3 | ap-south-1 | ami-0a3d254c2a454ebc8 | 2020/06/24 |
+| 1.1.4-3 | ap-southeast-1 | ami-0c184ad733fa9eb42 | 2020/06/24 |
+| 1.1.4-3 | ap-southeast-2 | ami-0d9fdec2761824f47 | 2020/06/24 |
 | 1.1.0.1-17 | us-east-1 | ami-03afccfc337ea7031 | 2020/01/13 |
 | 1.1.0.1-17 | us-east-2 | ami-0a961a8b51b0b45c1 | 2020/01/13 |
 | 1.1.0.1-17 | us-west-1 | ami-04c8c228d6aadb8a2 | 2020/01/13 |
