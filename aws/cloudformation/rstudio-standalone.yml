@@ -435,7 +435,7 @@ Resources:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT20M
+        Timeout: PT1H
     Properties:
       Tags:
         - Key: Name
