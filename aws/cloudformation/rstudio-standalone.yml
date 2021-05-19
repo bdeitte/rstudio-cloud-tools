@@ -305,6 +305,13 @@ Resources:
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
 
+            PIP_CONFIG_FILE=/etc/pip.conf
+            cat << EOF > $PIP_CONFIG_FILE
+            [global]
+            timeout = 60
+            index-url = https://${RSPM_IP}/pypi/latest/simple
+            EOF
+            
             # Start Sessions
             /opt/R/3.6.3/bin/R --version
             /opt/R/3.6.3/bin/R --no-save -e "library(dplyr)"
@@ -397,6 +404,13 @@ Resources:
             sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
             sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
             sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
+            
+            PIP_CONFIG_FILE=/etc/pip.conf
+            cat << EOF > $PIP_CONFIG_FILE
+            [global]
+            timeout = 60
+            index-url = https://${RSPM_IP}/pypi/latest/simple
+            EOF
 
             systemctl start rstudio-connect
 
