@@ -196,7 +196,7 @@ Mappings:
     eu-west-3:
       AMI: ami-0790eaebd8188279e
     us-east-1:
-      AMI: ami-0893c8bcf961b37fc
+      AMI: ami-04bd6989dfa69be83
     us-east-2:
       AMI: ami-0a0fcfe7249fac9f5
     us-west-1:
@@ -212,13 +212,13 @@ Mappings:
     eu-west-1:
       AMI: ami-0e958dba717422144
     eu-west-2:
-      AMI: ami-0e0633ab0869ee960
+      AMI: ami-00d7054d3d517802c
     eu-west-3:
       AMI: ami-0355e9150a06de678
     us-east-1:
-      AMI: ami-01b2d1ebce4dba914
+      AMI: ami-0925289e48c7e041c
     us-east-2:
-      AMI: ami-09103663a28d3b6ce
+      AMI: ami-0d654bde0b1fb03ae
     us-west-1:
       AMI: ami-04ed4e5e4ce91002c
     us-west-2:
@@ -246,7 +246,7 @@ Mappings:
     eu-west-3:
       AMI: ami-07f15e5d10f19f45c
     us-east-1:
-      AMI: ami-0b67497386d94876f
+      AMI: ami-05bcd1624763edb6d
     us-east-2:
       AMI: ami-077706d681ccd250b
     us-west-1:
