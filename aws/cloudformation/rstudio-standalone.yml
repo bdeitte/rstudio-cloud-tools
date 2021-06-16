@@ -309,7 +309,7 @@ Resources:
             cat << EOF > $PIP_CONFIG_FILE
             [global]
             timeout = 60
-            index-url = https://${RSPM_IP}/pypi/latest/simple
+            index-url = http://${RSPM_IP}/pypi/latest/simple
             EOF
             
             # Start Sessions
@@ -324,14 +324,14 @@ Resources:
             systemctl start rstudio-server
             systemctl start rstudio-launcher
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
+            /usr/local/bin/wait-for-it.sh localhost:8787 -t 60
             rstudio-server stop
             sleep 10
             rstudio-server verify-installation --verify-user rstudio-user || true
             sleep 10
             rstudio-server start
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
+            /usr/local/bin/wait-for-it.sh localhost:8787 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
@@ -396,11 +396,12 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
-            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
-            sleep 5  # Wait for admin user creation
-            systemctl stop rstudio-connect
-
             CONNECT_CONFIG_FILE=/etc/rstudio-connect/rstudio-connect.gcfg
+
+            sed -i -e 's/Listen = \":3939\"/Listen = \":80\"/g' $CONNECT_CONFIG_FILE
+
+            systemctl restart rstudio-connect
+
             sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
             sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
             sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
@@ -409,10 +410,10 @@ Resources:
             cat << EOF > $PIP_CONFIG_FILE
             [global]
             timeout = 60
-            index-url = https://${RSPM_IP}/pypi/latest/simple
+            index-url = http://${RSPM_IP}/pypi/latest/simple
             EOF
 
-            systemctl start rstudio-connect
+            systemctl restart rstudio-connect
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
@@ -474,6 +475,12 @@ Resources:
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            
+            sed -i -e "s/Listen = :4242/Listen = :80/g" /etc/rstudio-pm/rstudio-pm.gcfg
+            setcap 'cap_net_bind_service=+ep' /opt/rstudio-pm/bin/rstudio-pm
+            sleep 10
+
+            systemctl restart rstudio-pm
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
