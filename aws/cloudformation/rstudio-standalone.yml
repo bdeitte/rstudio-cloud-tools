@@ -297,13 +297,22 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            
+            export DEBIAN_FRONTEND=noninteractive
+            apt install -y python-pip python-setuptools
+            mkdir -p /opt/aws/bin
+            python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+            
+            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
-            sed -i -e "s|#default-rsconnect-server=RSC_SERVER_ADDRESS|default-rsconnect-server=http://${RSC_IP}|" $RSESSION_CONFIG_FILE
+            echo "default-rsconnect-server=http://${RSC_IP}|" >> $RSESSION_CONFIG_FILE
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
-            sed -i -e "s|#CRAN=RSPM_SERVER_ADDRESS|CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" $REPOS_CONFIG_FILE
+            echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" >> $REPOS_CONFIG_FILE
+            
+            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf 
+            echo "www-port=80" >> $RSERVER_CONFIG_FILE
 
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
@@ -315,24 +324,27 @@ Resources:
             # Start Sessions
             /opt/R/3.6.3/bin/R --version
             /opt/R/3.6.3/bin/R --no-save -e "library(dplyr)"
-            /opt/python/3.8.1/bin/python --version
-            /opt/python/3.8.1/bin/python -c "import pandas"
+            /opt/Python/3.8.9/bin/python3 --version
+            /opt/Python/3.8.9/bin/python3 -c "import math"
 
             # Verify
             systemctl enable rstudio-server
             systemctl enable rstudio-launcher
-            systemctl start rstudio-server
-            systemctl start rstudio-launcher
+            systemctl restart rstudio-server
+            systemctl restart rstudio-launcher
 
-            /usr/local/bin/wait-for-it.sh localhost:8787 -t 60
+            curl -L -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+            chmod +x /usr/local/bin/wait-for-it.sh
+
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             rstudio-server stop
             sleep 10
             rstudio-server verify-installation --verify-user rstudio-user || true
             sleep 10
-            rstudio-server start
+            rstudio-server restart
 
-            /usr/local/bin/wait-for-it.sh localhost:8787 -t 60
-            /usr/local/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
+            /usr/local/bin/wait-for-it.sh localhost:80 -t 60
+            /opt/aws/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
             RSPM_IP: !GetAtt RSPMInstance.PublicIp
@@ -394,13 +406,17 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            
+            export DEBIAN_FRONTEND=noninteractive
+            apt install -y python-pip python-setuptools
+            mkdir -p /opt/aws/bin
+            python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
+            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             CONNECT_CONFIG_FILE=/etc/rstudio-connect/rstudio-connect.gcfg
 
             sed -i -e 's/Listen = \":3939\"/Listen = \":80\"/g' $CONNECT_CONFIG_FILE
-
-            systemctl restart rstudio-connect
 
             sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
             sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
@@ -415,8 +431,11 @@ Resources:
 
             systemctl restart rstudio-connect
 
+            curl -L -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+            chmod +x /usr/local/bin/wait-for-it.sh
+
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
-            /usr/local/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
+            /opt/aws/bin/cfn-signal --exit-code 0 --resource RSCInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSPM_IP: !GetAtt RSPMInstance.PublicIp
 
