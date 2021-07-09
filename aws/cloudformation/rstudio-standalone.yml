@@ -549,12 +549,6 @@ Outputs:
   RSCHost:
     Description: RStudio Connect UI
     Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
-  RSCDefaultUser:
-    Description: RStudio Connect default user
-    Value: admin
-  RSCDefaultPassword:
-    Description: RStudio Connect initial default user password
-    Value: !Ref RSCInstance
   RSPMHost:
     Description: RStudio Package Manager UI
     Value: !Join [ "", ["http://", !GetAtt RSPMInstance.PublicIp]]
