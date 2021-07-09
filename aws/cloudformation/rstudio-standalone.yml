@@ -206,33 +206,33 @@ Mappings:
 
   RSCRegionMap:
     eu-central-1:
-      AMI: ami-094b7f5cae87907dd
+      AMI: ami-0fc53eb59f4b17110
     eu-north-1:
-      AMI: ami-0ea31068e99f8df91
+      AMI: ami-013ece7f61c627534
     eu-west-1:
-      AMI: ami-0e958dba717422144
+      AMI: ami-0023b14125e28c11a
     eu-west-2:
-      AMI: ami-00d7054d3d517802c
+      AMI: ami-0a46e8a8218a40a47
     eu-west-3:
-      AMI: ami-0355e9150a06de678
+      AMI: ami-0df7d98d66e84b834
     us-east-1:
       AMI: ami-0925289e48c7e041c
     us-east-2:
-      AMI: ami-0d654bde0b1fb03ae
+      AMI: ami-0a60db9be2f0c148b
     us-west-1:
-      AMI: ami-04ed4e5e4ce91002c
+      AMI: ami-0369e3b663d1b9032
     us-west-2:
-      AMI: ami-05aa2331ff635008d
+      AMI: ami-0a8a6e13f238b4bcd
     ap-northeast-1:
-      AMI: ami-0c72a69fd8f76bfbf
+      AMI: ami-02dac8221b546b333
     ap-northeast-2:
-      AMI: ami-04912a71571a0e3fd
+      AMI: ami-003570525ed0d4172
     ap-south-1:
-      AMI: ami-0b0e0f8a466687432
+      AMI: ami-05a5d804f3698a0ab
     ap-southeast-1:
-      AMI: ami-0eb2e999f192e0f3f
+      AMI: ami-00e116136c8ac5563
     ap-southeast-2:
-      AMI: ami-08f4772373c299cea
+      AMI: ami-0b46b11c2b1a84a27
 
   RSPMRegionMap:
     eu-central-1:
