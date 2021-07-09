@@ -332,7 +332,13 @@ Resources:
             systemctl enable rstudio-launcher
             systemctl restart rstudio-server
             systemctl restart rstudio-launcher
-
+            
+            # Create first user
+            user_passwd=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+            sudo useradd -p $(openssl passwd -crypt $user_passwd) rstudio-user
+            unset user_passwd
+            
+            # Download Wait for It
             curl -L -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
             chmod +x /usr/local/bin/wait-for-it.sh
 
