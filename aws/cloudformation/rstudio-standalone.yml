@@ -299,7 +299,11 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             
             export DEBIAN_FRONTEND=noninteractive
-            apt install -y python-pip python-setuptools
+            
+            apt-get update -y
+            apt-get upgrade -y
+
+            apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
             
@@ -414,7 +418,11 @@ Resources:
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             
             export DEBIAN_FRONTEND=noninteractive
-            apt install -y python-pip python-setuptools
+
+            apt-get update -y
+            apt-get upgrade -y
+
+            apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
 
