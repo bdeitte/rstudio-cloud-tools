@@ -310,10 +310,10 @@ Resources:
             trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
-            echo "default-rsconnect-server=http://${RSC_IP}|" >> $RSESSION_CONFIG_FILE
+            echo "default-rsconnect-server=http://${RSC_IP}" >> $RSESSION_CONFIG_FILE
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
-            echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" >> $REPOS_CONFIG_FILE
+            echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $REPOS_CONFIG_FILE
             
             RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf 
             echo "www-port=80" >> $RSERVER_CONFIG_FILE
@@ -432,9 +432,8 @@ Resources:
 
             sed -i -e 's/Listen = \":3939\"/Listen = \":80\"/g' $CONNECT_CONFIG_FILE
 
-            sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
-            sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
-            sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
+            echo "[RPackageRepository \"CRAN\"]" >> $CONNECT_CONFIG_FILE
+            echo "URL = http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $CONNECT_CONFIG_FILE
             
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
