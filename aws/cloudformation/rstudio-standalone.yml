@@ -22,7 +22,7 @@ Parameters:
     AllowedPattern: ".+"
     ConstraintDescription: Must select an existing EC2 KeyPair
     Description: "AWS key pair to use to SSH to the VMs. SSH username for the VMs are ubuntu (has sudo privilege). SSH into machines for changing configuration, reviewing logs, etc."
-  rspInstanceType:
+  rswInstanceType:
     Type: String
     Default: m5.large
     AllowedValues:
@@ -46,12 +46,12 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Server Pro. Default is m5.large.
-  rspDiskSize:
+    Description: EC2 Instance type for RStudio Workbench. Default is m5.large.
+  rswDiskSize:
     Type: Number
     Default: 50
     MinValue: 50
-    Description: Volume size for RStudio Server Pro EC2 Instance. Min 50 GB.
+    Description: Volume size for RStudio Workbench EC2 Instance. Min 50 GB.
   rscInstanceType:
     Type: String
     Default: m5.large
@@ -131,10 +131,10 @@ Metadata:
           - keyName
       -
         Label:
-          default: RStudio Server Pro EC2 resource configuration
+          default: RStudio Workbench EC2 resource configuration
         Parameters:
-          - rspInstanceType
-          - rspDiskSize
+          - rswInstanceType
+          - rswDiskSize
       -
         Label:
           default: RStudio Connect EC2 resource configuration
@@ -160,10 +160,10 @@ Metadata:
         default: "Deploy to VPC"
       keyName:
         default : "AWS keypair"
-      rspInstanceType:
-        default : "RStudio Server Pro Instance Type"
-      rspDiskSize:
-        default : "RStudio Server Pro Disk Size"
+      rswInstanceType:
+        default : "RStudio Workbench Instance Type"
+      rswDiskSize:
+        default : "RStudio Workbench Disk Size"
       rscInstanceType:
         default : "RStudio Connect Instance Type"
       rscDiskSize:
@@ -174,7 +174,7 @@ Metadata:
         default : "RStudio Package Manager Disk Size"
 
 Mappings:
-  RSPRegionMap:
+  RSWRegionMap:
     ap-northeast-1:
       AMI: ami-0400ffd16cda0e53d
     ap-northeast-2:
@@ -265,7 +265,7 @@ Mappings:
       AMI: ami-06f37890301137a87
 
 Resources:
-  RSPInstance:
+  RSWInstance:
     Type: AWS::EC2::Instance
     DependsOn:
       - RSCInstance
@@ -277,15 +277,15 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join ["-", [!Ref "AWS::StackName", "RStudioServerPro"]]
-      ImageId: !FindInMap [RSPRegionMap, !Ref "AWS::Region", AMI]
+      ImageId: !FindInMap [RSWRegionMap, !Ref "AWS::Region", AMI]
       KeyName: !Ref keyName
-      InstanceType: !Ref rspInstanceType
+      InstanceType: !Ref rswInstanceType
       NetworkInterfaces:
         - DeleteOnTermination: "true"
           AssociatePublicIpAddress: "true"
           DeviceIndex: 0
           SubnetId: !Ref useSubnet
-          GroupSet: [!Ref RSPSecurityGroup]
+          GroupSet: [!Ref RSWSecurityGroup]
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
@@ -307,7 +307,7 @@ Resources:
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
             
-            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
             echo "default-rsconnect-server=http://${RSC_IP}|" >> $RSESSION_CONFIG_FILE
@@ -354,15 +354,15 @@ Resources:
             rstudio-server restart
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
-            /opt/aws/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
+            /opt/aws/bin/cfn-signal --exit-code 0 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
             RSPM_IP: !GetAtt RSPMInstance.PublicIp
 
-  RSPSecurityGroup:
+  RSWSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: RStudio Server Pro Access
+      GroupDescription: RStudio Workbench Access
       VpcId: !Ref useVPC
       SecurityGroupIngress:
       - IpProtocol: tcp
@@ -378,12 +378,12 @@ Resources:
         ToPort: '443'
         CidrIp: !Ref cidrIpHTTP
 
-  RSPSecurityGroupSelfIngress:
+  RSWSecurityGroupSelfIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      GroupId: !Ref RSPSecurityGroup
+      GroupId: !Ref RSWSecurityGroup
       IpProtocol: -1
-      SourceSecurityGroupId: !Ref RSPSecurityGroup
+      SourceSecurityGroupId: !Ref RSWSecurityGroup
 
   RSCInstance:
     Type: AWS::EC2::Instance
@@ -545,15 +545,15 @@ Resources:
       SourceSecurityGroupId: !Ref RSPMSecurityGroup
 
 Outputs:
-  RSPHost:
-    Description: RStudio Server Pro UI
-    Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
-  RSPDefaultUser:
-    Description: RStudio Server Pro default user
+  RSWHost:
+    Description: RStudio Workbench UI
+    Value: !Join [ "", ["http://", !GetAtt RSWInstance.PublicIp]]
+  RSWDefaultUser:
+    Description: RStudio Workbench default user
     Value: rstudio-user
-  RSPDefaultPassword:
-    Description: RStudio Server Pro initial default user password
-    Value: !Ref RSPInstance
+  RSWDefaultPassword:
+    Description: RStudio Workbench initial default user password
+    Value: !Ref RSWInstance
   RSCHost:
     Description: RStudio Connect UI
     Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
