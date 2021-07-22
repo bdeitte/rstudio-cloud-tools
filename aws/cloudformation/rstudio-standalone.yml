@@ -435,6 +435,9 @@ Resources:
             echo "[RPackageRepository \"CRAN\"]" >> $CONNECT_CONFIG_FILE
             echo "URL = http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $CONNECT_CONFIG_FILE
             
+            ip_addr=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+            sed -i -e "s/Address = http:\/\/example.com/Address = http:\/\/$ip_addr/g" $CONNECT_CONFIG_FILE
+
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
             [global]
@@ -512,8 +515,20 @@ Resources:
             setcap 'cap_net_bind_service=+ep' /opt/rstudio-pm/bin/rstudio-pm
             sleep 10
 
+            systemctl enable rstudio-pm
             systemctl restart rstudio-pm
 
+            # Creates CRAN repository
+            alias rspm='/opt/rstudio-pm/bin/rspm'
+            rspm create repo --name=cran --description='Access CRAN packages'
+            rspm subscribe --repo=cran --source=cran
+            rspm sync --type=cran
+
+            # Creates PyPI repository
+            rspm create repo --name=pypi --type=python --description='Access PyPI packages'
+            rspm subscribe --repo=pypi --source=pypi
+            rspm sync --type=pypi
+            
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
