@@ -196,7 +196,7 @@ Mappings:
     eu-west-3:
       AMI: ami-0bccdef5ee0449395
     us-east-1:
-      AMI: ami-042c82acc8c5659cf
+      AMI: ami-0d6bf98f1df14da07
     us-east-2:
       AMI: ami-0f04b1190df907fde
     us-west-1:
@@ -246,7 +246,7 @@ Mappings:
     eu-west-3:
       AMI: ami-04beed3dc1066d79b
     us-east-1:
-      AMI: ami-05bcd1624763edb6d
+      AMI: ami-0739337a02c314cd4
     us-east-2:
       AMI: ami-0b56f184c0b9c081a
     us-west-1:
@@ -317,6 +317,7 @@ Resources:
             
             RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf 
             echo "www-port=80" >> $RSERVER_CONFIG_FILE
+            sed -i -e 's/8787/80/g' $RSERVER_CONFIG_FILE
 
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
@@ -325,6 +326,7 @@ Resources:
             index-url = http://${RSPM_IP}/pypi/latest/simple
             EOF
             
+
             # Start Sessions
             /opt/R/3.6.3/bin/R --version
             /opt/R/3.6.3/bin/R --no-save -e "library(dplyr)"
@@ -332,8 +334,14 @@ Resources:
             /opt/Python/3.8.9/bin/python3 -c "import math"
 
             # Verify
-            rstudio-server restart
-            rstudio-launcher restart
+            systemctl enable rstudio-server
+            systemctl enable rstudio-launcher
+
+            systemctl stop rstudio-server
+            systemctl start rstudio-server
+
+            systemctl stop rstudio-launcher
+            systemctl start rstudio-launcher
             
             # Create first user
             user_passwd=$(curl http://169.254.169.254/latest/meta-data/instance-id)
@@ -345,11 +353,13 @@ Resources:
             chmod +x /usr/local/bin/wait-for-it.sh
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
-            rstudio-server stop
+            systemctl stop rstudio-server
+            systemctl stop rstudio-launcher
             sleep 10
             rstudio-server verify-installation --verify-user rstudio-user || true
             sleep 10
-            rstudio-server restart
+            systemctl start rstudio-server
+            systemctl start rstudio-launcher
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /opt/aws/bin/cfn-signal --exit-code 0 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}
