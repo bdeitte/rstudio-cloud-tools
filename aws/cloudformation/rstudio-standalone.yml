@@ -176,34 +176,34 @@ Metadata:
 Mappings:
   RSWRegionMap:
     ap-northeast-1:
-      AMI: ami-0400ffd16cda0e53d
+      AMI: ami-076802ed442082495
     ap-northeast-2:
-      AMI: ami-033544f197fd94050
+      AMI: ami-027a639b15cabb5bd
     ap-south-1:
-      AMI: ami-02802dc9a582fcb0d
+      AMI: ami-099206806c3b7462f
     ap-southeast-1:
-      AMI: ami-013d74602f69399f0
+      AMI: ami-0a04048b052f19fe8
     ap-southeast-2:
-      AMI: ami-07e0c5d55d521645c
+      AMI: ami-0c12be16ea1d338e2
     eu-central-1:
-      AMI: ami-04a38162e3d74331a
+      AMI: ami-0cda419450cd2508c
     eu-north-1:
-      AMI: ami-0bece7227d8a82425
+      AMI: ami-0aa7d559685b0b5c7
     eu-west-1:
-      AMI: ami-09114541f8e41efb8
+      AMI: ami-03c1f15baa16c8d4d
     eu-west-2:
-      AMI: ami-02bc9099865ca25bb
+      AMI: ami-0de3bd5a9c3ac7005
     eu-west-3:
-      AMI: ami-0bccdef5ee0449395
+      AMI: ami-0c950337d2159e9dc
     us-east-1:
       AMI: ami-0d6bf98f1df14da07
     us-east-2:
-      AMI: ami-0f04b1190df907fde
+      AMI: ami-030c5847e0f486ba4
     us-west-1:
-      AMI: ami-06f711a4856dacbdb
+      AMI: ami-0acf4799a6ff4750b
     us-west-2:
-      AMI: ami-02de5980f62e1277e
-
+      AMI: ami-0ff2e63b60ebe83f8
+      
   RSCRegionMap:
     eu-central-1:
       AMI: ami-0fc53eb59f4b17110
@@ -323,7 +323,7 @@ Resources:
             cat << EOF > $PIP_CONFIG_FILE
             [global]
             timeout = 60
-            index-url = http://${RSPM_IP}/pypi/latest/simple
+            index-url = https://pypi.python.org/simple
             EOF
             
 
@@ -450,7 +450,7 @@ Resources:
             cat << EOF > $PIP_CONFIG_FILE
             [global]
             timeout = 60
-            index-url = http://${RSPM_IP}/pypi/latest/simple
+            index-url = https://pypi.python.org/simple
             EOF
 
             systemctl restart rstudio-connect
