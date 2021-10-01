@@ -203,7 +203,7 @@ Mappings:
       AMI: ami-0acf4799a6ff4750b
     us-west-2:
       AMI: ami-0ff2e63b60ebe83f8
-      
+
   RSCRegionMap:
     eu-central-1:
       AMI: ami-0fc53eb59f4b17110
@@ -246,7 +246,7 @@ Mappings:
     eu-west-3:
       AMI: ami-04beed3dc1066d79b
     us-east-1:
-      AMI: ami-0739337a02c314cd4
+      AMI: ami-05bcd1624763edb6d
     us-east-2:
       AMI: ami-0b56f184c0b9c081a
     us-west-1:
