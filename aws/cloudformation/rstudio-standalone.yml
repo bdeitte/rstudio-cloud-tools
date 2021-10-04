@@ -22,7 +22,7 @@ Parameters:
     AllowedPattern: ".+"
     ConstraintDescription: Must select an existing EC2 KeyPair
     Description: "AWS key pair to use to SSH to the VMs. SSH username for the VMs are ubuntu (has sudo privilege). SSH into machines for changing configuration, reviewing logs, etc."
-  rspInstanceType:
+  rswInstanceType:
     Type: String
     Default: m5.large
     AllowedValues:
@@ -46,12 +46,12 @@ Parameters:
       - r5.12xlarge
       - r5.16xlarge
       - r5.24xlarge
-    Description: EC2 Instance type for RStudio Server Pro. Default is m5.large.
-  rspDiskSize:
+    Description: EC2 Instance type for RStudio Workbench. Default is m5.large.
+  rswDiskSize:
     Type: Number
     Default: 50
     MinValue: 50
-    Description: Volume size for RStudio Server Pro EC2 Instance. Min 50 GB.
+    Description: Volume size for RStudio Workbench EC2 Instance. Min 50 GB.
   rscInstanceType:
     Type: String
     Default: m5.large
@@ -131,10 +131,10 @@ Metadata:
           - keyName
       -
         Label:
-          default: RStudio Server Pro EC2 resource configuration
+          default: RStudio Workbench EC2 resource configuration
         Parameters:
-          - rspInstanceType
-          - rspDiskSize
+          - rswInstanceType
+          - rswDiskSize
       -
         Label:
           default: RStudio Connect EC2 resource configuration
@@ -160,10 +160,10 @@ Metadata:
         default: "Deploy to VPC"
       keyName:
         default : "AWS keypair"
-      rspInstanceType:
-        default : "RStudio Server Pro Instance Type"
-      rspDiskSize:
-        default : "RStudio Server Pro Disk Size"
+      rswInstanceType:
+        default : "RStudio Workbench Instance Type"
+      rswDiskSize:
+        default : "RStudio Workbench Disk Size"
       rscInstanceType:
         default : "RStudio Connect Instance Type"
       rscDiskSize:
@@ -174,35 +174,35 @@ Metadata:
         default : "RStudio Package Manager Disk Size"
 
 Mappings:
-  RSPRegionMap:
+  RSWRegionMap:
     ap-northeast-1:
-      AMI: ami-0400ffd16cda0e53d
+      AMI: ami-076802ed442082495
     ap-northeast-2:
-      AMI: ami-033544f197fd94050
+      AMI: ami-027a639b15cabb5bd
     ap-south-1:
-      AMI: ami-02802dc9a582fcb0d
+      AMI: ami-099206806c3b7462f
     ap-southeast-1:
-      AMI: ami-013d74602f69399f0
+      AMI: ami-0a04048b052f19fe8
     ap-southeast-2:
-      AMI: ami-07e0c5d55d521645c
+      AMI: ami-0c12be16ea1d338e2
     eu-central-1:
-      AMI: ami-04a38162e3d74331a
+      AMI: ami-0cda419450cd2508c
     eu-north-1:
-      AMI: ami-0bece7227d8a82425
+      AMI: ami-0aa7d559685b0b5c7
     eu-west-1:
-      AMI: ami-09114541f8e41efb8
+      AMI: ami-03c1f15baa16c8d4d
     eu-west-2:
-      AMI: ami-02bc9099865ca25bb
+      AMI: ami-0de3bd5a9c3ac7005
     eu-west-3:
-      AMI: ami-0bccdef5ee0449395
+      AMI: ami-0c950337d2159e9dc
     us-east-1:
-      AMI: ami-04bd6989dfa69be83
+      AMI: ami-0d6bf98f1df14da07
     us-east-2:
-      AMI: ami-0f04b1190df907fde
+      AMI: ami-030c5847e0f486ba4
     us-west-1:
-      AMI: ami-06f711a4856dacbdb
+      AMI: ami-0acf4799a6ff4750b
     us-west-2:
-      AMI: ami-02de5980f62e1277e
+      AMI: ami-0ff2e63b60ebe83f8
 
   RSCRegionMap:
     eu-central-1:
@@ -265,7 +265,7 @@ Mappings:
       AMI: ami-06f37890301137a87
 
 Resources:
-  RSPInstance:
+  RSWInstance:
     Type: AWS::EC2::Instance
     DependsOn:
       - RSCInstance
@@ -276,16 +276,16 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Join ["-", [!Ref "AWS::StackName", "RStudioServerPro"]]
-      ImageId: !FindInMap [RSPRegionMap, !Ref "AWS::Region", AMI]
+          Value: !Join ["-", [!Ref "AWS::StackName", "RStudioWorkbench"]]
+      ImageId: !FindInMap [RSWRegionMap, !Ref "AWS::Region", AMI]
       KeyName: !Ref keyName
-      InstanceType: !Ref rspInstanceType
+      InstanceType: !Ref rswInstanceType
       NetworkInterfaces:
         - DeleteOnTermination: "true"
           AssociatePublicIpAddress: "true"
           DeviceIndex: 0
           SubnetId: !Ref useSubnet
-          GroupSet: [!Ref RSPSecurityGroup]
+          GroupSet: [!Ref RSWSecurityGroup]
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
@@ -306,23 +306,23 @@ Resources:
             apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-
-            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
-            echo "default-rsconnect-server=http://${RSC_IP}|" >> $RSESSION_CONFIG_FILE
+            echo "default-rsconnect-server=http://${RSC_IP}" >> $RSESSION_CONFIG_FILE
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
-            echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" >> $REPOS_CONFIG_FILE
-
-            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf
+            echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $REPOS_CONFIG_FILE
+            
+            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf 
             echo "www-port=80" >> $RSERVER_CONFIG_FILE
+            sed -i -e 's/8787/80/g' $RSERVER_CONFIG_FILE
 
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
             [global]
             timeout = 60
-            index-url = http://${RSPM_IP}/pypi/latest/simple
+            index-url = https://pypi.python.org/simple
             EOF
 
             # Start Sessions
@@ -334,12 +334,16 @@ Resources:
             # Verify
             systemctl enable rstudio-server
             systemctl enable rstudio-launcher
-            systemctl restart rstudio-server
-            systemctl restart rstudio-launcher
 
+            systemctl stop rstudio-server
+            systemctl start rstudio-server
+
+            systemctl stop rstudio-launcher
+            systemctl start rstudio-launcher
+            
             # Create first user
             user_passwd=$(curl http://169.254.169.254/latest/meta-data/instance-id)
-            sudo useradd -p $(openssl passwd -crypt $user_passwd) rstudio-user
+            sudo useradd -m -p $(openssl passwd -crypt $user_passwd) rstudio-user
             unset user_passwd
 
             # Download Wait for It
@@ -347,22 +351,24 @@ Resources:
             chmod +x /usr/local/bin/wait-for-it.sh
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
-            rstudio-server stop
+            systemctl stop rstudio-server
+            systemctl stop rstudio-launcher
             sleep 10
             rstudio-server verify-installation --verify-user rstudio-user || true
             sleep 10
-            rstudio-server restart
+            systemctl start rstudio-server
+            systemctl start rstudio-launcher
 
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
-            /opt/aws/bin/cfn-signal --exit-code 0 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}
+            /opt/aws/bin/cfn-signal --exit-code 0 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
           - RSC_IP: !GetAtt RSCInstance.PublicIp
             RSPM_IP: !GetAtt RSPMInstance.PublicIp
 
-  RSPSecurityGroup:
+  RSWSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: RStudio Server Pro Access
+      GroupDescription: RStudio Workbench Access
       VpcId: !Ref useVPC
       SecurityGroupIngress:
       - IpProtocol: tcp
@@ -378,12 +384,12 @@ Resources:
         ToPort: '443'
         CidrIp: !Ref cidrIpHTTP
 
-  RSPSecurityGroupSelfIngress:
+  RSWSecurityGroupSelfIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      GroupId: !Ref RSPSecurityGroup
+      GroupId: !Ref RSWSecurityGroup
       IpProtocol: -1
-      SourceSecurityGroupId: !Ref RSPSecurityGroup
+      SourceSecurityGroupId: !Ref RSWSecurityGroup
 
   RSCInstance:
     Type: AWS::EC2::Instance
@@ -432,15 +438,17 @@ Resources:
 
             sed -i -e 's/Listen = \":3939\"/Listen = \":80\"/g' $CONNECT_CONFIG_FILE
 
-            sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
-            sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
-            sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
+            echo "[RPackageRepository \"CRAN\"]" >> $CONNECT_CONFIG_FILE
+            echo "URL = http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $CONNECT_CONFIG_FILE
+            
+            ip_addr=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+            sed -i -e "s/Address = http:\/\/example.com/Address = http:\/\/$ip_addr/g" $CONNECT_CONFIG_FILE
 
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
             [global]
             timeout = 60
-            index-url = http://${RSPM_IP}/pypi/latest/simple
+            index-url = https://pypi.python.org/simple
             EOF
 
             systemctl restart rstudio-connect
@@ -521,10 +529,26 @@ Resources:
 
             sed -i -e "s/Listen = :4242/Listen = :80/g" /etc/rstudio-pm/rstudio-pm.gcfg
             setcap 'cap_net_bind_service=+ep' /opt/rstudio-pm/bin/rstudio-pm
-            sleep 10
 
+            systemctl enable rstudio-pm
+            sleep 5
             systemctl restart rstudio-pm
+            sleep 5
+            /opt/rstudio-pm/bin/license-manager initialize
+            sleep 5
+            systemctl restart rstudio-pm
+            sleep 5
 
+            # Creates CRAN repository
+            /opt/rstudio-pm/bin/rspm create repo --name=cran --description='Access CRAN packages'
+            /opt/rstudio-pm/bin/rspm subscribe --repo=cran --source=cran
+            /opt/rstudio-pm/bin/rspm sync --type=cran --no-wait
+
+            # Creates PyPI repository
+            /opt/rstudio-pm/bin/rspm create repo --name=pypi --type=python --description='Access PyPI packages'
+            /opt/rstudio-pm/bin/rspm subscribe --repo=pypi --source=pypi
+            /opt/rstudio-pm/bin/rspm sync --type=pypi --no-wait
+            
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
@@ -555,15 +579,15 @@ Resources:
       SourceSecurityGroupId: !Ref RSPMSecurityGroup
 
 Outputs:
-  RSPHost:
-    Description: RStudio Server Pro UI
-    Value: !Join [ "", ["http://", !GetAtt RSPInstance.PublicIp]]
-  RSPDefaultUser:
-    Description: RStudio Server Pro default user
+  RSWHost:
+    Description: RStudio Workbench UI
+    Value: !Join [ "", ["http://", !GetAtt RSWInstance.PublicIp]]
+  RSWDefaultUser:
+    Description: RStudio Workbench default user
     Value: rstudio-user
-  RSPDefaultPassword:
-    Description: RStudio Server Pro initial default user password
-    Value: !Ref RSPInstance
+  RSWDefaultPassword:
+    Description: RStudio Workbench initial default user password
+    Value: !Ref RSWInstance
   RSCHost:
     Description: RStudio Connect UI
     Value: !Join [ "", ["http://", !GetAtt RSCInstance.PublicIp]]
