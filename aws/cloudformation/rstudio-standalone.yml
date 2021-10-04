@@ -306,6 +306,7 @@ Resources:
             apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
             trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSWInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
@@ -313,8 +314,8 @@ Resources:
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $REPOS_CONFIG_FILE
-            
-            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf 
+
+            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf
             echo "www-port=80" >> $RSERVER_CONFIG_FILE
             sed -i -e 's/8787/80/g' $RSERVER_CONFIG_FILE
 
@@ -324,6 +325,7 @@ Resources:
             timeout = 60
             index-url = https://pypi.python.org/simple
             EOF
+
 
             # Start Sessions
             /opt/R/3.6.3/bin/R --version
@@ -340,7 +342,7 @@ Resources:
 
             systemctl stop rstudio-launcher
             systemctl start rstudio-launcher
-            
+
             # Create first user
             user_passwd=$(curl http://169.254.169.254/latest/meta-data/instance-id)
             sudo useradd -m -p $(openssl passwd -crypt $user_passwd) rstudio-user
@@ -440,7 +442,7 @@ Resources:
 
             echo "[RPackageRepository \"CRAN\"]" >> $CONNECT_CONFIG_FILE
             echo "URL = http://${RSPM_IP}/cran/__linux__/bionic/latest" >> $CONNECT_CONFIG_FILE
-            
+
             ip_addr=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
             sed -i -e "s/Address = http:\/\/example.com/Address = http:\/\/$ip_addr/g" $CONNECT_CONFIG_FILE
 
@@ -548,7 +550,7 @@ Resources:
             /opt/rstudio-pm/bin/rspm create repo --name=pypi --type=python --description='Access PyPI packages'
             /opt/rstudio-pm/bin/rspm subscribe --repo=pypi --source=pypi
             /opt/rstudio-pm/bin/rspm sync --type=pypi --no-wait
-            
+
             /usr/local/bin/wait-for-it.sh localhost:80 -t 60
             /usr/local/bin/cfn-signal --exit-code 0 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}
 
