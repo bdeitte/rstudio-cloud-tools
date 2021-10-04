@@ -297,16 +297,16 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            
+
             export DEBIAN_FRONTEND=noninteractive
-            
+
             apt-get update -y
             apt-get upgrade -y
 
             apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-            
+
             trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RSPInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
 
             RSESSION_CONFIG_FILE=/etc/rstudio/rsession.conf
@@ -314,8 +314,8 @@ Resources:
 
             REPOS_CONFIG_FILE=/etc/rstudio/repos.conf
             echo "CRAN=http://${RSPM_IP}/cran/__linux__/bionic/latest|" >> $REPOS_CONFIG_FILE
-            
-            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf 
+
+            RSERVER_CONFIG_FILE=/etc/rstudio/rserver.conf
             echo "www-port=80" >> $RSERVER_CONFIG_FILE
 
             PIP_CONFIG_FILE=/etc/pip.conf
@@ -324,7 +324,7 @@ Resources:
             timeout = 60
             index-url = http://${RSPM_IP}/pypi/latest/simple
             EOF
-            
+
             # Start Sessions
             /opt/R/3.6.3/bin/R --version
             /opt/R/3.6.3/bin/R --no-save -e "library(dplyr)"
@@ -336,12 +336,12 @@ Resources:
             systemctl enable rstudio-launcher
             systemctl restart rstudio-server
             systemctl restart rstudio-launcher
-            
+
             # Create first user
             user_passwd=$(curl http://169.254.169.254/latest/meta-data/instance-id)
             sudo useradd -p $(openssl passwd -crypt $user_passwd) rstudio-user
             unset user_passwd
-            
+
             # Download Wait for It
             curl -L -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
             chmod +x /usr/local/bin/wait-for-it.sh
@@ -416,7 +416,7 @@ Resources:
           - |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            
+
             export DEBIAN_FRONTEND=noninteractive
 
             apt-get update -y
@@ -435,7 +435,7 @@ Resources:
             sed -i -e 's|;\[RPackageRepository "CRAN"\]|\[RPackageRepository "CRAN"\]|' $CONNECT_CONFIG_FILE
             sed -i -e 's|;\[RPackageRepository "RSPM"\]|\[RPackageRepository "RSPM"\]|' $CONNECT_CONFIG_FILE
             sed -i -e "s|;URL = RSPM_SERVER_ADDRESS|URL = http://${RSPM_IP}/cran/__linux__/bionic/latest|" $CONNECT_CONFIG_FILE
-            
+
             PIP_CONFIG_FILE=/etc/pip.conf
             cat << EOF > $PIP_CONFIG_FILE
             [global]
@@ -507,8 +507,18 @@ Resources:
         Fn::Base64: !Sub |
             #!/bin/bash -xe
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+            export DEBIAN_FRONTEND=noninteractive
+
+            apt-get update -y
+            apt-get upgrade -y
+
+            apt-get install -y python-pip python-setuptools
+            mkdir -p /opt/aws/bin
+            python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
             trap '/usr/local/bin/cfn-signal --exit-code 1 --resource RSPMInstance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
-            
+
             sed -i -e "s/Listen = :4242/Listen = :80/g" /etc/rstudio-pm/rstudio-pm.gcfg
             setcap 'cap_net_bind_service=+ep' /opt/rstudio-pm/bin/rstudio-pm
             sleep 10
