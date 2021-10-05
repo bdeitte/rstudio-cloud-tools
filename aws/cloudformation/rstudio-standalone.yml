@@ -301,7 +301,6 @@ Resources:
             export DEBIAN_FRONTEND=noninteractive
 
             apt-get update -y
-            apt-get upgrade -y
 
             apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
@@ -428,7 +427,6 @@ Resources:
             export DEBIAN_FRONTEND=noninteractive
 
             apt-get update -y
-            apt-get upgrade -y
 
             apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
@@ -521,7 +519,6 @@ Resources:
             export DEBIAN_FRONTEND=noninteractive
 
             apt-get update -y
-            apt-get upgrade -y
 
             apt-get install -y python-pip python-setuptools
             mkdir -p /opt/aws/bin
